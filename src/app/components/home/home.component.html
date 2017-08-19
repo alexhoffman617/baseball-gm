@@ -1,0 +1,123 @@
+<div>
+  <button md-raised-button color="primary" (click)="playGame(1)">Play Game</button>
+
+  <button md-raised-button color="primary" (click)="playGame(10)">Play 10 Games</button>
+
+  <button md-raised-button color="primary" (click)="playGame(162)">Play Season</button>
+</div>
+<div fxLayout
+     fxLayout.xs="column"
+     fxLayoutAlign=""
+     fxLayoutGap="10px"
+     fxLayoutGap.xs="0">
+<div fxFlex="40%">
+  <h4>Home Team</h4>
+  <div *ngFor="let player of teamA.players">
+    <md-input-container>
+     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="player.name" placeholder="position"/>
+    </md-input-container>
+    <!-- <md-input-container>
+     <input mdInput disabled="true" [(ngModel)]="player.position" placeholder="position"/>
+    </md-input-container> -->
+    <md-input-container>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="player.skills.contact" placeholder="contact"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="player.skills.power" placeholder="power"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="player.skills.eye" placeholder="eye"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="player.skills.speed" placeholder="speed"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'plateAppearance', homeTeamStats)" placeholder="PA"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'single', homeTeamStats)" placeholder="1B"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'double', homeTeamStats)" placeholder="2B"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'triple', homeTeamStats)" placeholder="3B"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'homerun', homeTeamStats)" placeholder="HR"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'strikeout', homeTeamStats)" placeholder="K"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'walk', homeTeamStats)" placeholder="BB"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="AVG"
+     [value]="getOutcomeTotal(player.id, 'hits', homeTeamStats) / (getOutcomeTotal(player.id, 'plateAppearance', homeTeamStats) - getOutcomeTotal(player.id, 'walk', homeTeamStats))" />
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="OBP"
+     [value]="(getOutcomeTotal(player.id, 'hits', homeTeamStats) + getOutcomeTotal(player.id, 'walk', homeTeamStats)) / getOutcomeTotal(player.id, 'plateAppearance', homeTeamStats)" />
+    </md-input-container>
+  </div>
+</div>
+<div fxFlex="40%">
+  <h4>Away Team</h4>
+  <div *ngFor="let player of teamB.players">
+    <md-input-container>
+     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="player.name" placeholder="position"/>
+    </md-input-container>
+    <!-- <md-input-container>
+     <input mdInput disabled="true" [(ngModel)]="player.position" placeholder="position"/>
+    </md-input-container> -->
+    <md-input-container>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="player.skills.contact" placeholder="contact"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="player.skills.power" placeholder="power"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="player.skills.eye" placeholder="eye"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="player.skills.speed" placeholder="speed"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'plateAppearance', awayTeamStats)" placeholder="PA"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'single', awayTeamStats)" placeholder="1B"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'double', awayTeamStats)" placeholder="2B"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'triple', awayTeamStats)" placeholder="3B"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'homerun', awayTeamStats)" placeholder="HR"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'strikeout', awayTeamStats)" placeholder="K"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(player.id, 'walk', awayTeamStats)" placeholder="BB"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="AVG"
+     [value]="getOutcomeTotal(player.id, 'hits', awayTeamStats) / (getOutcomeTotal(player.id, 'plateAppearance', awayTeamStats) - getOutcomeTotal(player.id, 'walk', awayTeamStats))" />
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="OBP"
+     [value]="(getOutcomeTotal(player.id, 'hits', awayTeamStats) + getOutcomeTotal(player.id, 'walk', awayTeamStats)) / getOutcomeTotal(player.id, 'plateAppearance', awayTeamStats)" />
+    </md-input-container>
+  </div>
+</div>
+<div fxFlex="20%" >
+<div> Home Wins: {{ homeWins }} Away Wins: {{ awayWins }} </div>
+<div> Home RPG: {{ homeTeamStats?.runs / games }} Away RGP: {{ awayTeamStats?.runs / games }} </div>
+  <h4>Game Log</h4>
+<div [innerHtml]="game?.gameLogString"></div>
+</div>
+</div>
