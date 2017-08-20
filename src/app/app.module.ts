@@ -5,19 +5,24 @@ import { MaterialModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
+import { PlayGameTestComponent } from './components/play-game-test/play-game-test.component';
 import { PlayGameService } from './services/play-game.service';
+import { GeneratePlayerService } from './services/generate-player.service';
+import { GeneratePlayerTestComponent } from './components/generate-player-test/generate-player-test.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent}
+  {path: '', component: PlayGameTestComponent},
+  {path: 'generate-player-test', component: GeneratePlayerTestComponent}
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    PlayGameTestComponent,
+    GeneratePlayerTestComponent
   ],
   imports: [
     BrowserModule,
@@ -25,10 +30,12 @@ const routes: Routes = [
     BrowserAnimationsModule,
     FormsModule,
     RouterModule.forRoot(routes),
-    FlexLayoutModule
+    FlexLayoutModule,
+    HttpModule
   ],
   providers: [
-    PlayGameService
+    PlayGameService,
+    GeneratePlayerService
   ],
   bootstrap: [AppComponent]
 })

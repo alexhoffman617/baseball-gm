@@ -14,7 +14,7 @@ export class PlayGameService {
     leagueMaxStrikeOutFreq = .33;
     leagueOutFreq = 0.479726;
     leagueWalkFreq = 0.090562;
-    leagueMinWalkFreq = .025
+    leagueMinWalkFreq = 0
     leagueMaxWalkFreq = .2
     leagueHRFreq = 0.022758;
     leagueMinHRFreq = 0.005;
@@ -52,9 +52,9 @@ export class PlayGameService {
         this.currentInning = 1;
 
         while (this.currentInning - 1 < 9 || this.gameObject.homeTeamStats.runs == this.gameObject.awayTeamStats.runs){
-            this.playInning(homeTeam, awayTeam);
-            this.gameObject.gameLogString += ("<div>" + "After " + this.currentInning + " the score is: Home " + this.gameObject.homeTeamStats.runs + "," + " Away " + this.gameObject.awayTeamStats.runs + "</div>");
-            this.currentInning++;
+          this.playInning(homeTeam, awayTeam);
+          this.gameObject.gameLogString += ("<div>" + "After " + this.currentInning + " the score is: Home " + this.gameObject.homeTeamStats.runs + "," + " Away " + this.gameObject.awayTeamStats.runs + "</div>");
+          this.currentInning++;
         }
 
         return this.gameObject;
@@ -75,41 +75,58 @@ export class PlayGameService {
         this.gameObject.gameLogString += ("<div class='" + side + "'>" + side + " " + this.currentInning + "</div>");
 
         while (this.outs < 3){
-            // Get Batter
-            var batter = battingTeam.players[(battingTeamStats.atBats.length) % 9];
-            var pitcher = pitchingTeam.pitcher;
-            this.gameObject.gameLogString += ("<div>" + batter.name + " is up to bat" + "</div>");
+          // Get Batter
+          var batter = battingTeam.batters[(battingTeamStats.atBats.length) % 9];
+          var pitcher = pitchingTeam.pitcher;
+          this.gameObject.gameLogString += ("<div>" + batter.name + " is up to bat" + "</div>");
 
 
-            // determine outcome of PA
-            this.outcome = this.atBat(batter, pitcher);
-            this.advanceRunners(batter, pitcher, battingTeamStats);
+          // determine outcome of PA
+          this.outcome = this.atBat(batter, pitcher);
+          this.advanceRunners(batter, pitcher, battingTeamStats);
 
-            this.gameObject.gameLogString += ("<div>" + this.outcome + "</div>");
-            battingTeamStats.atBats.push({"batterId": batter.id, "pitcherId": "", "outcome": this.outcome});
-
+          this.gameObject.gameLogString += ("<div>" + this.outcome + "</div>");
+          battingTeamStats.atBats.push({"batterId": batter.id, "pitcherId": pitcher.id, "outcome": this.outcome});
         }
 
         //pitcher.gameStats.InningsPitched++;
     }
 
+    getModifierPercentage(min, max, skill, isNegative = false){
+      if(isNegative){
+        return (20 - skill + 5) / 20 * (max - min);
+      } else {
+        return (skill + 5) / 20 * (max - min);
+      }
+    }
+    
     getOutcomeProbs(batter, pitcher){
-        var strikeOutProb = ((20 - batter.skills.contact) / 20 * .5 +  (20 - batter.skills.contact) / 20 * .5) * (this.leagueMaxStrikeOutFreq - this.leagueMinStrikeOutFreq) + this.leagueMinStrikeOutFreq;
+        var strikeOutProb = this.getModifierPercentage(this.leagueMinStrikeOutFreq, this.leagueMaxStrikeOutFreq, batter.skills.eye, true) * .5
+                            + this.getModifierPercentage(this.leagueMinStrikeOutFreq, this.leagueMaxStrikeOutFreq, batter.skills.contact, true) * .5
+                            + this.leagueMinStrikeOutFreq;
+        var walkProb = this.getModifierPercentage(this.leagueMinWalkFreq, this.leagueMaxWalkFreq, batter.skills.eye) * .5
+                      + this.getModifierPercentage(this.leagueMinWalkFreq, this.leagueMaxWalkFreq, pitcher.skills.control, true) * .5
+                      + this.leagueMinWalkFreq;
+        var hrProb = this.getModifierPercentage(this.leagueMinHRFreq, this.leagueMaxHRFreq, batter.skills.power)
+                     + this.leagueMinHRFreq;
+        var tripleProb = this.getModifierPercentage(this.leagueMinTripleFreq, this.leagueMaxTripleFreq, batter.skills.speed) * .8
+                          + this.getModifierPercentage(this.leagueMinTripleFreq, this.leagueMaxTripleFreq, batter.skills.power) * .2
+                          + this.leagueMinTripleFreq;
+        var doubleProb = this.getModifierPercentage(this.leagueMinDoubleFreq, this.leagueMaxDoubleFreq, batter.skills.speed) * .4
+                          + this.getModifierPercentage(this.leagueMinDoubleFreq, this.leagueMaxDoubleFreq, batter.skills.power) * .6
+                          + this.leagueMinDoubleFreq;
+        var singleProb = this.getModifierPercentage(this.leagueMinHitFreq, this.leagueMaxHitFreq, batter.skills.contact); 
+                          + this.leagueMinHitFreq - doubleProb - tripleProb - hrProb;
         var outProb = this.leagueOutFreq;
-        var walkProb = (batter.skills.eye / 20) * (this.leagueMaxWalkFreq - this.leagueMinWalkFreq) + this.leagueMinWalkFreq;
-        var hrProb = (batter.skills.power / 20) * (this.leagueMaxHRFreq - this.leagueMinHRFreq) + this.leagueMinHRFreq;
-        var tripleProb = (batter.skills.speed / 20 * .8 + batter.skills.power / 20 * .2) * (this.leagueMaxTripleFreq - this.leagueMinTripleFreq) + this.leagueMinTripleFreq;
-        var doubleProb = (batter.skills.speed / 20 * .4 + batter.skills.power / 20 * .6) * (this.leagueMaxDoubleFreq - this.leagueMinDoubleFreq) + this.leagueMinDoubleFreq;
-        var singleProb = (batter.skills.contact / 20) * (this.leagueMaxHitFreq - this.leagueMinHitFreq) + this.leagueMinHitFreq - doubleProb - tripleProb - hrProb;
         var sumOfProbs = strikeOutProb + outProb + walkProb + hrProb + tripleProb + doubleProb + singleProb;
         return {
-            "strikeOutProb": strikeOutProb / sumOfProbs,
-            "outProb": outProb / sumOfProbs,
-            "walkProb": walkProb / sumOfProbs,
-            "hrProb": hrProb / sumOfProbs,
-            "tripleProb": tripleProb / sumOfProbs,
-            "doubleProb": doubleProb / sumOfProbs,
-            "singleProb": singleProb / sumOfProbs
+          "strikeOutProb": strikeOutProb / sumOfProbs,
+          "outProb": outProb / sumOfProbs,
+          "walkProb": walkProb / sumOfProbs,
+          "hrProb": hrProb / sumOfProbs,
+          "tripleProb": tripleProb / sumOfProbs,
+          "doubleProb": doubleProb / sumOfProbs,
+          "singleProb": singleProb / sumOfProbs
         }
     }
 
@@ -120,53 +137,53 @@ export class PlayGameService {
         var outcome;
         var lowerBound = 0;
         if(roll <= outcomeProbs.strikeOutProb){
-            outcome = "strikeout";
+          outcome = "strikeout";
         }
         lowerBound += outcomeProbs.strikeOutProb;
         if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.outProb)){                
-            outcome = "out";
+          outcome = "out";
         }
         lowerBound += outcomeProbs.outProb;
         if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.walkProb)){
-            outcome = "walk";
+          outcome = "walk";
         }
         lowerBound += outcomeProbs.walkProb;
         if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.hrProb)){
-            outcome = "homerun";
+          outcome = "homerun";
         }
         lowerBound += outcomeProbs.hrProb
         if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.tripleProb)){
-            outcome = "triple";
+          outcome = "triple";
         }
         lowerBound += outcomeProbs.tripleProb;
         if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.doubleProb)){
-            outcome = "double";
+          outcome = "double";
         }
         lowerBound += outcomeProbs.doubleProb;
         if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.singleProb)){
-            outcome = "single";
+          outcome = "single";
         }
 
         return outcome;
     }
 
     advanceRunners(batter, pitcher, battingTeam){
-            if(this.outcome == "strikeout") {
-              this.outs ++;
-            } else if(this.outcome == "out"){
-              this.processOut(batter, pitcher, battingTeam);
-            } else {
-              if(this.thirdBase){
-                this.advanceThirdBaseRunner(batter, pitcher, this.outcome, battingTeam);
-              }
-              if(this.secondBase){
-                this.advanceSecondBaseRunner(batter, pitcher, this.outcome, battingTeam);                
-              }
-              if(this.firstBase){
-                this.advanceFirstBaseRunner(batter, pitcher, this.outcome, battingTeam);                
-              }
-              this.advanceBatter(batter, pitcher, this.outcome, battingTeam);
-            }
+      if(this.outcome == "strikeout") {
+        this.outs ++;
+      } else if(this.outcome == "out"){
+        this.processOut(batter, pitcher, battingTeam);
+      } else {
+        if(this.thirdBase){
+          this.advanceThirdBaseRunner(batter, pitcher, this.outcome, battingTeam);
+        }
+        if(this.secondBase){
+          this.advanceSecondBaseRunner(batter, pitcher, this.outcome, battingTeam);                
+        }
+        if(this.firstBase){
+          this.advanceFirstBaseRunner(batter, pitcher, this.outcome, battingTeam);                
+        }
+        this.advanceBatter(batter, pitcher, this.outcome, battingTeam);
+      }
     }
 
     processOut(batter, pitcher, battingTeamStats){
@@ -363,8 +380,8 @@ export class PlayGameService {
           this.thirdBase = this.firstBase;
           this.firstBase = null;
         } else {
-        battingTeamStats.runs ++;
-        this.firstBase = null;
+          battingTeamStats.runs ++;
+          this.firstBase = null;
         }
       }
       else if(outcome == "triple"){
