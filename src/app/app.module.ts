@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { PlayGameTestComponent } from './components/play-game-test/play-game-test.component';
 import { PlayGameService } from './services/play-game.service';
 import { GeneratePlayerService } from './services/generate-player.service';
+import { AtBatService } from './services/at-bat.service';
 import { GeneratePlayerTestComponent } from './components/generate-player-test/generate-player-test.component';
 
 const routes: Routes = [
@@ -35,7 +36,8 @@ const routes: Routes = [
   ],
   providers: [
     PlayGameService,
-    GeneratePlayerService
+    GeneratePlayerService,
+    AtBatService
   ],
   bootstrap: [AppComponent]
 })

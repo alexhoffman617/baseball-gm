@@ -11,16 +11,16 @@ export class Game {
 }
 
 export class TeamStats {
-    atBats: Array<AtBat>
+    events: Array<GameEvent>
     runs: number;
 
-    constructor(atBats: Array<AtBat>, runs: number){
-        this.atBats = atBats;
+    constructor(events: Array<GameEvent>, runs: number){
+        this.events = events;
         this.runs = runs;
     }
 }
 
-export class AtBat{
+export class GameEvent {
     batterId: string;
     pitcherId: string;
     outcome: string;
@@ -29,5 +29,17 @@ export class AtBat{
         this.batterId = batterId;
         this.pitcherId = pitcherId;
         this.outcome = outcome;
+    }
+}
+
+export class AtBat{
+    result: string;
+    contact: string;
+    trajectory: string;
+
+    constructor(result: string, contact: string, trajectory: string){
+        this.result = result;
+        this.contact = contact;
+        this.trajectory = trajectory;
     }
 }

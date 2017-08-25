@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AtBat, Game, TeamStats  } from '../models/game';
+import { AtBat, Game, TeamStats, GameEvent  } from '../models/game';
+import { AtBatService } from '../services/at-bat.service';
+
 @Injectable()
 export class PlayGameService {
     gameObject;
@@ -29,7 +31,7 @@ export class PlayGameService {
     leagueMaxHitFreq = .285
     leagueMinHitFreq = .17
 
-    constructor() { 
+    constructor(public atBatService: AtBatService) { 
         
     }
 
@@ -37,11 +39,11 @@ export class PlayGameService {
         this.gameObject =  {
         "gameLogString": "",
         "homeTeamStats": {
-            "atBats": [],
+            "events": [],
             "runs": 0
         },
         "awayTeamStats": {
-            "atBats": [],
+            "events": [],
             "runs": 0
         }
     }
@@ -76,17 +78,17 @@ export class PlayGameService {
 
         while (this.outs < 3){
           // Get Batter
-          var batter = battingTeam.batters[(battingTeamStats.atBats.length) % 9];
+          var batter = battingTeam.batters[(battingTeamStats.events.length) % 9];
           var pitcher = pitchingTeam.pitcher;
           this.gameObject.gameLogString += ("<div>" + batter.name + " is up to bat" + "</div>");
 
 
           // determine outcome of PA
-          this.outcome = this.atBat(batter, pitcher);
+          this.outcome = this.atBatService.atBat(batter, pitcher).result;
           this.advanceRunners(batter, pitcher, battingTeamStats);
 
           this.gameObject.gameLogString += ("<div>" + this.outcome + "</div>");
-          battingTeamStats.atBats.push({"batterId": batter.id, "pitcherId": pitcher.id, "outcome": this.outcome});
+          battingTeamStats.events.push({"batterId": batter.id, "pitcherId": pitcher.id, "outcome": this.outcome});
         }
 
         //pitcher.gameStats.InningsPitched++;
@@ -94,9 +96,9 @@ export class PlayGameService {
 
     getModifierPercentage(min, max, skill, isNegative = false){
       if(isNegative){
-        return (20 - skill + 5) / 20 * (max - min);
+        return (20 - skill) / 20 * (max - min);
       } else {
-        return (skill + 5) / 20 * (max - min);
+        return (skill) / 20 * (max - min);
       }
     }
     
@@ -130,41 +132,68 @@ export class PlayGameService {
         }
     }
 
-    atBat(batter, pitcher){
-        var outcomeProbs = this.getOutcomeProbs(batter, pitcher)
-       
-        var roll = Math.random();
-        var outcome;
-        var lowerBound = 0;
-        if(roll <= outcomeProbs.strikeOutProb){
-          outcome = "strikeout";
+    getOutcomeProbs2(batter, pitcher){
+      var inPlayRand = Math.random();
+      var strikeOutProb = this.getModifierPercentage(this.leagueMinStrikeOutFreq, this.leagueMaxStrikeOutFreq, batter.skills.eye, true) * .5
+                            + this.getModifierPercentage(this.leagueMinStrikeOutFreq, this.leagueMaxStrikeOutFreq, batter.skills.contact, true) * .5
+                            + this.leagueMinStrikeOutFreq;
+      var walkProb = this.getModifierPercentage(this.leagueMinWalkFreq, this.leagueMaxWalkFreq, batter.skills.eye) * .5
+                      + this.getModifierPercentage(this.leagueMinWalkFreq, this.leagueMaxWalkFreq, pitcher.skills.control, true) * .5
+                      + this.leagueMinWalkFreq;   
+      if(inPlayRand < strikeOutProb){
+        return "strikeout";
+      } else if(inPlayRand >= strikeOutProb && inPlayRand < strikeOutProb + walkProb){
+        return "walk";
+      } else {
+        var contactTypeRand = Math.random();
+        var hardContactProb = this.getModifierPercentage(.15, .45, batter.contact) 
+        var mediumContactProb = this.getModifierPercentage(.4, .6, 20 - Math.abs(10 - batter.contact) * 2) 
+        if(contactTypeRand < hardContactProb){
+          var outRand = Math.random();
+          var outProb = 1;
+          if(outRand < outProb){
+            return "out"
+          } else {
+            var hitTypeRand = 0;
+            var hrProb = 1
+            var tripleProb = 1
+            var doubleProb = 1
+            if(hitTypeRand < hrProb){
+              return "homerun";
+            } else if(hitTypeRand >= hrProb && hitTypeRand < hrProb + tripleProb) {
+              return "triple";
+            } else if(hitTypeRand >= hrProb + tripleProb && hitTypeRand < hrProb + tripleProb + doubleProb){
+              return "double";
+            } else {
+              return "single";
+            }
+          }
+        } else if(contactTypeRand >= hardContactProb && contactTypeRand < hardContactProb + mediumContactProb){
+          var outRand = Math.random();
+          var outProb = 1;
+          if(outRand < outProb){
+            return "out"
+          } else {
+            
+          }
+        } else {
+          var outRand = Math.random();
+          var outProb = 1;
+          if(outRand < outProb){
+            return "out"
+          } else {
+            
+          }
         }
-        lowerBound += outcomeProbs.strikeOutProb;
-        if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.outProb)){                
-          outcome = "out";
-        }
-        lowerBound += outcomeProbs.outProb;
-        if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.walkProb)){
-          outcome = "walk";
-        }
-        lowerBound += outcomeProbs.walkProb;
-        if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.hrProb)){
-          outcome = "homerun";
-        }
-        lowerBound += outcomeProbs.hrProb
-        if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.tripleProb)){
-          outcome = "triple";
-        }
-        lowerBound += outcomeProbs.tripleProb;
-        if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.doubleProb)){
-          outcome = "double";
-        }
-        lowerBound += outcomeProbs.doubleProb;
-        if(roll > lowerBound && roll <= (lowerBound + outcomeProbs.singleProb)){
-          outcome = "single";
-        }
-
-        return outcome;
+      }
+      var hardContactProb = this.getModifierPercentage(.15, .45, batter.contact) * .75
+                            + this.getModifierPercentage(.15, .45, batter.power) * .25
+                            + .15
+      var mediumContactProb = this.getModifierPercentage(.4, .6, batter.contact) 
+                            + .4
+      // soft contact 10-30
+      // medium contact 40-60
+      // hard contact  15-45
     }
 
     advanceRunners(batter, pitcher, battingTeam){

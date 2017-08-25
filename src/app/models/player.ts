@@ -15,13 +15,13 @@ export class Skills {
   contact: number;
   power: number;
   speed: number;
-  eye: number;
+  patience: number;
 
 
-  constructor(contact: number, power: number, speed: number, eye: number) {
+  constructor(contact: number, power: number, speed: number, patience: number) {
     this.contact = contact;
     this.power = power;
     this.speed = speed;
-    this.eye = eye;
+    this.patience = patience;
   }
 }

@@ -10,6 +10,10 @@ export class GeneratePlayerService {
 
     async generatePlayer(){
         var result = await this.http.get('https://uinames.com/api/?gender=male&region=United+States').toPromise()
-        return new Player(result.json().name + " " + result.json().surname, result.json().name+result.json().surname, new Skills(Math.round(Math.random() * 20), Math.round(Math.random() * 20), Math.round(Math.random() * 20), Math.round(Math.random() * 20)));
+        return new Player(result.json().name + " " + result.json().surname, result.json().name+result.json().surname, 
+        new Skills(Math.round(Math.random() * 10) + Math.round(Math.random() * 10), 
+                   Math.round(Math.random() * 10) + Math.round(Math.random() * 10), 
+                   Math.round(Math.random() * 10) + Math.round(Math.random() * 10), 
+                   Math.round(Math.random() * 10) + Math.round(Math.random() * 10)));
     }
 }

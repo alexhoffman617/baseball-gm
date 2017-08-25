@@ -49,9 +49,9 @@ export class PlayGameTestComponent implements OnInit {
     for(var i = 0; i < times; i++){
       this.game = this.playGameService.playGame(this.teamA, this.teamB);
       this.homeTeamStats.runs += this.game.homeTeamStats.runs;
-      this.homeTeamStats.atBats = this.homeTeamStats.atBats.concat(this.game.homeTeamStats.atBats);
+      this.homeTeamStats.events = this.homeTeamStats.events.concat(this.game.homeTeamStats.events);
       this.awayTeamStats.runs += this.game.awayTeamStats.runs;
-      this.awayTeamStats.atBats = this.awayTeamStats.atBats.concat(this.game.awayTeamStats.atBats);
+      this.awayTeamStats.events = this.awayTeamStats.events.concat(this.game.awayTeamStats.events);
       if(this.game.homeTeamStats.runs > this.game.awayTeamStats.runs){
         this.homeWins ++;
       } else {
@@ -67,21 +67,21 @@ export class PlayGameTestComponent implements OnInit {
       return "--"
     }
     if(outcome == 'plateAppearance'){
-      return _.filter(teamStats.atBats, function(atBat){
-        return atBat.batterId == playerId;
+      return _.filter(teamStats.events, function(event){
+        return event.batterId == playerId;
       }).length
     }
     if(outcome == 'hits'){
-      return _.filter(teamStats.atBats, function(atBat){
-        return atBat.batterId == playerId && 
-        (atBat.outcome == 'single' ||
-        atBat.outcome == 'double' ||
-        atBat.outcome == 'triple' ||
-        atBat.outcome == 'homerun');
+      return _.filter(teamStats.events, function(event){
+        return event.batterId == playerId && 
+        (event.outcome == 'single' ||
+        event.outcome == 'double' ||
+        event.outcome == 'triple' ||
+        event.outcome == 'homerun');
       }).length
     }
-    return _.filter(teamStats.atBats, function(atBat){
-      return atBat.batterId == playerId && atBat.outcome == outcome;
+    return _.filter(teamStats.events, function(event){
+      return event.batterId == playerId && event.outcome == outcome;
     }).length;
   }
 }
