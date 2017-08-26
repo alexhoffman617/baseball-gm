@@ -72,7 +72,7 @@ export class AtBatService {
   atBat(batter, pitcher){
   		 var contactRand = Math.random();
   	   var strikeOutProb = Math.max(.03, this.getModifierPercentage(.04, .36, batter.skills.contact, true) + this.getModifierPercentage(.04, .36, pitcher.skills.velocity, false) - .12);
-       var walkProb = Math.max(.02, this.getModifierPercentage(0, .23, batter.skills.patience, false) + this.getModifierPercentage(0, .23, pitcher.skills.control, true) - .145);
+       var walkProb = Math.max(0, this.getModifierPercentage(0, .07, batter.skills.patience, false) + this.getModifierPercentage(0, .07, pitcher.skills.control, true) + .02);
        if(contactRand < strikeOutProb){
        	return new AtBat("strikeout", "none", "none");
        } else if(contactRand < strikeOutProb + walkProb) {
