@@ -19,7 +19,7 @@
      fxLayoutAlign=""
      fxLayoutGap="10px"
      fxLayoutGap.xs="0">
-<div fxFlex="40%">
+<div fxFlex="50%">
   <h4>Team A</h4>
   <div *ngFor="let batter of teamA.batters">
     <md-input-container>
@@ -112,14 +112,33 @@
      <input mdInput type="number" min="0" max="20" [(ngModel)]="teamA.pitcher.skills.velocity" placeholder="velocity"/>
     </md-input-container>
     <md-input-container>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamA.pitcher.skills.control" placeholder="control"/>
+    </md-input-container>
+    <md-input-container>
      <input mdInput type="number" min="0" max="20" [(ngModel)]="teamA.pitcher.skills.stuff" placeholder="stuff"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamA.pitcher.skills.control" placeholder="control"/>
+     <input mdInput  [(ngModel)]="teamA.pitcher.skills.type" placeholder="type"/>
+    </md-input-container>
+   <!-- <md-select ng-model="teamB.pitcher.skills.type">
+        <md-option ng-value="fb"> FB </md-option>
+        <md-option ng-value="gb"> GB </md-option>
+    </md-select>-->
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="ERA"
+     [value]="teamBStats?.runs * 27 / getOutcomeTotal('all', 'outs', teamBStats)" />
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="K/9"
+     [value]="getOutcomeTotal('all', 'strikeout', teamBStats) * 27 / getOutcomeTotal('all', 'outs', teamBStats)" />
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="BB/9"
+     [value]="getOutcomeTotal('all', 'walk', teamBStats) * 27 / getOutcomeTotal('all', 'outs', teamBStats)" />
     </md-input-container>
   </div>
 </div>
-<div fxFlex="40%">
+<div fxFlex="50%">
   <h4>Team B</h4>
   <div *ngFor="let batter of teamB.batters">
     <md-input-container>
@@ -219,17 +238,36 @@
      <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.skills.velocity" placeholder="velocity"/>
     </md-input-container>
     <md-input-container>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.skills.control" placeholder="control"/>
+    </md-input-container>
+    <md-input-container>
      <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.skills.stuff" placeholder="stuff"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.skills.control" placeholder="control"/>
+     <input mdInput  [(ngModel)]="teamB.pitcher.skills.type" placeholder="type"/>
+    </md-input-container>
+    <!--<md-select ng-model="teamB.pitcher.skills.type">
+            <md-option ng-value="fb"> FB </md-option>
+            <md-option ng-value="gb"> GB </md-option>
+    </md-select>-->
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="ERA"
+     [value]="teamAStats?.runs * 27 / getOutcomeTotal('all', 'outs', teamAStats)" />
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="K/9"
+     [value]="getOutcomeTotal('all', 'strikeout', teamAStats) * 27 / getOutcomeTotal('all', 'outs', teamAStats)" />
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="BB/9"
+     [value]="getOutcomeTotal('all', 'walk', teamAStats) * 27 / getOutcomeTotal('all', 'outs', teamAStats)" />
     </md-input-container>
   </div>
 </div>
-<div fxFlex="20%" >
+</div>
+<div >
 <div> Home Wins: {{ homeWins }} Away Wins: {{ awayWins }} </div>
 <div> Home RPG: {{ teamAStats?.runs / games }} Away RGP: {{ teamBStats?.runs / games }} </div>
   <h4>Game Log</h4>
 <div [innerHtml]="game?.gameLogString"></div>
-</div>
 </div>

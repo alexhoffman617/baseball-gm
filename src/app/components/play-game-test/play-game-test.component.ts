@@ -25,13 +25,13 @@ export class PlayGameTestComponent implements OnInit {
     this.teamA = {
       "batters": [],
       "pitcher": {
-        "id": "player9A", "name": "player9A", "position": "P", "skills": {"velocity": 10, "stuff": 10, "control": 10}
+        "id": "player9A", "name": "player9A", "position": "P", "skills": {"velocity": 10, "stuff": 10, "control": 10, "type": "gb"}
       }
     };
     this.teamB = {
       "batters": [],
       "pitcher": {
-        "id": "player9B", "name": "player9B", "position": "P", "skills": {"velocity": 10, "stuff": 10, "control": 10}
+        "id": "player9B", "name": "player9B", "position": "P", "skills": {"velocity": 10, "stuff": 10, "control": 10, "type": "gb"}
       }
     };
     this.avgBatters()
@@ -120,6 +120,23 @@ export class PlayGameTestComponent implements OnInit {
         event.outcome == 'triple' ||
         event.outcome == 'homerun');
       }).length
+    }
+    if(outcome == 'outs'){
+      var outs = 0;
+      _.forEach(teamStats.events, function(event){
+        if(event.outcome == "out"){
+          outs++;
+        } else if(event.outcome == "strikeout"){
+          outs++;
+        } else if(event.outcome == "fielders choice"){
+          outs++;
+        } else if(event.outcome == "double play"){
+          outs += 2;
+        } else if(event.outcome == "triple play"){
+          outs += 3;
+        }
+      }) 
+      return outs;
     }
     return _.filter(teamStats.events, function(event){
       return (event.batterId == playerId || playerId == "all") && event.outcome == outcome;
