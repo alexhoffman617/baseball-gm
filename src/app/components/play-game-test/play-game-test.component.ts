@@ -6,7 +6,7 @@ import * as _ from "lodash";
 
 
 @Component({
-  selector: 'app-home',
+  selector: 'play-game-test',
   templateUrl: './play-game-test.component.html',
   styleUrls: ['./play-game-test.component.css']
 })
@@ -14,8 +14,8 @@ export class PlayGameTestComponent implements OnInit {
   teamA;
   teamB;
   games = 0;
-  homeTeamStats: TeamStats;
-  awayTeamStats: TeamStats;
+  teamAStats: TeamStats;
+  teamBStats: TeamStats;
   homeWins = 0;
   awayWins = 0;
   game: Game;
@@ -34,29 +34,70 @@ export class PlayGameTestComponent implements OnInit {
         "id": "player9B", "name": "player9B", "position": "P", "skills": {"velocity": 10, "stuff": 10, "control": 10}
       }
     };
+    this.avgBatters()
+  }
+
+  async randomBatters(){
+    this.teamA.batters = [];
+    this.teamB.batters = [];
     for(var i = 0; i < 9; i++){
       this.teamA.batters.push(await this.generatePlayerService.generatePlayer());
       this.teamB.batters.push(await this.generatePlayerService.generatePlayer());
     }
   }
+
+  async avgBatters(){
+    this.teamA.batters = [];
+    this.teamB.batters = [];
+    for(var i = 0; i < 9; i++){
+      this.teamA.batters.push(await this.generatePlayerService.generatePlayer());
+      this.teamA.batters.forEach(batter => {
+        batter.skills.contact = 10;
+        batter.skills.power = 10;
+        batter.skills.patience = 10;
+        batter.skills.speed = 10;
+      });
+      this.teamB.batters.push(await this.generatePlayerService.generatePlayer());
+      this.teamB.batters.forEach(batter => {
+        batter.skills.contact = 10;
+        batter.skills.power = 10;
+        batter.skills.patience = 10;
+        batter.skills.speed = 10;
+      });
+    }
+  }
   
   playGame(times: number){
-    this.homeTeamStats = new TeamStats([], 0);
-    this.awayTeamStats = new TeamStats([], 0);
+    this.teamAStats = new TeamStats([], 0);
+    this.teamBStats = new TeamStats([], 0);
     this.homeWins = 0;
     this.awayWins = 0;
     this.games = 0;
     for(var i = 0; i < times; i++){
-      this.game = this.playGameService.playGame(this.teamA, this.teamB);
-      this.homeTeamStats.runs += this.game.homeTeamStats.runs;
-      this.homeTeamStats.events = this.homeTeamStats.events.concat(this.game.homeTeamStats.events);
-      this.awayTeamStats.runs += this.game.awayTeamStats.runs;
-      this.awayTeamStats.events = this.awayTeamStats.events.concat(this.game.awayTeamStats.events);
-      if(this.game.homeTeamStats.runs > this.game.awayTeamStats.runs){
-        this.homeWins ++;
+      if(!(i % 2)){
+        this.game = this.playGameService.playGame(this.teamA, this.teamB);
+        this.teamAStats.runs += this.game.homeTeamStats.runs;
+        this.teamAStats.events = this.teamAStats.events.concat(this.game.homeTeamStats.events);
+        this.teamBStats.runs += this.game.awayTeamStats.runs;
+        this.teamBStats.events = this.teamBStats.events.concat(this.game.awayTeamStats.events);
+        if(this.game.homeTeamStats.runs > this.game.awayTeamStats.runs){
+          this.homeWins ++;
+        } else {
+          this.awayWins ++;
+        }
       } else {
-        this.awayWins ++;
+        this.game = this.playGameService.playGame(this.teamB, this.teamA);
+        this.teamBStats.runs += this.game.homeTeamStats.runs;
+        this.teamBStats.events = this.teamBStats.events.concat(this.game.homeTeamStats.events);
+        this.teamAStats.runs += this.game.awayTeamStats.runs;
+        this.teamAStats.events = this.teamAStats.events.concat(this.game.awayTeamStats.events);
+        if(this.game.homeTeamStats.runs > this.game.awayTeamStats.runs){
+          this.homeWins ++;
+        } else {
+          this.awayWins ++;
+        }
       }
+
       this.games++;
     }
     var x = 1;
@@ -68,12 +109,12 @@ export class PlayGameTestComponent implements OnInit {
     }
     if(outcome == 'plateAppearance'){
       return _.filter(teamStats.events, function(event){
-        return event.batterId == playerId;
+        return event.batterId == playerId || playerId == "all";
       }).length
     }
     if(outcome == 'hits'){
       return _.filter(teamStats.events, function(event){
-        return event.batterId == playerId && 
+        return (event.batterId == playerId || playerId == "all") && 
         (event.outcome == 'single' ||
         event.outcome == 'double' ||
         event.outcome == 'triple' ||
@@ -81,7 +122,7 @@ export class PlayGameTestComponent implements OnInit {
       }).length
     }
     return _.filter(teamStats.events, function(event){
-      return event.batterId == playerId && event.outcome == outcome;
+      return (event.batterId == playerId || playerId == "all") && event.outcome == outcome;
     }).length;
   }
 }

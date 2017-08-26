@@ -44,7 +44,7 @@ export class AtBatService {
   atBat(batter, pitcher){
   		 var contactRand = Math.random();
   	   var strikeOutProb = this.getModifierPercentage(.04, .36, batter.skills.contact, true) + .04;
-       var walkProb = this.getModifierPercentage(0, .25, batter.skills.patience, false);
+       var walkProb = this.getModifierPercentage(0, .23, batter.skills.patience, false) - .03;
        if(contactRand < strikeOutProb){
        	return new AtBat("strikeout", "none", "none");
        } else if(contactRand < strikeOutProb + walkProb) {
@@ -61,19 +61,19 @@ export class AtBatService {
        	    if(Math.random() < .65){
        	      return new AtBat("out", "hard", "gb");
        	    } else {
-       	      return new AtBat(this.getHitType(0, 0, .15 + batter.skills.contact * .015), "hard", "gb");
+       	      return new AtBat(this.getHitType(0, 0, .175 + batter.skills.contact * .01), "hard", "gb");
        	    }
        	  } else if(trajectoryRandom < this.gbpct + this.ldpct) {
        	    if(Math.random() < .3){
        	      return new AtBat("out", "hard", "ld");
        	    } else {
-       	      return new AtBat(this.getHitType( batter.skills.power * .04 - .05, batter.skills.speed, .15 + batter.skills.contact * .025), "hard", "ld");
+       	      return new AtBat(this.getHitType( batter.skills.power * .03 - .05, batter.skills.speed, .2 + batter.skills.contact * .02), "hard", "ld");
        	    }
        	  } else if(trajectoryRandom < this.gbpct + this.ldpct + this.fbpct){
        	    if(Math.random() < .65){
        	      return new AtBat("out", "hard", "fb");
        	    } else {
-       	      return new AtBat(this.getHitType(.1 + batter.skills.power * .045, batter.skills.speed, .15 + batter.skills.contact * .025), "hard", "fb");
+       	      return new AtBat(this.getHitType(.1 + batter.skills.power * .035, batter.skills.speed, .2 + batter.skills.contact * .02), "hard", "fb");
        	    }
        	  } else {
        	    return new AtBat("out", "hard", "iffb");
@@ -84,19 +84,19 @@ export class AtBatService {
        	    if(Math.random() < .7){
        	      return new AtBat("out", "medium", "gb");
        	    } else {
-       	      return new AtBat(this.getHitType(0, 0, .15 + batter.skills.contact * .015), "medium", "gb");
+       	      return new AtBat(this.getHitType(0, 0, .175 + batter.skills.contact * .015), "medium", "gb");
        	    }
        	  } else if(trajectoryRandom < this.gbpct + this.ldpct) {
        	    if(Math.random() < .35){
        	      return new AtBat("out", "medium", "ld");
        	    } else {
-       	      return new AtBat(this.getHitType(batter.skills.power * .015 - .05, batter.skills.speed,  batter.skills.contact * .03 - .05), "medium", "ld");
+       	      return new AtBat(this.getHitType(batter.skills.power * .01 - .025, batter.skills.speed,  batter.skills.contact * .02), "medium", "ld");
        	    }
        	  } else if(trajectoryRandom < this.gbpct + this.ldpct + this.fbpct){
        	    if(Math.random() < .75){
        	      return new AtBat("out", "medium", "fb");
        	    } else {
-       	      return new AtBat(this.getHitType(batter.skills.power * .025 - .05, batter.skills.speed,  batter.skills.contact * .03 - .05), "medium", "fb");
+       	      return new AtBat(this.getHitType(batter.skills.power * .02 - .025, batter.skills.speed,  batter.skills.contact * .02), "medium", "fb");
        	    }
        	  } else {
        	    return new AtBat("out", "medium", "iffb");
@@ -113,13 +113,13 @@ export class AtBatService {
        	    if(Math.random() < .5){
        	      return new AtBat("out", "soft", "ld");
        	    } else {
-       	      return new AtBat(this.getHitType(0, 0, .15 + batter.skills.contact * .025), "soft", "ld");
+       	      return new AtBat(this.getHitType(0, 0,  batter.skills.contact * .015 + .05), "soft", "ld");
        	    }
        	  } else if(trajectoryRandom < this.gbpct + this.ldpct + this.fbpct){
        	    if(Math.random() < .85){
        	      return new AtBat("out", "soft", "fb");
        	    } else {
-       	      return new AtBat(this.getHitType(0, 0, .5 + batter.skills.contact * .015), "soft", "fb");
+       	      return new AtBat(this.getHitType(0, 0, batter.skills.contact * .015 + .05), "soft", "fb");
        	    }
        	  } else {
        	    return new AtBat("out", "soft", "iffb");

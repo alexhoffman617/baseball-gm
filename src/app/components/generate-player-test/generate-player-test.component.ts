@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GeneratePlayerService } from '../../services/generate-player.service';
 
 @Component({
-  selector: 'app-generate-player-test',
+  selector: 'generate-player-test',
   templateUrl: './generate-player-test.component.html',
   styleUrls: ['./generate-player-test.component.css']
 })

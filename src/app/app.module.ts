@@ -13,17 +13,18 @@ import { PlayGameService } from './services/play-game.service';
 import { GeneratePlayerService } from './services/generate-player.service';
 import { AtBatService } from './services/at-bat.service';
 import { GeneratePlayerTestComponent } from './components/generate-player-test/generate-player-test.component';
+import { TestComponent } from './components/test/test.component';
 
 const routes: Routes = [
-  {path: '', component: PlayGameTestComponent},
-  {path: 'generate-player-test', component: GeneratePlayerTestComponent}
+  {path: '', component: TestComponent}
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     PlayGameTestComponent,
-    GeneratePlayerTestComponent
+    GeneratePlayerTestComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule,
