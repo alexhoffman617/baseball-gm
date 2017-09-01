@@ -23,9 +23,9 @@ export class TeamStats {
 export class GameEvent {
     batterId: string;
     pitcherId: string;
-    outcome: string;
+    outcome: AtBat;
 
-    constructor(batterId: string, pitcherId: string, outcome: string){
+    constructor(batterId: string, pitcherId: string, outcome: AtBat){
         this.batterId = batterId;
         this.pitcherId = pitcherId;
         this.outcome = outcome;

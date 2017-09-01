@@ -115,31 +115,31 @@ export class PlayGameTestComponent implements OnInit {
     if(outcome == 'hits'){
       return _.filter(teamStats.events, function(event){
         return (event.batterId == playerId || playerId == "all") && 
-        (event.outcome == 'single' ||
-        event.outcome == 'double' ||
-        event.outcome == 'triple' ||
-        event.outcome == 'homerun');
+        (event.outcome.result == 'single' ||
+        event.outcome.result == 'double' ||
+        event.outcome.result == 'triple' ||
+        event.outcome.result == 'homerun');
       }).length
     }
     if(outcome == 'outs'){
       var outs = 0;
       _.forEach(teamStats.events, function(event){
-        if(event.outcome == "out"){
+        if(event.outcome.result == "out"){
           outs++;
-        } else if(event.outcome == "strikeout"){
+        } else if(event.outcome.result == "strikeout"){
           outs++;
-        } else if(event.outcome == "fielders choice"){
+        } else if(event.outcome.result == "fielders choice"){
           outs++;
-        } else if(event.outcome == "double play"){
+        } else if(event.outcome.result == "double play"){
           outs += 2;
-        } else if(event.outcome == "triple play"){
+        } else if(event.outcome.result == "triple play"){
           outs += 3;
         }
       }) 
       return outs;
     }
     return _.filter(teamStats.events, function(event){
-      return (event.batterId == playerId || playerId == "all") && event.outcome == outcome;
+      return (event.batterId == playerId || playerId == "all") && event.outcome.result == outcome;
     }).length;
   }
 }

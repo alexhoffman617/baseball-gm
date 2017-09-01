@@ -84,10 +84,10 @@ export class PlayGameService {
 
 
           // determine outcome of PA
-          this.outcome = this.atBatService.atBat(batter, pitcher).result;
+          this.outcome = this.atBatService.atBat(batter, pitcher);
           this.advanceRunners(batter, pitcher, battingTeamStats);
 
-          this.gameObject.gameLogString += ("<div>" + this.outcome + "</div>");
+          this.gameObject.gameLogString += ("<div>" + this.outcome.result + "</div>");
           battingTeamStats.events.push({"batterId": batter.id, "pitcherId": pitcher.id, "outcome": this.outcome});
         }
 
@@ -104,21 +104,21 @@ export class PlayGameService {
 
 
     advanceRunners(batter, pitcher, battingTeam){
-      if(this.outcome == "strikeout") {
+      if(this.outcome.result == "strikeout") {
         this.outs ++;
-      } else if(this.outcome == "out"){
+      } else if(this.outcome.result == "out"){
         this.processOut(batter, pitcher, battingTeam);
       } else {
         if(this.thirdBase){
-          this.advanceThirdBaseRunner(batter, pitcher, this.outcome, battingTeam);
+          this.advanceThirdBaseRunner(batter, pitcher, this.outcome.result, battingTeam);
         }
         if(this.secondBase){
-          this.advanceSecondBaseRunner(batter, pitcher, this.outcome, battingTeam);                
+          this.advanceSecondBaseRunner(batter, pitcher, this.outcome.result, battingTeam);                
         }
         if(this.firstBase){
-          this.advanceFirstBaseRunner(batter, pitcher, this.outcome, battingTeam);                
+          this.advanceFirstBaseRunner(batter, pitcher, this.outcome.result, battingTeam);                
         }
-        this.advanceBatter(batter, pitcher, this.outcome, battingTeam);
+        this.advanceBatter(batter, pitcher, this.outcome.result, battingTeam);
       }
     }
 
@@ -131,7 +131,7 @@ export class PlayGameService {
         if(this.outs == 1 && prob < .02){
           this.outs ++;
           this.outs ++;
-          this.outcome = "triple play";
+          this.outcome.result = "triple play";
         } else if(prob <= .2){
           if(prob < .05){
             this.thirdBase = null
@@ -154,7 +154,7 @@ export class PlayGameService {
             this.firstBase = null;
           }
           this.outs ++;
-          this.outcome = "double play";
+          this.outcome.result = "double play";
         } else if(prob  < .35){
           if(prob < .25){
             this.thirdBase = this.secondBase;
@@ -169,7 +169,7 @@ export class PlayGameService {
             this.secondBase = null;
             this.firstBase = batter;
           }
-          this.outcome = "fielders choice";
+          this.outcome.result = "fielders choice";
         } else if(prob < .45){
           this.thirdBase = this.secondBase;
           this.secondBase = this.firstBase;
@@ -181,10 +181,10 @@ export class PlayGameService {
         if(prob <= .2){
           this.firstBase = null;
           this.outs ++;
-          this.outcome = "double play";
+          this.outcome.result = "double play";
         } else if (prob < .3){
           this.firstBase = batter;
-          this.outcome = "fielders choice";
+          this.outcome.result = "fielders choice";
         } else if( prob < .4){
           this.secondBase = this.firstBase;
           this.firstBase = null;
@@ -205,7 +205,7 @@ export class PlayGameService {
             this.secondBase = null;
           }
           this.outs ++;
-          this.outcome = "double play";
+          this.outcome.result = "double play";
         } else if(prob  < .3){
           if(prob < .25){
             this.secondBase = this.firstBase;
@@ -215,7 +215,7 @@ export class PlayGameService {
             this.secondBase = null;
             this.firstBase = batter;
           }
-          this.outcome = "fielders choice";
+          this.outcome.result = "fielders choice";
         } else if(prob < .4){
           this.thirdBase = this.secondBase;
           this.secondBase = this.firstBase;
@@ -226,10 +226,10 @@ export class PlayGameService {
         if(prob <= .2){
           this.firstBase = null;
           this.outs ++;
-          this.outcome = "double play";
+          this.outcome.result = "double play";
         } else if (prob < .3){
           this.firstBase = batter;
-          this.outcome = "fielders choice";
+          this.outcome.result = "fielders choice";
         } else if( prob < .4){
           this.secondBase = this.firstBase;
           this.firstBase = null;
@@ -241,12 +241,12 @@ export class PlayGameService {
 
     advanceThirdBaseRunner(batter, pitcher, outcome, battingTeamStats){
       if(outcome == "walk"){
-        if(this.firstBase && this.secondBase){
+        if(this.firstBase && this.secondBase && this.thirdBase){
           battingTeamStats.runs ++;
           this.thirdBase = null;
         }
       }
-      else if (outcome == "single"){
+      else if (outcome == "single" || outcome == "error"){
         battingTeamStats.runs ++;
         this.thirdBase = null;
       }
@@ -265,12 +265,12 @@ export class PlayGameService {
     }
     advanceSecondBaseRunner(batter, pitcher, outcome, battingTeamStats){
       if(outcome == "walk"){
-        if(this.firstBase){
+        if(this.firstBase && this.secondBase){
           this.thirdBase = this.secondBase;
           this.secondBase = null;
         }
       }
-      else if (outcome == "single"){
+      else if (outcome == "single" || outcome == "error"){
         var bsr = Math.random();
         if (bsr <= 0.42){
           this.thirdBase = this.secondBase;
@@ -300,7 +300,7 @@ export class PlayGameService {
         this.secondBase = this.firstBase;
         this.firstBase = null;
       }
-      else if (outcome == "single"){
+      else if (outcome == "single" || outcome == "error"){
         var bsr = Math.random();
         if (bsr <= 0.72 && this.thirdBase){
           this.thirdBase = this.firstBase;
@@ -331,7 +331,7 @@ export class PlayGameService {
     }
 
     advanceBatter(batter, pitcher, outcome, battingTeamStats){
-        if (outcome == "single" || outcome == "walk"){
+        if (outcome == "single" || outcome == "walk" || outcome == "error"){
           this.firstBase = batter;
         }
       else if(outcome == "double"){

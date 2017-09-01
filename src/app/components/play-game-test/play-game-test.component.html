@@ -136,6 +136,10 @@
      <input mdInput type="number" disabled="true" style="width: 50px" placeholder="BB/9"
      [value]="getOutcomeTotal('all', 'walk', teamBStats) * 27 / getOutcomeTotal('all', 'outs', teamBStats)" />
     </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="E/9"
+     [value]="getOutcomeTotal('all', 'error', teamBStats) * 27 / getOutcomeTotal('all', 'outs', teamBStats)" />
+    </md-input-container>
   </div>
 </div>
 <div fxFlex="50%">
@@ -261,6 +265,10 @@
     <md-input-container>
      <input mdInput type="number" disabled="true" style="width: 50px" placeholder="BB/9"
      [value]="getOutcomeTotal('all', 'walk', teamAStats) * 27 / getOutcomeTotal('all', 'outs', teamAStats)" />
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="E/9"
+     [value]="getOutcomeTotal('all', 'error', teamAStats)  * 27 / getOutcomeTotal('all', 'outs', teamAStats)" />
     </md-input-container>
   </div>
 </div>
