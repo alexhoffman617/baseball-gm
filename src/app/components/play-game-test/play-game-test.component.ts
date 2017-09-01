@@ -25,44 +25,49 @@ export class PlayGameTestComponent implements OnInit {
     this.teamA = {
       "batters": [],
       "pitcher": {
-        "id": "player9A", "name": "player9A", "position": "P", "skills": {"velocity": 10, "stuff": 10, "control": 10, "type": "gb"}
+        "id": "player9A", "name": "player9A", "pitchingAbility": {"velocity": 50, "stuff": 50, "control": 50, "type": "gb"}
       }
     };
     this.teamB = {
       "batters": [],
       "pitcher": {
-        "id": "player9B", "name": "player9B", "position": "P", "skills": {"velocity": 10, "stuff": 10, "control": 10, "type": "gb"}
+        "id": "player9A", "name": "player9A", "pitchingAbility": {"velocity": 50, "stuff": 50, "control": 50, "type": "gb"}
       }
     };
-    this.avgBatters()
+    this.avgBatters();
   }
 
   async randomBatters(){
     this.teamA.batters = [];
     this.teamB.batters = [];
     for(var i = 0; i < 9; i++){
-      this.teamA.batters.push(await this.generatePlayerService.generatePlayer());
-      this.teamB.batters.push(await this.generatePlayerService.generatePlayer());
+      this.teamA.batters.push(await this.generatePlayerService.generateBatter());
+      this.teamB.batters.push(await this.generatePlayerService.generateBatter());
     }
+  }
+
+  async randomPitchers(){
+      this.teamA.pitcher = await this.generatePlayerService.generatePitcher();
+      this.teamB.pitcher = await this.generatePlayerService.generatePitcher();
   }
 
   async avgBatters(){
     this.teamA.batters = [];
     this.teamB.batters = [];
     for(var i = 0; i < 9; i++){
-      this.teamA.batters.push(await this.generatePlayerService.generatePlayer());
+      this.teamA.batters.push(await this.generatePlayerService.generateBatter());
       this.teamA.batters.forEach(batter => {
-        batter.skills.contact = 10;
-        batter.skills.power = 10;
-        batter.skills.patience = 10;
-        batter.skills.speed = 10;
+        batter.hittingAbility.contact = 50;
+        batter.hittingAbility.power = 50;
+        batter.hittingAbility.patience = 50;
+        batter.hittingAbility.speed = 50;
       });
-      this.teamB.batters.push(await this.generatePlayerService.generatePlayer());
+      this.teamB.batters.push(await this.generatePlayerService.generateBatter());
       this.teamB.batters.forEach(batter => {
-        batter.skills.contact = 10;
-        batter.skills.power = 10;
-        batter.skills.patience = 10;
-        batter.skills.speed = 10;
+        batter.hittingAbility.contact = 50;
+        batter.hittingAbility.power = 50;
+        batter.hittingAbility.patience = 50;
+        batter.hittingAbility.speed = 50;
       });
     }
   }

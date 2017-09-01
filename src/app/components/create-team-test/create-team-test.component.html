@@ -1,3 +1,112 @@
-<p>
-  create-team-test works!
-</p>
+<div>
+  <button md-raised-button color="primary" (click)="generateTeam()">Create Team</button>
+</div>
+<div>
+  <h3> {{ generatedTeam?.location }} {{ generatedTeam?.name }}</h3>
+</div>
+<div>
+  <h5>Batters</h5>
+</div>
+<table>
+  <thead>
+    <tr class="header">
+      <th>Name</th> 
+      <th>Age</th>
+      <th>Position</th> 
+      <th>Order #</th>    
+      <th>Overall</th>
+      <th>Contact</th>
+      <th>Power</th>
+      <th>Patience</th>
+      <th>Speed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let batter of generatedTeam?.roster?.batters" >
+      <td>
+        {{ getPlayerById(batter.playerId)?.name }}
+      </td>
+      <td>
+        {{ getPlayerById(batter.playerId)?.age }}
+      </td>
+      <td>
+        <md-select [(ngModel)]="batter.position" (change)="onPositionChange(batter, $event)">
+          <md-option *ngFor="let position of positions" [value]="position">
+            {{ position }}
+          </md-option>
+        </md-select>
+      </td>
+      <td>
+        <md-select [disabled]="!batter.position" [(ngModel)]="batter.orderNumber" (change)="onOrderChange(batter, $event)">
+          <md-option *ngFor="let orderNumber of orderNumbers" [value]="orderNumber">
+            {{ orderNumber }}
+          </md-option>
+        </md-select>
+      </td>
+      <td>
+        {{ getPlayerById(batter.playerId).overallHittingAbility() }} ({{ getPlayerById(batter.playerId)?.overallHittingPotential() }})
+      </td>
+      <td>
+        {{ getPlayerById(batter.playerId)?.hittingAbility.contact }} ({{ getPlayerById(batter.playerId)?.hittingPotential.contact }})
+      </td>
+      <td>
+        {{ getPlayerById(batter.playerId)?.hittingAbility.power }} ({{ getPlayerById(batter.playerId)?.hittingPotential.power }})
+      </td>
+      <td>
+        {{ getPlayerById(batter.playerId)?.hittingAbility.patience }} ({{ getPlayerById(batter.playerId)?.hittingPotential.patience }})
+      </td>
+      <td>
+        {{ getPlayerById(batter.playerId)?.hittingAbility.speed }} ({{ getPlayerById(batter.playerId)?.hittingPotential.speed }})
+      </td>
+    </tr>
+   </tbody>
+ </table>
+<div>
+  <h5>Pitchers</h5>
+</div>
+<table>
+  <thead>
+    <tr class="header">
+      <th>Name</th> 
+      <th>Age</th>
+      <th>Role</th> 
+      <th>Overall</th>
+      <th>Velocity</th>
+      <th>Control</th>
+      <th>Movement</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let pitcher of generatedTeam?.roster?.pitchers" >
+      <td>
+        {{ getPlayerById(pitcher.playerId)?.name }}
+      </td>
+      <td>
+        {{ getPlayerById(pitcher.playerId)?.age }}
+      </td>
+      <td>
+        <md-select [(ngModel)]="pitcher.position" (change)="onPitcherRoleChange(pitcher, $event)">
+          <md-option *ngFor="let role of pitcherRoles" [value]="role">
+            {{ role }}
+          </md-option>
+        </md-select>
+      </td>
+      <td>
+        {{ getPlayerById(pitcher.playerId).overallPitchingAbility() }} ({{ getPlayerById(pitcher.playerId)?.overallPitchingPotential() }})
+      </td>
+      <td>
+        {{ getPlayerById(pitcher.playerId)?.pitchingAbility.velocity }} ({{ getPlayerById(pitcher.playerId)?.pitchingPotential.velocity }})
+      </td>
+      <td>
+        {{ getPlayerById(pitcher.playerId)?.pitchingAbility.control }} ({{ getPlayerById(pitcher.playerId)?.pitchingPotential.control }})
+      </td>
+      <td>
+        {{ getPlayerById(pitcher.playerId)?.pitchingAbility.movement }} ({{ getPlayerById(pitcher.playerId)?.pitchingPotential.movement }})
+      </td>
+      <td>
+        {{ getPlayerById(pitcher.playerId)?.pitchingAbility.type }} 
+      </td>
+    </tr>
+   </tbody>
+ </table>

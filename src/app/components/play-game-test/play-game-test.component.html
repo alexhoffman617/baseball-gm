@@ -23,19 +23,19 @@
   <h4>Team A</h4>
   <div *ngFor="let batter of teamA.batters">
     <md-input-container>
-     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="batter.name" placeholder="position"/>
+     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="batter.name" placeholder="name"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.skills.contact" placeholder="contact"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.skills.power" placeholder="power"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.skills.patience" placeholder="patience"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.skills.speed" placeholder="speed"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
     </md-input-container>
     <md-input-container>
      <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'plateAppearance', teamAStats)" placeholder="PA"/>
@@ -102,28 +102,21 @@
     </md-input-container>
   </div>
   <div>
-    <md-input-container>
+    <!-- <md-input-container>
      <input mdInput disabled="true" style="width: 80px" [(ngModel)]="teamA.pitcher.name" placeholder="name"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="teamA.pitcher.position" placeholder="position"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="teamA.pitcher.pitchingAbility.velocity" placeholder="velocity"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamA.pitcher.skills.velocity" placeholder="velocity"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="teamA.pitcher.pitichingAbility.control" placeholder="control"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamA.pitcher.skills.control" placeholder="control"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="teamA.pitcher.pitchingAbility.stuff" placeholder="stuff"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamA.pitcher.skills.stuff" placeholder="stuff"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput  [(ngModel)]="teamA.pitcher.skills.type" placeholder="type"/>
-    </md-input-container>
-   <!-- <md-select ng-model="teamB.pitcher.skills.type">
-        <md-option ng-value="fb"> FB </md-option>
-        <md-option ng-value="gb"> GB </md-option>
-    </md-select>-->
+     <input mdInput  [(ngModel)]="teamA.pitcher.pitchingAbility.type" placeholder="type"/>
+    </md-input-container>-->
     <md-input-container>
      <input mdInput type="number" disabled="true" style="width: 50px" placeholder="ERA"
      [value]="teamBStats?.runs * 27 / getOutcomeTotal('all', 'outs', teamBStats)" />
@@ -146,22 +139,22 @@
   <h4>Team B</h4>
   <div *ngFor="let batter of teamB.batters">
     <md-input-container>
-     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="batter.name" placeholder="position"/>
+     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="batter.name" placeholder="name"/>
     </md-input-container>
     <!-- <md-input-container>
      <input mdInput disabled="true" [(ngModel)]="batter.position" placeholder="position"/>
     </md-input-container> -->
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.skills.contact" placeholder="contact"/>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.skills.power" placeholder="power"/>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.skills.patience" placeholder="patience"/>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.skills.speed" placeholder="speed"/>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
     </md-input-container>
     <md-input-container>
      <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'plateAppearance', teamBStats)" placeholder="PA"/>
@@ -232,28 +225,21 @@
   </div>
 
   <div>
-    <md-input-container>
+    <!-- <md-input-container>
      <input mdInput disabled="true" style="width: 80px" [(ngModel)]="teamB.pitcher.name" placeholder="name"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="teamB.pitcher.position" placeholder="position"/>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.pitchingAbility.velocity" placeholder="velocity"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.skills.velocity" placeholder="velocity"/>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.pitchingAbility.control" placeholder="control"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.skills.control" placeholder="control"/>
+     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.pitchingAbility.stuff" placeholder="stuff"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.skills.stuff" placeholder="stuff"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput  [(ngModel)]="teamB.pitcher.skills.type" placeholder="type"/>
-    </md-input-container>
-    <!--<md-select ng-model="teamB.pitcher.skills.type">
-            <md-option ng-value="fb"> FB </md-option>
-            <md-option ng-value="gb"> GB </md-option>
-    </md-select>-->
+     <input mdInput  [(ngModel)]="teamB.pitcher.pitchingAbility.type" placeholder="type"/>
+    </md-input-container>-->
     <md-input-container>
      <input mdInput type="number" disabled="true" style="width: 50px" placeholder="ERA"
      [value]="teamAStats?.runs * 27 / getOutcomeTotal('all', 'outs', teamAStats)" />

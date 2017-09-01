@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { Player, Skills  } from '../models/player';
+import { Player, HittingSkillset, PitchingSkillset  } from '../models/player';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
@@ -8,26 +8,45 @@ export class GeneratePlayerService {
 
     constructor(private http: Http) { }
 
-    async generatePlayer(){
-        var result = await this.http.get('https://uinames.com/api/?gender=male&region=United+States').toPromise()
+    async generateBatter(){
+        var result = await this.http.get('https://uinames.com/api/?gender=male&region=United+States').toPromise();
         var name = result.json().name + " " + result.json().surname;
         var id = result.json().name+result.json().surname;
         var age = Math.round(18 + Math.random() * 22);
-        var potential = {
-            "contact": this.generatePotentialValue(age),
-            "power": this.generatePotentialValue(age),
-            "speed": this.generatePotentialValue(age),
-            "patience": this.generatePotentialValue(age)
-        };
-        var skills = {
-            "contact": this.generateSkillValue("contact", age, potential),
-            "power": this.generateSkillValue("power", age, potential),
-            "speed": this.generateSkillValue("speed", age, potential),
-            "patience": this.generateSkillValue("patience", age, potential)
-        };
+        var potential = new HittingSkillset(
+            this.generatePotentialValue(age),
+            this.generatePotentialValue(age),
+            this.generatePotentialValue(age),
+            this.generatePotentialValue(age));
+
+        var skills = new HittingSkillset(
+            this.generateSkillValue("contact", age, potential),
+            this.generateSkillValue("power", age, potential),
+            this.generateSkillValue("patience", age, potential),
+            this.generateSkillValue("speed", age, potential));
     
-        return new Player(name, id, age, skills, potential);
+        return new Player(name, id, age, skills, potential, new PitchingSkillset(0,0,0, "std"), new PitchingSkillset(0, 0, 0, "std"));
     }
+
+    async generatePitcher(){
+        var result = await this.http.get('https://uinames.com/api/?gender=male&region=United+States').toPromise();
+        var name = result.json().name + " " + result.json().surname;
+        var id = result.json().name+result.json().surname;
+        var age = Math.round(18 + Math.random() * 22);
+        var potential = new PitchingSkillset(
+            this.generatePotentialValue(age),
+            this.generatePotentialValue(age),
+            this.generatePotentialValue(age),
+            this.getPitcherType());
+            
+        var skills = new PitchingSkillset(
+            this.generateSkillValue("velocity", age, potential),
+            this.generateSkillValue("control", age, potential),
+            this.generateSkillValue("movement", age, potential),
+            potential.type);
+    
+        return new Player(name, id, age, new HittingSkillset(0,0,0,0), new HittingSkillset(0, 0, 0, 0), skills, potential);
+    }   
 
     generatePotentialValue(age){
     var value = 20 + Math.round(Math.random() * 40) + Math.round(Math.random() * 40);
@@ -45,9 +64,19 @@ export class GeneratePlayerService {
         return value;
     }
 
-      generateSkillValue(skill, age, potential){
-        var garunteedValue = .2 + Math.min(9, age - 18) / 9 * .4;  
-        var value = Math.round(garunteedValue * potential[skill] + Math.random() * potential[skill] * (1 - garunteedValue));
-        return value;
-      }
+    generateSkillValue(skill, age, potential){
+    var garunteedValue = .2 + Math.min(9, age - 18) / 9 * .4;  
+    var value = Math.round(garunteedValue * potential[skill] + Math.random() * potential[skill] * (1 - garunteedValue));
+    return value;
+    }
+
+    getPitcherType(){
+        var rand = Math.random();
+        if(rand < .33){
+            return "gb";
+        } else if(rand < .66){
+            return "fb";
+        }
+        return "std";
+    }
 }

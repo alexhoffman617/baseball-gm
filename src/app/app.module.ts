@@ -8,13 +8,16 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
+
+import { TestComponent } from './components/test/test.component';
 import { PlayGameTestComponent } from './components/play-game-test/play-game-test.component';
+import { GeneratePlayerTestComponent } from './components/generate-player-test/generate-player-test.component';
+import { CreateTeamTestComponent } from './components/create-team-test/create-team-test.component';
+
 import { PlayGameService } from './services/play-game.service';
 import { GeneratePlayerService } from './services/generate-player.service';
+import { GenerateTeamService } from './services/generate-team.service';
 import { AtBatService } from './services/at-bat.service';
-import { GeneratePlayerTestComponent } from './components/generate-player-test/generate-player-test.component';
-import { TestComponent } from './components/test/test.component';
-import { CreateTeamTestComponent } from './components/create-team-test/create-team-test.component';
 
 const routes: Routes = [
   {path: '', component: TestComponent}
@@ -40,7 +43,8 @@ const routes: Routes = [
   providers: [
     PlayGameService,
     GeneratePlayerService,
-    AtBatService
+    AtBatService,
+    GenerateTeamService
   ],
   bootstrap: [AppComponent]
 })
