@@ -54,11 +54,9 @@ export class GeneratePlayerService {
             value -= 10;
         } else if(value > 80 && Math.random() < .5){
         value -= 10;
-        } else if(value < 20){
-        value += 10;
-        }
+        } 
         if(age > 30){
-        var garunteedValue = .8 - Math.abs(30 - age) / 10 * .5;  
+        var garunteedValue = .8 - Math.abs(30 - age) / 10 * .3;  
         value = Math.round(value * (garunteedValue + Math.random() * 1-garunteedValue))
         }
         return value;

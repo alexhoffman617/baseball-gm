@@ -1,0 +1,72 @@
+<div>
+  <button md-raised-button color="primary" (click)="progressPlayer()">Progress Player</button>
+</div>
+<div *ngIf="batter">
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.age" placeholder="age"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.contact" placeholder="contact"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.power" placeholder="power"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.patience" placeholder="patience"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.speed" placeholder="speed"/>
+  </md-input-container>
+</div>
+<div *ngIf="seasonStats">
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.plateAppearences" (ngModelChange)="newSeasonStats()" placeholder="PA"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.singles" (ngModelChange)="newSeasonStats()" placeholder="1B"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.doubles" (ngModelChange)="newSeasonStats()" placeholder="2B"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.triples" (ngModelChange)="newSeasonStats()" placeholder="3B"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.homeruns" (ngModelChange)="newSeasonStats()" placeholder="HR"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.walks" (ngModelChange)="newSeasonStats()" placeholder="BB"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.strikeouts" (ngModelChange)="newSeasonStats()" placeholder="K"/>
+  </md-input-container>
+</div>
+<div *ngIf="seasonStats" >
+  <md-input-container>
+    <input mdInput  disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.average" placeholder="AVG"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.obp" placeholder="OBP"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.slg" placeholder="SLG"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.babip" placeholder="BABIP"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.woba" placeholder="wOBA"/>
+  </md-input-container>
+</div>
