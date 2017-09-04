@@ -42,7 +42,7 @@ export class HittingSkillset {
   speed: number;
   patience: number;
 
-  constructor(contact: number, power: number, speed: number, patience: number) {
+  constructor(contact: number, power: number, patience: number, speed: number) {
     this.contact = contact;
     this.power = power;
     this.speed = speed;

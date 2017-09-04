@@ -50,7 +50,7 @@ export class PlayerProgressionService {
 		var powerChange = powerAgeChange + powerPerformanceChange;
 		var speedChange = speedAgeChange + speedPerformanceChange;
 		var patienceChange = patienceAgeChange + patiencePerformanceChange;
-		return new HittingSkillset(contactChange, powerChange, speedChange, patienceChange);
+		return new HittingSkillset(contactChange, powerChange, patienceChange, speedChange);
 	}
 
 	getPerformanceImprovementByAge(ability: number, potential: number, age: number, peakAge: number){

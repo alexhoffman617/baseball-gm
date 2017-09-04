@@ -56,8 +56,8 @@ export class PlayerProgressionTestComponent implements OnInit {
       this.batter.hittingAbility = new HittingSkillset(
         this.batter.hittingAbility.contact + this.improvement.contact,
         this.batter.hittingAbility.power + this.improvement.power,
-        this.batter.hittingAbility.speed + this.improvement.speed,
-        this.batter.hittingAbility.patience + this.improvement.patience
+        this.batter.hittingAbility.patience + this.improvement.patience,
+        this.batter.hittingAbility.speed + this.improvement.speed
       );
       this.batter.age++;
     }
