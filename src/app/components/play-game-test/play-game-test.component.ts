@@ -25,13 +25,13 @@ export class PlayGameTestComponent implements OnInit {
     this.teamA = {
       "batters": [],
       "pitcher": {
-        "id": "player9A", "name": "player9A", "pitchingAbility": {"velocity": 50, "stuff": 50, "control": 50, "type": "gb"}
+        "id": "player9A", "name": "player9A", "pitchingAbility": {"velocity": 50, "movement": 50, "control": 50, "type": "gb"}
       }
     };
     this.teamB = {
       "batters": [],
       "pitcher": {
-        "id": "player9A", "name": "player9A", "pitchingAbility": {"velocity": 50, "stuff": 50, "control": 50, "type": "gb"}
+        "id": "player9A", "name": "player9A", "pitchingAbility": {"velocity": 50, "movement": 50, "control": 50, "type": "gb"}
       }
     };
     this.avgBatters();

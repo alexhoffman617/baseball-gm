@@ -1,34 +1,6 @@
 <div>
   <button md-raised-button color="primary" (click)="progressPlayer()">Progress Player</button>
-</div>
-<div *ngIf="batter">
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.age" placeholder="age"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.contact" placeholder="contact"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.power" placeholder="power"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.patience" placeholder="patience"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.speed" placeholder="speed"/>
-  </md-input-container>
+    <button md-raised-button color="primary" (click)="reset()">Reset</button>
 </div>
 <div *ngIf="seasonStats">
   <md-input-container>
@@ -68,5 +40,56 @@
   </md-input-container>
   <md-input-container>
     <input mdInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.woba" placeholder="wOBA"/>
+  </md-input-container>
+</div>
+<div *ngIf="batter">
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.age" placeholder="age"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
+  </md-input-container>
+</div>
+<div *ngIf="batter">
+  <md-input-container>
+    <input mdInput disabled="true" style="width: 40px"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.contact" placeholder="contact"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.power" placeholder="power"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.patience" placeholder="patience"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.speed" placeholder="speed"/>
+  </md-input-container>
+</div>
+<div *ngIf="improvement" >
+  <md-input-container>
+    <input mdInput disabled="true" style="width: 40px"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.contact" placeholder="CT"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.power" placeholder="POW"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.patience" placeholder="PAT"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.speed" placeholder="SPD"/>
   </md-input-container>
 </div>

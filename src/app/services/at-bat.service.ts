@@ -30,25 +30,25 @@ export class AtBatService {
 	getTrajectoryPercentage(pitcher, trajectoryType){
 		if(trajectoryType == "gb"){
 			if(pitcher.pitchingAbility.type == "gb"){
-				return this.gbpct + ((pitcher.pitchingAbility.stuff - 25) / 75 * .1)
+				return this.gbpct + ((pitcher.pitchingAbility.movement - 25) / 75 * .1)
 			} else if(pitcher.pitchingAbility.type == "fb"){
-				return this.gbpct - ((pitcher.pitchingAbility.stuff - 25) / 75 * .075)
+				return this.gbpct - ((pitcher.pitchingAbility.movement - 25) / 75 * .075)
 			} else {
 				return this.gbpct;
 			}
 		} else if(trajectoryType == "ld"){
 			if(pitcher.pitchingAbility.type == "gb"){
-				return this.ldpct - ((pitcher.pitchingAbility.stuff - 25) / 75 * .05)
+				return this.ldpct - ((pitcher.pitchingAbility.movement - 25) / 75 * .05)
 			} else if(pitcher.pitchingAbility.type == "fb"){
-				return this.ldpct - ((pitcher.pitchingAbility.stuff - 25) / 75 * .05);
+				return this.ldpct - ((pitcher.pitchingAbility.movement - 25) / 75 * .05);
 			} else {
 				return this.ldpct;
 			}
 		} else if (trajectoryType == "fb"){
 			if(pitcher.pitchingAbility.type == "gb"){
-				return this.fbpct - ((pitcher.pitchingAbility.stuff - 25) / 75 * .05)
+				return this.fbpct - ((pitcher.pitchingAbility.movement - 25) / 75 * .05)
 			} else if(pitcher.pitchingAbility.type == "fb"){
-				return this.fbpct + ((pitcher.pitchingAbility.stuff - 25) / 75 * .1)
+				return this.fbpct + ((pitcher.pitchingAbility.movement - 25) / 75 * .1)
 			} else {
 				return this.fbpct;
 			}
@@ -147,7 +147,7 @@ export class AtBatService {
        	      }
        	      return new AtBat("out", "medium", "gb");
        	    } else {
-       	      return new AtBat(this.getHitType(0, 0, .175 + batter.hittingAbility.contact * .0003), "medium", "gb");
+       	      return new AtBat(this.getHitType(0, 0, .175 + batter.hittingAbility.contact * .003), "medium", "gb");
        	    }
        	  } else if(trajectoryRandom < this.getTrajectoryPercentage(pitcher, "gb") + this.getTrajectoryPercentage(pitcher, "ld")) {
        	    if(Math.random() < .35){
