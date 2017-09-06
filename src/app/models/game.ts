@@ -1,3 +1,5 @@
+import { Player } from '../models/player';
+
 export class Game {
   gameLogString: string;
   homeTeamStats: TeamStats;
@@ -8,6 +10,20 @@ export class Game {
     this.homeTeamStats = homeTeamStats,
     this.awayTeamStats = awayTeamStats
   }
+}
+
+export class GamePlayer{
+    position: string;
+    orderNumber: string;
+    played: boolean;
+    player: Player;
+
+    constructor(position: string, orderNumber: string, played: boolean, player: Player){
+        this.position = position;
+        this.orderNumber = orderNumber;
+        this.played = played;
+        this.player = player;
+    }
 }
 
 export class TeamStats {

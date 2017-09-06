@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PlayGameService } from '../../services/play-game.service';
 import { GeneratePlayerService } from '../../services/generate-player.service';
-import { AtBat, Game, TeamStats  } from '../../models/game';
+import { AtBat, Game, TeamStats, GamePlayer  } from '../../models/game';
 import * as _ from "lodash";
 
 
@@ -61,6 +61,7 @@ export class PlayGameTestComponent implements OnInit {
         batter.hittingAbility.power = 50;
         batter.hittingAbility.patience = 50;
         batter.hittingAbility.speed = 50;
+        batter.hittingAbility.fielding = 50;
       });
       this.teamB.batters.push(await this.generatePlayerService.generateBatter());
       this.teamB.batters.forEach(batter => {
@@ -68,6 +69,7 @@ export class PlayGameTestComponent implements OnInit {
         batter.hittingAbility.power = 50;
         batter.hittingAbility.patience = 50;
         batter.hittingAbility.speed = 50;
+        batter.hittingAbility.fielding = 50;
       });
     }
   }
@@ -78,9 +80,33 @@ export class PlayGameTestComponent implements OnInit {
     this.homeWins = 0;
     this.awayWins = 0;
     this.games = 0;
+    var a = [
+      new GamePlayer("C", "1", true, this.teamA.batters[0]),
+      new GamePlayer("1B", "2", true, this.teamA.batters[1]),
+      new GamePlayer("2B", "3", true, this.teamA.batters[2]),
+      new GamePlayer("3B", "4", true, this.teamA.batters[3]),
+      new GamePlayer("SS", "5", true, this.teamA.batters[4]),
+      new GamePlayer("LF", "6", true, this.teamA.batters[5]),
+      new GamePlayer("CF", "7", true, this.teamA.batters[6]),
+      new GamePlayer("RF", "8", true, this.teamA.batters[7]),
+      new GamePlayer("DH", "9", true, this.teamA.batters[8]),
+      new GamePlayer("P", "", true, this.teamA.pitcher)
+    ];
+    var b = [
+      new GamePlayer("C", "1", true, this.teamB.batters[0]),
+      new GamePlayer("1B", "2", true, this.teamB.batters[1]),
+      new GamePlayer("2B", "3", true, this.teamB.batters[2]),
+      new GamePlayer("3B", "4", true, this.teamB.batters[3]),
+      new GamePlayer("SS", "5", true, this.teamB.batters[4]),
+      new GamePlayer("LF", "6", true, this.teamB.batters[5]),
+      new GamePlayer("CF", "7", true, this.teamB.batters[6]),
+      new GamePlayer("RF", "8", true, this.teamB.batters[7]),
+      new GamePlayer("DH", "9", true, this.teamB.batters[8]),
+      new GamePlayer("P", "", true, this.teamB.pitcher)
+    ];
     for(var i = 0; i < times; i++){
       if(!(i % 2)){
-        this.game = this.playGameService.playGame(this.teamA, this.teamB);
+        this.game = this.playGameService.playGame(a, b);
         this.teamAStats.runs += this.game.homeTeamStats.runs;
         this.teamAStats.events = this.teamAStats.events.concat(this.game.homeTeamStats.events);
         this.teamBStats.runs += this.game.awayTeamStats.runs;
@@ -91,7 +117,7 @@ export class PlayGameTestComponent implements OnInit {
           this.awayWins ++;
         }
       } else {
-        this.game = this.playGameService.playGame(this.teamB, this.teamA);
+        this.game = this.playGameService.playGame(b, a);
         this.teamBStats.runs += this.game.homeTeamStats.runs;
         this.teamBStats.events = this.teamBStats.events.concat(this.game.homeTeamStats.events);
         this.teamAStats.runs += this.game.awayTeamStats.runs;

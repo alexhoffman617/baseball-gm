@@ -17,15 +17,17 @@ export class GeneratePlayerService {
             this.generatePotentialValue(age),
             this.generatePotentialValue(age),
             this.generatePotentialValue(age),
+            this.generatePotentialValue(age),
             this.generatePotentialValue(age));
 
         var skills = new HittingSkillset(
             this.generateSkillValue("contact", age, potential),
             this.generateSkillValue("power", age, potential),
             this.generateSkillValue("patience", age, potential),
-            this.generateSkillValue("speed", age, potential));
+            this.generateSkillValue("speed", age, potential),
+            this.generateSkillValue("fielding", age, potential));
     
-        return new Player(name, id, age, skills, potential, new PitchingSkillset(0,0,0, "std"), new PitchingSkillset(0, 0, 0, "std"));
+        return new Player(name, id, age, this.getBattingSide(), this.getThrowingSide(), skills, potential, new PitchingSkillset(0,0,0, "std"), new PitchingSkillset(0, 0, 0, "std"));
     }
 
     async generatePitcher(){
@@ -45,8 +47,28 @@ export class GeneratePlayerService {
             this.generateSkillValue("movement", age, potential),
             potential.type);
     
-        return new Player(name, id, age, new HittingSkillset(0,0,0,0), new HittingSkillset(0, 0, 0, 0), skills, potential);
+        return new Player(name, id, age, this.getBattingSide(), this.getThrowingSide(), new HittingSkillset(0,0,0,0,0), new HittingSkillset(0, 0, 0, 0, 0), skills, potential);
     }   
+
+    getBattingSide(){
+        var rand = Math.random();
+        if(rand < .125){
+            return "B";
+        } else if(rand < .4){
+            return "L";
+        } else {
+            return "R";
+        }
+    }
+
+    getThrowingSide(){
+        var rand = Math.random();
+        if(rand < .3){
+            return "L";
+        } else {
+            return "R";
+        }
+    }
 
     generatePotentialValue(age){
     var value = 20 + Math.round(Math.random() * 40) + Math.round(Math.random() * 40);

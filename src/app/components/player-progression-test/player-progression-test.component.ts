@@ -4,6 +4,7 @@ import { PlayerProgressionService } from '../../services/player-progression.serv
 import { AtBatService } from '../../services/at-bat.service';
 import { SeasonStats } from '../../models/season-stats';
 import { Player, HittingSkillset } from '../../models/player';
+import { GamePlayer } from '../../models/game';
 
 @Component({
   selector: 'player-progression-test',
@@ -13,6 +14,7 @@ import { Player, HittingSkillset } from '../../models/player';
 export class PlayerProgressionTestComponent implements OnInit {
   batter;
   pitcher;
+  fieldingTeam;
   improvement;
   seasonStats: SeasonStats;
   atBats;
@@ -32,8 +34,20 @@ export class PlayerProgressionTestComponent implements OnInit {
     this.pitcher.pitchingAbility.control = 50;
     this.pitcher.pitchingAbility.movement = 50;
     this.pitcher.pitchingAbility.type = "std";
+    this.pitcher.hittingAbility.fielding = 50;
     this.seasonStats = new SeasonStats;
     this.seasonStats.buildSeasonStats("", 0, 0, 0, 0, 0, 0, 0, 0);
+    this.fieldingTeam = [
+        new GamePlayer("C", "", true, this.pitcher),
+        new GamePlayer("1B", "", true, this.pitcher),
+        new GamePlayer("2B", "", true, this.pitcher),
+        new GamePlayer("3B", "", true, this.pitcher),
+        new GamePlayer("SS", "", true, this.pitcher),
+        new GamePlayer("LF", "", true, this.pitcher),
+        new GamePlayer("CF", "", true, this.pitcher),
+        new GamePlayer("RF", "", true, this.pitcher),
+        new GamePlayer("P", "", true, this.pitcher)
+      ]
   }
 
   newSeasonStats(){
@@ -46,7 +60,7 @@ export class PlayerProgressionTestComponent implements OnInit {
   progressPlayer(){
     this.atBats = [];
     for(var x = 0; x < 650; x++){
-      this.atBats.push(this.atBatService.atBat(this.batter, this.pitcher));
+      this.atBats.push(this.atBatService.atBat(this.batter, this.pitcher, this.fieldingTeam));
     } 
     this.seasonStats = new SeasonStats;
     this.seasonStats.buildSeasonStatsFromGameEvents(this.seasonStats.playerId, this.atBats);
@@ -57,7 +71,8 @@ export class PlayerProgressionTestComponent implements OnInit {
         this.batter.hittingAbility.contact + this.improvement.contact,
         this.batter.hittingAbility.power + this.improvement.power,
         this.batter.hittingAbility.patience + this.improvement.patience,
-        this.batter.hittingAbility.speed + this.improvement.speed
+        this.batter.hittingAbility.speed + this.improvement.speed,
+        this.batter.hittingAbility.fielding + this.improvement.fielding
       );
       this.batter.age++;
     }

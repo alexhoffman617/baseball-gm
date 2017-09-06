@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AtBat, Game, TeamStats, GameEvent  } from '../models/game';
+import { AtBat, Game, TeamStats, GameEvent, GamePlayer  } from '../models/game';
 import { AtBatService } from '../services/at-bat.service';
+import * as _ from "lodash";
 
 @Injectable()
 export class PlayGameService {
@@ -49,7 +50,7 @@ export class PlayGameService {
     }
     }
 
-    playGame(homeTeam, awayTeam){
+    playGame(homeTeam: Array<GamePlayer>, awayTeam: Array<GamePlayer>){
         this.newGameObject();
         this.currentInning = 1;
 
@@ -62,46 +63,39 @@ export class PlayGameService {
         return this.gameObject;
     }
 
-    playInning(homeTeam, awayTeam){
+    playInning(homeTeam: Array<GamePlayer>, awayTeam: Array<GamePlayer>){
         this.halfInning(awayTeam, this.gameObject.awayTeamStats, homeTeam, this.gameObject.homeTeamStats, "Top");
         if(this.currentInning < 9 || this.gameObject.homeTeamStats.runs <= this.gameObject.awayTeamStats.runs){
           this.halfInning(homeTeam, this.gameObject.homeTeamStats, awayTeam, this.gameObject.awayTeamStats, "Bottom");
         }
     }
 
-    halfInning(battingTeam, battingTeamStats, pitchingTeam, pitchingTeamStats, side){
-        this.outs = 0;
-        this.firstBase = 0;
-        this.secondBase = 0;
-        this.thirdBase = 0;
-        this.gameObject.gameLogString += ("<div class='" + side + "'>" + side + " " + this.currentInning + "</div>");
+    halfInning(battingTeam: Array<GamePlayer>, battingTeamStats, pitchingTeam: Array<GamePlayer>, pitchingTeamStats, side){
+      this.outs = 0;
+      this.firstBase = 0;
+      this.secondBase = 0;
+      this.thirdBase = 0;
+      this.gameObject.gameLogString += ("<div class='" + side + "'>" + side + " " + this.currentInning + "</div>");
 
-        while (this.outs < 3 && (side != "Bottom" || this.currentInning < 9 || battingTeamStats.runs <= pitchingTeamStats.runs)){
-          // Get Batter
-          var batter = battingTeam.batters[(battingTeamStats.events.length) % 9];
-          var pitcher = pitchingTeam.pitcher;
-          this.gameObject.gameLogString += ("<div>" + batter.name + " is up to bat" + "</div>");
+      while (this.outs < 3 && (side != "Bottom" || this.currentInning < 9 || battingTeamStats.runs <= pitchingTeamStats.runs)){
+        // Get Batter
+        var batter = _.find(battingTeam, function(player){
+          return player.orderNumber === (battingTeamStats.events.length % 9 + 1).toString();
+        }).player;
+        var pitcher = _.find(pitchingTeam, function(player){
+          return player.position  == "P";
+        }).player;
+        this.gameObject.gameLogString += ("<div>" + batter.name + " is up to bat" + "</div>");
 
 
-          // determine outcome of PA
-          this.outcome = this.atBatService.atBat(batter, pitcher);
-          this.advanceRunners(batter, pitcher, battingTeamStats);
+        // determine outcome of PA
+        this.outcome = this.atBatService.atBat(batter, pitcher, pitchingTeam);
+        this.advanceRunners(batter, pitcher, battingTeamStats);
 
-          this.gameObject.gameLogString += ("<div>" + this.outcome.result + "</div>");
-          battingTeamStats.events.push({"batterId": batter.id, "pitcherId": pitcher.id, "outcome": this.outcome});
-        }
-
-        //pitcher.gameStats.InningsPitched++;
-    }
-
-    getModifierPercentage(min, max, skill, isNegative = false){
-      if(isNegative){
-        return (20 - skill) / 20 * (max - min);
-      } else {
-        return (skill) / 20 * (max - min);
+        this.gameObject.gameLogString += ("<div>" + this.outcome.result + "</div>");
+        battingTeamStats.events.push({"batterId": batter.id, "pitcherId": pitcher.id, "outcome": this.outcome});
       }
     }
-
 
     advanceRunners(batter, pitcher, battingTeam){
       if(this.outcome.result == "strikeout") {
