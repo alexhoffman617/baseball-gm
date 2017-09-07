@@ -89,7 +89,7 @@ export class PlayGameService {
 
 
         // determine outcome of PA
-        this.outcome = this.atBatService.atBat(batter, pitcher, pitchingTeam);
+        this.outcome = this.atBatService.atBat(batter, pitcher, pitchingTeam, side == "Bottom");
         this.advanceRunners(batter, pitcher, battingTeamStats);
 
         this.gameObject.gameLogString += ("<div>" + this.outcome.result + "</div>");

@@ -60,7 +60,7 @@ export class PlayerProgressionTestComponent implements OnInit {
   progressPlayer(){
     this.atBats = [];
     for(var x = 0; x < 650; x++){
-      this.atBats.push(this.atBatService.atBat(this.batter, this.pitcher, this.fieldingTeam));
+      this.atBats.push(this.atBatService.atBat(this.batter, this.pitcher, this.fieldingTeam, true));
     } 
     this.seasonStats = new SeasonStats;
     this.seasonStats.buildSeasonStatsFromGameEvents(this.seasonStats.playerId, this.atBats);

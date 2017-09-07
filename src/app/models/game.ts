@@ -52,10 +52,14 @@ export class AtBat{
     result: string;
     contact: string;
     trajectory: string;
+    direction: string;
+    fielderId: string;
 
-    constructor(result: string, contact: string, trajectory: string){
+    constructor(result: string, contact: string, trajectory: string, direction: string, fielderId: string){
         this.result = result;
         this.contact = contact;
         this.trajectory = trajectory;
+        this.direction = direction;
+        fielderId = fielderId;
     }
 }

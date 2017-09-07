@@ -38,6 +38,9 @@
      <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
     </md-input-container>
     <md-input-container>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.fielding" placeholder="fielding"/>
+    </md-input-container>
+    <md-input-container>
      <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'plateAppearance', teamAStats)" placeholder="PA"/>
     </md-input-container>
     <md-input-container>
@@ -145,16 +148,19 @@
      <input mdInput disabled="true" [(ngModel)]="batter.position" placeholder="position"/>
     </md-input-container> -->
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
     </md-input-container>
     <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
+    </md-input-container>
+    <md-input-container>
+     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.fielding" placeholder="fielding"/>
     </md-input-container>
     <md-input-container>
      <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'plateAppearance', teamBStats)" placeholder="PA"/>

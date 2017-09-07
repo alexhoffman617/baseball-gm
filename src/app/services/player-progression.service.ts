@@ -36,6 +36,7 @@ export class PlayerProgressionService {
 		var powerAgeChange = this.getPerformanceImprovementByAge(player.hittingAbility.power, player.hittingPotential.power, player.age, 26);
 		var patienceAgeChange = this.getPerformanceImprovementByAge(player.hittingAbility.patience, player.hittingPotential.patience, player.age, 28);
 		var speedAgeChange = this.getPerformanceImprovementByAge(player.hittingAbility.speed, player.hittingPotential.speed, player.age, 24);
+		var fieldingAgeChange = this.getPerformanceImprovementByAge(player.hittingAbility.speed, player.hittingPotential.speed, player.age, 24);
 		
 		var contactPerformanceChange = this.getContactPerformanceImprovement(seasonStats.strikeoutPercentage, seasonStats.average,
 			 player.hittingAbility.contact, player.hittingPotential.contact);
@@ -45,12 +46,15 @@ export class PlayerProgressionService {
 			player.hittingPotential.patience);
 		var speedPerformanceChange = this.getSpeedPerformanceImprovement(seasonStats.steals, player.hittingAbility.speed, 
 			player.hittingPotential.speed);
+		var fieldingPerformanceChange = this.getSpeedPerformanceImprovement(seasonStats.steals, player.hittingAbility.speed, 
+			player.hittingPotential.speed);
 
 		var contactChange = contactAgeChange + contactPerformanceChange;
 		var powerChange = powerAgeChange + powerPerformanceChange;
 		var speedChange = speedAgeChange + speedPerformanceChange;
 		var patienceChange = patienceAgeChange + patiencePerformanceChange;
-		return new HittingSkillset(contactChange, powerChange, patienceChange, speedChange);
+		var fieldingChange = fieldingAgeChange + fieldingPerformanceChange;
+		return new HittingSkillset(contactChange, powerChange, patienceChange, speedChange, fieldingPerformanceChange);
 	}
 
 	getPerformanceImprovementByAge(ability: number, potential: number, age: number, peakAge: number){
@@ -119,6 +123,10 @@ export class PlayerProgressionService {
 	}
 
 	getSpeedPerformanceImprovement(steal: number, ability: number, potential: number){
+		return 0;
+	}
+
+	getFieldingPerformanceImprovement(steal: number, ability: number, potential: number){
 		return 0;
 	}
 }
