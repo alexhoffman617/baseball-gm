@@ -9,11 +9,16 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 
+import { MainComponent } from './components/main/main.component';
+
 import { TestComponent } from './components/test/test.component';
 import { PlayGameTestComponent } from './components/play-game-test/play-game-test.component';
 import { GeneratePlayerTestComponent } from './components/generate-player-test/generate-player-test.component';
 import { CreateTeamTestComponent } from './components/create-team-test/create-team-test.component';
 import { PlayerProgressionTestComponent } from './components/player-progression-test/player-progression-test.component';
+
+import { LeagueService } from './backEndServices/league/league.service'
+import { PlayerService } from './backEndServices/player/player.service'
 
 import { PlayGameService } from './services/play-game.service';
 import { GeneratePlayerService } from './services/generate-player.service';
@@ -22,7 +27,8 @@ import { AtBatService } from './services/at-bat.service';
 import { PlayerProgressionService } from './services/player-progression.service';
 
 const routes: Routes = [
-  {path: '', component: TestComponent}
+  {path: '', component: MainComponent},
+  {path: 'test', component: TestComponent},
 ];
 
 @NgModule({
@@ -32,7 +38,8 @@ const routes: Routes = [
     GeneratePlayerTestComponent,
     TestComponent,
     CreateTeamTestComponent,
-    PlayerProgressionTestComponent
+    PlayerProgressionTestComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +55,9 @@ const routes: Routes = [
     GeneratePlayerService,
     AtBatService,
     GenerateTeamService,
-    PlayerProgressionService
+    PlayerProgressionService,
+    LeagueService,
+    PlayerService
   ],
   bootstrap: [AppComponent]
 })
