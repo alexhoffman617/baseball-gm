@@ -6,8 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
+import { Feathers } from './backendServices/feathers.service';
 
 import { AppComponent } from './app.component';
+
+import { MainComponent } from './components/main/main.component';
 
 import { TestComponent } from './components/test/test.component';
 import { PlayGameTestComponent } from './components/play-game-test/play-game-test.component';
@@ -21,8 +24,13 @@ import { GenerateTeamService } from './services/generate-team.service';
 import { AtBatService } from './services/at-bat.service';
 import { PlayerProgressionService } from './services/player-progression.service';
 
+import { PlayerService } from './backendServices/player/player.service';
+import { LeagueService } from './backendServices/league/league.service';
+import { TeamService } from './backendServices/team/team.service';
+
 const routes: Routes = [
-  {path: '', component: TestComponent}
+  {path: '', component: MainComponent},
+  {path: 'test', component: TestComponent}
 ];
 
 @NgModule({
@@ -32,7 +40,8 @@ const routes: Routes = [
     GeneratePlayerTestComponent,
     TestComponent,
     CreateTeamTestComponent,
-    PlayerProgressionTestComponent
+    PlayerProgressionTestComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,
@@ -44,11 +53,15 @@ const routes: Routes = [
     HttpModule
   ],
   providers: [
+    Feathers,
     PlayGameService,
     GeneratePlayerService,
     AtBatService,
     GenerateTeamService,
-    PlayerProgressionService
+    PlayerProgressionService,
+    PlayerService,
+    LeagueService,
+    TeamService
   ],
   bootstrap: [AppComponent]
 })

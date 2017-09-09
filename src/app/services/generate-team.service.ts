@@ -10,8 +10,8 @@ export class GenerateTeamService {
     team;
     constructor(private generatePlayerSerivce: GeneratePlayerService) { }
 
-    async generateTeam(){
-        this.team = new Team(this.getTeamName(), this.getTeamLocation(), new Roster(new Array<RosterSpot>(), new Array<RosterSpot>()));
+    async generateTeam(leagueId: string){
+        this.team = new Team(this.getTeamName(), this.getTeamLocation(), new Roster(new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId);
         for(var x = 0; x < 15; x++){
             var player = await this.generatePlayerSerivce.generateBatter();
             this.players.push(player);

@@ -12,7 +12,7 @@ export class CreateTeamTestComponent implements OnInit {
   constructor(private generateTeamService: GenerateTeamService) { }
 
   async generateTeam(){
-    this.generatedTeam = await this.generateTeamService.generateTeam()
+    this.generatedTeam = await this.generateTeamService.generateTeam("testLeagueId")
   }
 
   getPlayerById(id){

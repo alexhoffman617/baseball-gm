@@ -2,11 +2,14 @@ export class Team {
   name: string;
   location: string;
   roster: Roster;
-
-  constructor(name: string, location: string, roster: Roster) {
+  leagueId: string;
+  _id: string;
+  
+  constructor(name: string, location: string, roster: Roster, leagueId: string) {
     this.name = name;
     this.location = location;
     this.roster = roster;
+    this.leagueId = this.leagueId;
   }
 }
 
