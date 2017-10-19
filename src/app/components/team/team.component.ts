@@ -35,24 +35,25 @@ export class TeamComponent implements OnInit {
   async ngOnInit() {
     await this.route.parent.params.subscribe(params => {
      this.leagueId = params['leagueId'];
+     this.route.params.subscribe(params => {
+      this.teamId = params['teamId'];
+     });
+     this.players = this.playerService.getPlayersByTeamId(this.teamId).map(
+       p => p.data
+     );
+     this.players.subscribe(t =>
+       this.playersInstance = <Array<Player>>t
+     )
+     this.team = this.teamService.getTeam(this.teamId).map(
+       t => t.data[0]
+     );
+     this.team.first().subscribe(t => this.teamInstance = t)
+     this.season = this.seasonService.getCurrentSeason(this.leagueId).map(
+       s => s.data[0]
+     );
+     this.season.subscribe(s => this.seasonInstance = s)
     });
-    await this.route.params.subscribe(params => {
-     this.teamId = params['teamId'];
-    });
-    this.players = await this.playerService.getPlayersByTeamId(this.teamId).map(
-      p => p.data
-    );
-    this.players.subscribe(t =>
-      this.playersInstance = <Array<Player>>t
-    )
-    this.team = await this.teamService.getTeam(this.teamId).map(
-      t => t.data[0]
-    );
-    this.team.first().subscribe(t => this.teamInstance = t)
-    this.season = await this.seasonService.getCurrentSeason(this.leagueId).map(
-      s => s.data[0]
-    );
-    await this.season.subscribe(s => this.seasonInstance = s)
+
   }
 
   getPlayerById(id) {

@@ -4,7 +4,9 @@ import { TeamService } from '../../backendServices/team/team.service';
 import { SeasonService } from '../../backendServices/season/season.service';
 import { PlayerService } from '../../backendServices/player/player.service';
 import { GameService } from '../../backendServices/game/game.service';
+import { LeagueService } from '../../backendServices/league/league.service';
 import { Season } from '../../models/season';
+import { League } from '../../models/league';
 import { GamePlayer } from '../../models/game';
 import { Team } from '../../models/team';
 import { Player } from '../../models/player';
@@ -26,32 +28,39 @@ teams
 season
 teamsInstance: Array<Team>
 seasonInstance: Season
-simming = false
+leagueInstance: League
 
   constructor(private route: ActivatedRoute,
               private teamService: TeamService,
               private seasonService: SeasonService,
               private playerService: PlayerService,
               private gameService: GameService,
+              private leagueService: LeagueService,
               private leagueProgressionService: LeagueProgressionService,
               private playGameService: PlayGameService
   ) { }
 
   ngOnInit() {
+    const that = this
     this.route.params.subscribe(params => {
       this.leagueId = params['leagueId'];
+      this.seasonService.getCurrentSeason(this.leagueId).subscribe(s => {
+        this.seasonInstance = s.data[0]
+      })
+      this.teams = this.teamService.getLeagueTeams(this.leagueId).map(
+        l => l.data
+      );
+      this.teams.subscribe(t => this.teamsInstance = t)
+      this.leagueService.getLeague(this.leagueId).subscribe(l => {
+        this.leagueInstance = l.data[0]
+      })
     });
-    this.seasonService.getCurrentSeason(this.leagueId).subscribe(s => {
-      this.seasonInstance = s.data[0]
-    })
-    this.teams = this.teamService.getLeagueTeams(this.leagueId).map(
-      l => l.data
-    );
-    this.teams.subscribe(t => this.teamsInstance = t)
+
   }
 
 stopSimming() {
-  this.simming = false
+  this.leagueInstance.simming = false
+  this.leagueService.updateLeague(this.leagueInstance)
 }
 
 areDaysLeftInSeason() {
@@ -68,14 +77,15 @@ areDaysLeftInSeason() {
   }
 
 simDays(days) {
-  this.simming = true
+  this.leagueInstance.simming = true
+  this.leagueService.updateLeague(this.leagueInstance)
   this.playDays(days)
 }
 
 async playDays(daysLeft) {
     const that = this
     let day
-    if (this.simming === false) {
+    if (this.leagueInstance.simming === false) {
       this.seasonService.updateSeason(this.seasonInstance)
       return
     }
@@ -102,14 +112,14 @@ async playDays(daysLeft) {
             this.playDays(daysLeft)
           } else {
             this.seasonService.updateSeason(this.seasonInstance)
-            this.simming = false
+            this.stopSimming()
           }
         } else if (daysLeft > 1) {
           daysLeft--
           this.playDays(daysLeft)
         } else {
           this.seasonService.updateSeason(this.seasonInstance)
-          this.simming = false
+          this.stopSimming()
         }
   }
 

@@ -13,7 +13,6 @@ export class Player {
 
   leagueId: string;
   teamId: string;
-  tempId: number;
 
   overallHittingAbility() {
     return Math.round((this.hittingAbility.contact + this.hittingAbility.power + this.hittingAbility.patience + this.hittingAbility.speed + this.hittingAbility.fielding) * .2);
@@ -46,7 +45,6 @@ export class Player {
     this.teamId = teamId;
     this.hittingProgressions = new Array<HittingProgression>()
     this.pitchingProgressions = new Array<PitchingProgression>()
-    this.tempId = Math.random()
   }
 }
 

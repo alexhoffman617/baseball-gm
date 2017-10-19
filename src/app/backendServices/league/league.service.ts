@@ -31,7 +31,7 @@ export class LeagueService {
       .watch()
       .find({
         query: {
-          id: id
+          _id: id
         }
       })
   }
@@ -40,6 +40,12 @@ export class LeagueService {
     return this.feathers
       .service('leagues')
       .create(league);
+  }
+
+  updateLeague(league: League) {
+    return this.feathers
+      .service('leagues')
+      .update(league._id, league);
   }
 
   deleteAllLeagues() {

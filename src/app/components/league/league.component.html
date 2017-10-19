@@ -1,7 +1,7 @@
 <md-toolbar color="primary">
-  <button md-button [mdMenuTriggerFor]="sim">{{simming ? 'Simming...' : 'Sim'}}</button>
+  <button md-button [mdMenuTriggerFor]="sim">{{leagueInstance?.simming ? 'Simming...' : 'Sim'}}</button>
   <md-menu #sim="mdMenu">
-    <ng-container *ngIf="!simming">
+    <ng-container *ngIf="!leagueInstace?.simming">
       <ng-container *ngIf="areDaysLeftInSeason()">
           <button md-menu-item (click)="simDays(1)">Sim Day</button>
           <button md-menu-item (click)="simDays(6)">Sim Week</button>
@@ -9,7 +9,7 @@
       </ng-container>
       <button md-menu-item *ngIf="!areDaysLeftInSeason()" (click)="playOffseason()">Sim Offseason</button>
     </ng-container>
-    <ng-container *ngIf="simming">
+    <ng-container *ngIf="leagueInstance?.simming">
       <button md-menu-item  (click)="stopSimming()">Stop Simming</button>
     </ng-container>
   </md-menu>
