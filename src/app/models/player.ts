@@ -1,36 +1,40 @@
 export class Player {
   name: string;
-  id: string;
+  _id: string;
   age: number;
   bats: string;
-  throws: string; 
+  throws: string;
   hittingAbility: HittingSkillset;
   hittingPotential: HittingSkillset;
+  hittingProgressions: Array<HittingProgression>
   pitchingAbility: PitchingSkillset;
   pitchingPotential: PitchingSkillset;
+  pitchingProgressions: Array<PitchingProgression>
 
+  leagueId: string;
+  teamId: string;
+  tempId: number;
 
-  overallHittingAbility(){
+  overallHittingAbility() {
     return Math.round((this.hittingAbility.contact + this.hittingAbility.power + this.hittingAbility.patience + this.hittingAbility.speed + this.hittingAbility.fielding) * .2);
   }
 
-  overallHittingPotential(){
+  overallHittingPotential() {
     return Math.round((this.hittingPotential.contact + this.hittingPotential.power + this.hittingPotential.patience + this.hittingPotential.speed + this.hittingPotential.fielding) * .2);
   }
 
-  overallPitchingAbility(){
+  overallPitchingAbility() {
     return Math.round((this.pitchingAbility.velocity + this.pitchingAbility.control + this.pitchingAbility.movement) / 3);
   }
 
-  overallPitchingPotential(){
+  overallPitchingPotential() {
     return Math.round((this.pitchingPotential.velocity + this.pitchingPotential.control + this.pitchingPotential.movement) / 3);
   }
 
-  constructor(name: string, id: string, age: number, bats: string, throws: string,
+  constructor(name: string, age: number, bats: string, throws: string,
     hittingAbility: HittingSkillset, hittingPotential: HittingSkillset,
-    pitchingAbility: PitchingSkillset, pitchingPotential: PitchingSkillset) {
+    pitchingAbility: PitchingSkillset, pitchingPotential: PitchingSkillset, leagueId: string, teamId: string) {
     this.name = name;
-    this.id = id;
     this.age = age;
     this.bats = bats,
     this.throws = throws,
@@ -38,6 +42,31 @@ export class Player {
     this.hittingPotential = hittingPotential;
     this.pitchingAbility = pitchingAbility;
     this.pitchingPotential = pitchingPotential;
+    this.leagueId = leagueId;
+    this.teamId = teamId;
+    this.hittingProgressions = new Array<HittingProgression>()
+    this.pitchingProgressions = new Array<PitchingProgression>()
+    this.tempId = Math.random()
+  }
+}
+
+export class HittingProgression {
+  year: number
+  hittingSkillset: HittingSkillset
+
+  constructor(year: number, hittingSkillset: HittingSkillset) {
+    this.year = year
+    this.hittingSkillset = hittingSkillset
+  }
+}
+
+export class PitchingProgression {
+  year: number
+  pitchingSkillset: PitchingSkillset
+
+  constructor(year: number, pitchingSkillset: PitchingSkillset) {
+    this.year = year
+    this.pitchingSkillset = pitchingSkillset
   }
 }
 

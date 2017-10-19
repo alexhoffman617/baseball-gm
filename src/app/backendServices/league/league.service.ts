@@ -25,8 +25,8 @@ export class LeagueService {
       });
   }
 
-  getSeason(id: string){
-    this.feathers
+  getLeague(id: string) {
+    return this.feathers
       .service('leagues')
       .watch()
       .find({
@@ -37,8 +37,14 @@ export class LeagueService {
   }
 
   createLeague(league: League) {
-    this.feathers
+    return this.feathers
       .service('leagues')
       .create(league);
+  }
+
+  deleteAllLeagues() {
+    return this.feathers
+      .service('leagues')
+      .remove();
   }
 }

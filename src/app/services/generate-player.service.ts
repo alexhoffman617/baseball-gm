@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Player, HittingSkillset, PitchingSkillset  } from '../models/player';
+import { PlayerService } from '../backendServices/player/player.service';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class GeneratePlayerService {
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, 
+                private playerService: PlayerService) { }
 
-    async generateBatter(){
+    async generateBatter(leagueId: string, teamId: string){
         var result = await this.http.get('https://uinames.com/api/?gender=male&region=United+States').toPromise();
         var name = result.json().name + " " + result.json().surname;
-        var id = result.json().name+result.json().surname;
         var age = Math.round(18 + Math.random() * 22);
         var potential = new HittingSkillset(
             this.generatePotentialValue(age),
@@ -27,13 +28,14 @@ export class GeneratePlayerService {
             this.generateSkillValue("speed", age, potential),
             this.generateSkillValue("fielding", age, potential));
     
-        return new Player(name, id, age, this.getBattingSide(), this.getThrowingSide(), skills, potential, new PitchingSkillset(0,0,0, "std"), new PitchingSkillset(0, 0, 0, "std"));
+        var player = new Player(name, age, this.getBattingSide(), this.getThrowingSide(), skills, potential, new PitchingSkillset(0,0,0, "std"), new PitchingSkillset(0, 0, 0, "std"), leagueId, teamId);
+        var dbPlayer = await this.playerService.createPlayer(player);
+        return dbPlayer;
     }
 
-    async generatePitcher(){
+    async generatePitcher(leagueId: string, teamId: string){
         var result = await this.http.get('https://uinames.com/api/?gender=male&region=United+States').toPromise();
         var name = result.json().name + " " + result.json().surname;
-        var id = result.json().name+result.json().surname;
         var age = Math.round(18 + Math.random() * 22);
         var potential = new PitchingSkillset(
             this.generatePotentialValue(age),
@@ -47,7 +49,9 @@ export class GeneratePlayerService {
             this.generateSkillValue("movement", age, potential),
             potential.type);
     
-        return new Player(name, id, age, this.getBattingSide(), this.getThrowingSide(), new HittingSkillset(0,0,0,0,0), new HittingSkillset(0, 0, 0, 0, 0), skills, potential);
+        var player =  new Player(name, age, this.getBattingSide(), this.getThrowingSide(), new HittingSkillset(0,0,0,0,0), new HittingSkillset(0, 0, 0, 0, 0), skills, potential, leagueId, teamId);
+        var dbPlayer = await this.playerService.createPlayer(player);
+        return dbPlayer;
     }   
 
     getBattingSide(){

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Feathers } from '../feathers.service';
-import { Player } from '../../models/player'
+import { Season } from '../../models/season'
 
 @Injectable()
-export class PlayerService {
+export class SeasonService {
   constructor(private feathers: Feathers) {
   }
 
-  players$() {
+  seasons$() {
     return this.feathers
-      .service('players')
+      .service('seasons')
       .watch()
       .find({
         query: {
@@ -19,44 +19,46 @@ export class PlayerService {
       });
   }
 
-  getPlayer(playerId) {
+  getLeagueSeasons(id) {
     return this.feathers
-      .service('players')
+      .service('seasons')
       .watch()
       .find({
         query: {
-          _id: playerId
+          leagueId: id
         }
       })
   }
 
-  getPlayersByTeamId(teamId: string) {
+  getCurrentSeason(id) {
     return this.feathers
-      .service('players')
+      .service('seasons')
       .watch()
       .find({
         query: {
-          teamId: teamId,
-          $limit: 50
+          leagueId: id,
+          $sort: { year: -1 },
+          $limit: 1
+
         }
       })
   }
 
-  createPlayer(player: Player) {
+  createSeason(season: Season) {
     return this.feathers
-      .service('players')
-      .create(player);
+      .service('seasons')
+      .create(season);
   }
 
-  updatePlayer(player: Player) {
+  updateSeason(season: Season) {
     return this.feathers
-      .service('players')
-      .update(player._id, player);
+      .service('seasons')
+      .update(season._id, season);
   }
 
-  deleteAllPlayers() {
+  deleteAllSeasons(){
     return this.feathers
-      .service('players')
+      .service('seasons')
       .remove();
   }
 }

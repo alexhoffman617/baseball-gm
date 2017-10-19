@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { League } from '../../models/league';
 import { LeagueService } from '../../backendServices/league/league.service'
+import { GenerateLeagueService } from '../../services/generate-league.service'
 
 @Component({
   selector: 'app-main',
@@ -9,14 +10,15 @@ import { LeagueService } from '../../backendServices/league/league.service'
 })
 export class MainComponent implements OnInit {
   leagues;
-  constructor(private leagueService: LeagueService) { }
+  constructor(private leagueService: LeagueService,
+              private generateLeagueService: GenerateLeagueService) { }
 
   ngOnInit() {
     this.leagues = this.leagueService.leagues$().map(l => l.data)
   }
 
   generateNewLeague(){
-    this.leagueService.createLeague(new League(4, "test"))
+    this.generateLeagueService.generateLeague()
   }
 
 }

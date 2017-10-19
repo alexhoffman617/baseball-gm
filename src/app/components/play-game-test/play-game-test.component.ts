@@ -41,21 +41,21 @@ export class PlayGameTestComponent implements OnInit {
     this.teamA.batters = [];
     this.teamB.batters = [];
     for(var i = 0; i < 9; i++){
-      this.teamA.batters.push(await this.generatePlayerService.generateBatter());
-      this.teamB.batters.push(await this.generatePlayerService.generateBatter());
+      this.teamA.batters.push(await this.generatePlayerService.generateBatter(null, null));
+      this.teamB.batters.push(await this.generatePlayerService.generateBatter(null, null));
     }
   }
 
   async randomPitchers(){
-      this.teamA.pitcher = await this.generatePlayerService.generatePitcher();
-      this.teamB.pitcher = await this.generatePlayerService.generatePitcher();
+      this.teamA.pitcher = await this.generatePlayerService.generatePitcher(null, null);
+      this.teamB.pitcher = await this.generatePlayerService.generatePitcher(null, null);
   }
 
   async avgBatters(){
     this.teamA.batters = [];
     this.teamB.batters = [];
     for(var i = 0; i < 9; i++){
-      this.teamA.batters.push(await this.generatePlayerService.generateBatter());
+      this.teamA.batters.push(await this.generatePlayerService.generateBatter(null, null));
       this.teamA.batters.forEach(batter => {
         batter.hittingAbility.contact = 50;
         batter.hittingAbility.power = 50;
@@ -63,7 +63,7 @@ export class PlayGameTestComponent implements OnInit {
         batter.hittingAbility.speed = 50;
         batter.hittingAbility.fielding = 50;
       });
-      this.teamB.batters.push(await this.generatePlayerService.generateBatter());
+      this.teamB.batters.push(await this.generatePlayerService.generateBatter(null, null));
       this.teamB.batters.forEach(batter => {
         batter.hittingAbility.contact = 50;
         batter.hittingAbility.power = 50;
@@ -73,7 +73,7 @@ export class PlayGameTestComponent implements OnInit {
       });
     }
   }
-  
+
   playGame(times: number){
     this.teamAStats = new TeamStats([], 0);
     this.teamBStats = new TeamStats([], 0);
@@ -81,32 +81,32 @@ export class PlayGameTestComponent implements OnInit {
     this.awayWins = 0;
     this.games = 0;
     var a = [
-      new GamePlayer("C", "1", true, this.teamA.batters[0]),
-      new GamePlayer("1B", "2", true, this.teamA.batters[1]),
-      new GamePlayer("2B", "3", true, this.teamA.batters[2]),
-      new GamePlayer("3B", "4", true, this.teamA.batters[3]),
-      new GamePlayer("SS", "5", true, this.teamA.batters[4]),
-      new GamePlayer("LF", "6", true, this.teamA.batters[5]),
-      new GamePlayer("CF", "7", true, this.teamA.batters[6]),
-      new GamePlayer("RF", "8", true, this.teamA.batters[7]),
-      new GamePlayer("DH", "9", true, this.teamA.batters[8]),
-      new GamePlayer("P", "", true, this.teamA.pitcher)
+      new GamePlayer("C", 1, true, this.teamA.batters[0]),
+      new GamePlayer("1B", 2, true, this.teamA.batters[1]),
+      new GamePlayer("2B", 3, true, this.teamA.batters[2]),
+      new GamePlayer("3B", 4, true, this.teamA.batters[3]),
+      new GamePlayer("SS", 5, true, this.teamA.batters[4]),
+      new GamePlayer("LF", 6, true, this.teamA.batters[5]),
+      new GamePlayer("CF", 7, true, this.teamA.batters[6]),
+      new GamePlayer("RF", 8, true, this.teamA.batters[7]),
+      new GamePlayer("DH", 9, true, this.teamA.batters[8]),
+      new GamePlayer("P", null, true, this.teamA.pitcher)
     ];
     var b = [
-      new GamePlayer("C", "1", true, this.teamB.batters[0]),
-      new GamePlayer("1B", "2", true, this.teamB.batters[1]),
-      new GamePlayer("2B", "3", true, this.teamB.batters[2]),
-      new GamePlayer("3B", "4", true, this.teamB.batters[3]),
-      new GamePlayer("SS", "5", true, this.teamB.batters[4]),
-      new GamePlayer("LF", "6", true, this.teamB.batters[5]),
-      new GamePlayer("CF", "7", true, this.teamB.batters[6]),
-      new GamePlayer("RF", "8", true, this.teamB.batters[7]),
-      new GamePlayer("DH", "9", true, this.teamB.batters[8]),
-      new GamePlayer("P", "", true, this.teamB.pitcher)
+      new GamePlayer("C", 1, true, this.teamB.batters[0]),
+      new GamePlayer("1B", 2, true, this.teamB.batters[1]),
+      new GamePlayer("2B", 3, true, this.teamB.batters[2]),
+      new GamePlayer("3B", 4, true, this.teamB.batters[3]),
+      new GamePlayer("SS", 5, true, this.teamB.batters[4]),
+      new GamePlayer("LF", 6, true, this.teamB.batters[5]),
+      new GamePlayer("CF", 7, true, this.teamB.batters[6]),
+      new GamePlayer("RF", 8, true, this.teamB.batters[7]),
+      new GamePlayer("DH", 9, true, this.teamB.batters[8]),
+      new GamePlayer("P", null, true, this.teamB.pitcher)
     ];
     for(var i = 0; i < times; i++){
       if(!(i % 2)){
-        this.game = this.playGameService.playGame(a, b);
+        this.game = this.playGameService.playGame(a, b, null, null, null);
         this.teamAStats.runs += this.game.homeTeamStats.runs;
         this.teamAStats.events = this.teamAStats.events.concat(this.game.homeTeamStats.events);
         this.teamBStats.runs += this.game.awayTeamStats.runs;
@@ -117,7 +117,7 @@ export class PlayGameTestComponent implements OnInit {
           this.awayWins ++;
         }
       } else {
-        this.game = this.playGameService.playGame(b, a);
+        this.game = this.playGameService.playGame(b, a, null, null, null);
         this.teamBStats.runs += this.game.homeTeamStats.runs;
         this.teamBStats.events = this.teamBStats.events.concat(this.game.homeTeamStats.events);
         this.teamAStats.runs += this.game.awayTeamStats.runs;
@@ -136,7 +136,7 @@ export class PlayGameTestComponent implements OnInit {
 
   getOutcomeTotal(playerId: string, outcome: string, teamStats: TeamStats){
     if(!this.game){
-      return "--"
+      return 0
     }
     if(outcome == 'plateAppearance'){
       return _.filter(teamStats.events, function(event){
@@ -145,7 +145,7 @@ export class PlayGameTestComponent implements OnInit {
     }
     if(outcome == 'hits'){
       return _.filter(teamStats.events, function(event){
-        return (event.batterId == playerId || playerId == "all") && 
+        return (event.batterId == playerId || playerId == "all") &&
         (event.outcome.result == 'single' ||
         event.outcome.result == 'double' ||
         event.outcome.result == 'triple' ||
@@ -166,7 +166,7 @@ export class PlayGameTestComponent implements OnInit {
         } else if(event.outcome.result == "triple play"){
           outs += 3;
         }
-      }) 
+      })
       return outs;
     }
     return _.filter(teamStats.events, function(event){

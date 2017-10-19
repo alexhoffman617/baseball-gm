@@ -32,8 +32,8 @@ export class PlayGameService {
     leagueMaxHitFreq = .285
     leagueMinHitFreq = .17
 
-    constructor(public atBatService: AtBatService) { 
-        
+    constructor(public atBatService: AtBatService) {
+
     }
 
     newGameObject(){
@@ -50,23 +50,30 @@ export class PlayGameService {
     }
     }
 
-    playGame(homeTeam: Array<GamePlayer>, awayTeam: Array<GamePlayer>){
+    playGame(homeTeam: Array<GamePlayer>, awayTeam: Array<GamePlayer>, homeTeamId, awayTeamId, seasonId) {
+        if (!homeTeam || !awayTeam || homeTeam.length === 0 || awayTeam.length === 0) {
+          return
+        }
         this.newGameObject();
         this.currentInning = 1;
+        this.gameObject.homeTeamId = homeTeamId
+        this.gameObject.awayTeamId = awayTeamId
+        this.gameObject.seasonId = seasonId
 
-        while (this.currentInning <= 9 || this.gameObject.homeTeamStats.runs == this.gameObject.awayTeamStats.runs){
+        while (this.currentInning <= 9 || this.gameObject.homeTeamStats.runs === this.gameObject.awayTeamStats.runs) {
           this.playInning(homeTeam, awayTeam);
           this.gameObject.gameLogString += ("<div>" + "After " + this.currentInning + " the score is: Home " + this.gameObject.homeTeamStats.runs + "," + " Away " + this.gameObject.awayTeamStats.runs + "</div>");
           this.currentInning++;
         }
 
+        this.gameObject.inning = this.currentInning - 1
         return this.gameObject;
     }
 
     playInning(homeTeam: Array<GamePlayer>, awayTeam: Array<GamePlayer>){
-        this.halfInning(awayTeam, this.gameObject.awayTeamStats, homeTeam, this.gameObject.homeTeamStats, "Top");
-        if(this.currentInning < 9 || this.gameObject.homeTeamStats.runs <= this.gameObject.awayTeamStats.runs){
-          this.halfInning(homeTeam, this.gameObject.homeTeamStats, awayTeam, this.gameObject.awayTeamStats, "Bottom");
+        this.halfInning(awayTeam, this.gameObject.awayTeamStats, homeTeam, this.gameObject.homeTeamStats, 'Top')
+        if (this.currentInning < 9 || this.gameObject.homeTeamStats.runs <= this.gameObject.awayTeamStats.runs) {
+          this.halfInning(homeTeam, this.gameObject.homeTeamStats, awayTeam, this.gameObject.awayTeamStats, 'Bottom')
         }
     }
 
@@ -75,16 +82,17 @@ export class PlayGameService {
       this.firstBase = 0;
       this.secondBase = 0;
       this.thirdBase = 0;
-      this.gameObject.gameLogString += ("<div class='" + side + "'>" + side + " " + this.currentInning + "</div>");
+      this.gameObject.gameLogString += ('<div class="' + side + '">' + side + ' ' + this.currentInning + '</div>')
 
-      while (this.outs < 3 && (side != "Bottom" || this.currentInning < 9 || battingTeamStats.runs <= pitchingTeamStats.runs)){
+      while (this.outs < 3 && (side !== "Bottom" || this.currentInning < 9 || battingTeamStats.runs <= pitchingTeamStats.runs)){
         // Get Batter
         var batter = _.find(battingTeam, function(player){
-          return player.orderNumber === (battingTeamStats.events.length % 9 + 1).toString();
+          return player.orderNumber === (battingTeamStats.events.length % 9 + 1);
         }).player;
         var pitcher = _.find(pitchingTeam, function(player){
-          return player.position  == "P";
+          return player.position  === "P";
         }).player;
+
         this.gameObject.gameLogString += ("<div>" + batter.name + " is up to bat" + "</div>");
 
 
@@ -93,7 +101,7 @@ export class PlayGameService {
         this.advanceRunners(batter, pitcher, battingTeamStats);
 
         this.gameObject.gameLogString += ("<div>" + this.outcome.result + "</div>");
-        battingTeamStats.events.push({"batterId": batter.id, "pitcherId": pitcher.id, "outcome": this.outcome});
+        battingTeamStats.events.push({"batterId": batter._id, "pitcherId": pitcher._id, "outcome": this.outcome});
       }
     }
 
@@ -107,10 +115,10 @@ export class PlayGameService {
           this.advanceThirdBaseRunner(batter, pitcher, this.outcome.result, battingTeam);
         }
         if(this.secondBase){
-          this.advanceSecondBaseRunner(batter, pitcher, this.outcome.result, battingTeam);                
+          this.advanceSecondBaseRunner(batter, pitcher, this.outcome.result, battingTeam);
         }
         if(this.firstBase){
-          this.advanceFirstBaseRunner(batter, pitcher, this.outcome.result, battingTeam);                
+          this.advanceFirstBaseRunner(batter, pitcher, this.outcome.result, battingTeam);
         }
         this.advanceBatter(batter, pitcher, this.outcome.result, battingTeam);
       }
@@ -153,7 +161,7 @@ export class PlayGameService {
           if(prob < .25){
             this.thirdBase = this.secondBase;
             this.secondBase = this.firstBase;
-            this.firstBase = batter;           
+            this.firstBase = batter;
           } else if(prob < .3){
             this.thirdBase = null;
             this.secondBase = this.firstBase;
@@ -301,7 +309,7 @@ export class PlayGameService {
           this.firstBase = null;
         } else {
           this.secondBase = this.firstBase;
-          this.firstBase = null;          
+          this.firstBase = null;
         }
       }
       else if(outcome == "double"){

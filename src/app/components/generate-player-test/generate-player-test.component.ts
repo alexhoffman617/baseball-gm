@@ -17,7 +17,7 @@ export class GeneratePlayerTestComponent implements OnInit {
   }
 
   async generatePlayer(){
-    var x = await this.generatePlayerSerivce.generateBatter()
+    var x = await this.generatePlayerSerivce.generateBatter(null, null)
     this.playerService.createPlayer(x);
     this.generatedPlayer = JSON.stringify(x);
   }

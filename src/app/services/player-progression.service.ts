@@ -37,16 +37,16 @@ export class PlayerProgressionService {
 		var patienceAgeChange = this.getPerformanceImprovementByAge(player.hittingAbility.patience, player.hittingPotential.patience, player.age, 28);
 		var speedAgeChange = this.getPerformanceImprovementByAge(player.hittingAbility.speed, player.hittingPotential.speed, player.age, 24);
 		var fieldingAgeChange = this.getPerformanceImprovementByAge(player.hittingAbility.speed, player.hittingPotential.speed, player.age, 24);
-		
+
 		var contactPerformanceChange = this.getContactPerformanceImprovement(seasonStats.strikeoutPercentage, seasonStats.average,
 			 player.hittingAbility.contact, player.hittingPotential.contact);
 		var powerPerformanceChange = this.getPowerPerformanceImprovement(seasonStats.slg, seasonStats.homeruns,
 			player.hittingAbility.power, player.hittingPotential.power);
-		var patiencePerformanceChange = this.getPatiencePerformanceImprovement(seasonStats.walkPercentage, player.hittingAbility.patience, 
+		var patiencePerformanceChange = this.getPatiencePerformanceImprovement(seasonStats.walkPercentage, player.hittingAbility.patience,
 			player.hittingPotential.patience);
-		var speedPerformanceChange = this.getSpeedPerformanceImprovement(seasonStats.steals, player.hittingAbility.speed, 
+		var speedPerformanceChange = this.getSpeedPerformanceImprovement(seasonStats.steals, player.hittingAbility.speed,
 			player.hittingPotential.speed);
-		var fieldingPerformanceChange = this.getSpeedPerformanceImprovement(seasonStats.steals, player.hittingAbility.speed, 
+		var fieldingPerformanceChange = this.getSpeedPerformanceImprovement(seasonStats.steals, player.hittingAbility.speed,
 			player.hittingPotential.speed);
 
 		var contactChange = contactAgeChange + contactPerformanceChange;
@@ -84,7 +84,7 @@ export class PlayerProgressionService {
 		if(avgContactImprovement > (potential - ability)){
 			avgContactImprovement = potential - ability;
 		}
-		return Math.round((kRateContactImprovement + avgContactImprovement) / 4);
+		return kRateContactImprovement + avgContactImprovement ? Math.round((kRateContactImprovement + avgContactImprovement) / 4) : 0;
 	}
 
 	getPowerPerformanceImprovement(slg: number, hr: number, ability: number, potential: number){
@@ -106,7 +106,7 @@ export class PlayerProgressionService {
 		if(hrPowerImprovement > (potential - ability)){
 			hrPowerImprovement = potential - ability;
 		}
-		return Math.round((slgPowerImprovement + hrPowerImprovement) / 4);
+		return slgPowerImprovement + hrPowerImprovement ? Math.round((slgPowerImprovement + hrPowerImprovement) / 4) : 0;
 	}
 
 	getPatiencePerformanceImprovement(walkRate: number, ability: number, potential: number){
@@ -119,7 +119,7 @@ export class PlayerProgressionService {
 		if(walkRatePatienceImprovement > (potential - ability)){
 			walkRatePatienceImprovement = potential - ability;
 		}
-		return Math.round((walkRatePatienceImprovement ) / 2);
+		return walkRatePatienceImprovement ? Math.round((walkRatePatienceImprovement ) / 2) : 0;
 	}
 
 	getSpeedPerformanceImprovement(steal: number, ability: number, potential: number){

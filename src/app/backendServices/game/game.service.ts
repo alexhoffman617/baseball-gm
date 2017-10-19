@@ -1,38 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Feathers } from '../feathers.service';
-import { Team } from '../../models/team'
+import { Game } from '../../models/game'
 
 @Injectable()
-export class TeamService {
+export class GameService {
   constructor(private feathers: Feathers) {
   }
 
-  teams$() {
+  games$() {
     return this.feathers
-      .service('teams')
+      .service('games')
       .watch()
       .find({
         query: {
           $sort: {createdAt: -1},
-          $limit: 25
         }
       });
   }
 
-  getLeagueTeams(id){
+  getGame(id) {
     return this.feathers
-      .service('teams')
-      .watch()
-      .find({
-        query: {
-          leagueId: id
-        }
-      })
-  }
-
-  getTeam(id){
-    return this.feathers
-      .service('teams')
+      .service('games')
       .watch()
       .find({
         query: {
@@ -41,21 +29,29 @@ export class TeamService {
       })
   }
 
-  createTeam(team: Team) {
+  getTeamsGamesBySeason(teamId, seasonId) {
     return this.feathers
-      .service('teams')
-      .create(team);
+      .service('games')
+      .watch()
+      .find({
+        query: {
+          $or: [
+            { homeTeamId: teamId, seasonId: seasonId },
+            { awayTeamId: teamId, seasonId: seasonId }
+          ]
+        }
+      })
   }
 
-  updateTeam(team: Team) {
+  createGame(game: Game) {
     return this.feathers
-      .service('teams')
-      .update(team._id, team)
+      .service('games')
+      .create(game);
   }
 
-  deleteAllTeams() {
+  deleteAllGames() {
     return this.feathers
-      .service('teams')
+      .service('games')
       .remove();
   }
 }
