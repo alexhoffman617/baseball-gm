@@ -30,13 +30,14 @@ import { SeasonGenerator } from './services/season.generator';
 import { AtBatService } from './services/at-bat.service';
 import { PlayerProgressionService } from './services/player-progression.service';
 import { LeagueProgressionService } from './services/league-progression.service';
-import { TeamPlayerRowComponent } from './components/team-player-row/team-player-row.component';
+import { TeamBatterRowComponent } from './components/team-batter-row/team-batter-row.component';
 
 import { PlayerService } from './backendServices/player/player.service';
 import { LeagueService } from './backendServices/league/league.service';
 import { TeamService } from './backendServices/team/team.service';
 import { SeasonService } from './backendServices/season/season.service';
 import { GameService } from './backendServices/game/game.service';
+import { TeamPitcherRowComponent } from './components/team-pitcher-row/team-pitcher-row.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -63,7 +64,8 @@ const routes: Routes = [
     LeagueHomeComponent,
     LeagueComponent,
     TeamComponent,
-    TeamPlayerRowComponent
+    TeamBatterRowComponent,
+    TeamPitcherRowComponent
   ],
   imports: [
     BrowserModule,

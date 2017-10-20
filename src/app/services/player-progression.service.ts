@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Player, HittingSkillset } from '../models/player';
-import { SeasonStats } from '../models/season-stats';
+import { BatterSeasonStats } from '../models/season-stats';
 
 @Injectable()
 export class PlayerProgressionService {
@@ -31,7 +31,7 @@ export class PlayerProgressionService {
 	leagueAvgSlg = .400;
 	constructor() {}
 
-	progressPlayer(player: Player, seasonStats: SeasonStats){
+	progressPlayer(player: Player, seasonStats: BatterSeasonStats){
 		var contactAgeChange = this.getPerformanceImprovementByAge(player.hittingAbility.contact, player.hittingPotential.contact, player.age, 26);
 		var powerAgeChange = this.getPerformanceImprovementByAge(player.hittingAbility.power, player.hittingPotential.power, player.age, 26);
 		var patienceAgeChange = this.getPerformanceImprovementByAge(player.hittingAbility.patience, player.hittingPotential.patience, player.age, 28);

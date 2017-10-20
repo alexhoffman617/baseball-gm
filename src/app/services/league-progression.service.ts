@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Season } from '../models/season';
 import { Team } from '../models/team';
 import { Game, AtBat } from '../models/game';
-import { SeasonStats } from '../models/season-stats';
+import { BatterSeasonStats } from '../models/season-stats';
 import { Player, HittingProgression } from '../models/player';
 import { PlayerProgressionService } from './player-progression.service';
 import { SeasonGenerator } from './season.generator';
@@ -51,7 +51,7 @@ export class LeagueProgressionService {
           }
         })
       })
-      const seasonStats = new SeasonStats()
+      const seasonStats = new BatterSeasonStats()
       seasonStats.buildSeasonStatsFromGameEvents(player._id, playerEvents)
       const improvement = this.playerProgressionService.progressPlayer(player, seasonStats)
       if (!player.hittingProgressions) {

@@ -25,8 +25,7 @@
   </thead>
   <tbody>
     <ng-container *ngFor="let batter of teamInstance?.roster?.batters">
-      <tr app-team-player-row [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonStats]="getSeasonStats(batter.playerId)" [seasonYear]="seasonInstance?.year" [teamInstance]="teamInstance">
-      </tr>
+      <tr app-team-batter-row [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonStats]="getBatterSeasonStats(batter.playerId)" [seasonYear]="seasonInstance?.year" [teamInstance]="teamInstance"></tr>
     </ng-container>
    </tbody>
  </table>
@@ -44,39 +43,19 @@
       <th>Control</th>
       <th>Movement</th>
       <th>Type</th>
+      <th>W</th>
+      <th>L</th>
+      <th>SV</th>
+      <th>G</th>
+      <th>GS</th>
+      <th>ERA</th>
+      <th>WHIP</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let pitcher of teamInstance?.roster?.pitchers" >
-      <td>
-        {{ getPlayerById(pitcher.playerId)?.name }}
-      </td>
-      <td>
-        {{ getPlayerById(pitcher.playerId)?.age }}
-      </td>
-      <td>
-        <md-select [(ngModel)]="pitcher.startingPosition" (change)="onPitcherRoleChange(pitcher, $event)">
-          <md-option *ngFor="let role of pitcherRoles" [value]="role">
-            {{ role }}
-          </md-option>
-        </md-select>
-      </td>
-      <td>
-        {{ overallPitchingAbility(getPlayerById(pitcher.playerId)) }} ({{ overallPitchingPotential(getPlayerById(pitcher.playerId)) }})
-      </td>
-      <td>
-        {{ getPlayerById(pitcher.playerId)?.pitchingAbility.velocity }} ({{ getPlayerById(pitcher.playerId)?.pitchingPotential.velocity }})
-      </td>
-      <td>
-        {{ getPlayerById(pitcher.playerId)?.pitchingAbility.control }} ({{ getPlayerById(pitcher.playerId)?.pitchingPotential.control }})
-      </td>
-      <td>
-        {{ getPlayerById(pitcher.playerId)?.pitchingAbility.movement }} ({{ getPlayerById(pitcher.playerId)?.pitchingPotential.movement }})
-      </td>
-      <td>
-        {{ getPlayerById(pitcher.playerId)?.pitchingAbility.type }}
-      </td>
-    </tr>
+    <ng-container *ngFor="let pitcher of teamInstance?.roster?.pitchers">
+      <tr app-team-pitcher-row [pitcher]="getPlayerById(pitcher.playerId)" [rosterPitcher]="pitcher" [seasonStats]="getPitcherSeasonStats(pitcher.playerId)" [seasonYear]="seasonInstance?.year" [teamInstance]="teamInstance"></tr>
+    </ng-container>
    </tbody>
  </table>
 

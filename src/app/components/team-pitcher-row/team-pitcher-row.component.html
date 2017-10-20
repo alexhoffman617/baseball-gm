@@ -1,0 +1,49 @@
+<td>
+  {{ pitcher?.name }}
+</td>
+<td>
+  {{ pitcher?.age }}
+</td>
+<td>
+  <md-select [(ngModel)]="rosterPitcher.startingPosition" (change)="onPitcherRoleChange(rosterPitcher, $event)">
+    <md-option *ngFor="let role of pitcherRoles" [value]="role">
+      {{ role }}
+    </md-option>
+  </md-select>
+</td>
+<td>
+  {{ overallPitchingAbility() }} ({{ overallPitchingPotential() }})
+</td>
+<td>
+  {{ pitcher?.pitchingAbility.velocity }} ({{ pitcher?.pitchingPotential.velocity }})
+</td>
+<td>
+  {{ pitcher?.pitchingAbility.control }} ({{ pitcher?.pitchingPotential.control }})
+</td>
+<td>
+  {{ pitcher?.pitchingAbility.movement }} ({{ pitcher?.pitchingPotential.movement }})
+</td>
+<td>
+  {{ pitcher?.pitchingAbility.type }}
+</td>
+<td>
+  {{ seasonStats?.wins }}
+</td>
+<td>
+  {{ seasonStats?.losses }}
+</td>
+<td>
+  {{ seasonStats?.saves }}
+</td>
+<td>
+  {{ seasonStats?.appearances }}
+</td>
+<td>
+  {{ seasonStats?.starts }}
+</td>
+<td>
+  {{ seasonStats?.era }}
+</td>
+<td>
+  {{ seasonStats?.whip }}
+</td>

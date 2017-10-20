@@ -18,8 +18,8 @@ export class Feathers {
   private _socket: any;
 
   constructor() {
-    //this._socket = io('https://secret-taiga-61058.herokuapp.com');       // init socket.io
-    this._socket = io('http://localhost:3030/');       // init socket.io
+    this._socket = io('https://secret-taiga-61058.herokuapp.com');       // init socket.io
+    //this._socket = io('http://localhost:3030/');       // init socket.io
 
     this._feathers = feathers();                      // init Feathers
     this._feathers.configure(hooks());                // add hooks plugin

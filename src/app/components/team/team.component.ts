@@ -6,8 +6,8 @@ import { GameService } from '../../backendServices/game/game.service';
 import { SeasonService } from '../../backendServices/season/season.service';
 import { Team } from '../../models/team';
 import { Player, HittingProgression } from '../../models/player';
-import { Game, AtBat } from '../../models/game';
-import { SeasonStats } from '../../models/season-stats';
+import { Game, AtBat, PitcherAppearance } from '../../models/game';
+import { BatterSeasonStats, PitcherSeasonStats } from '../../models/season-stats';
 import { Season } from '../../models/season';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/first'
@@ -35,9 +35,7 @@ export class TeamComponent implements OnInit {
   async ngOnInit() {
     await this.route.parent.params.subscribe(params => {
      this.leagueId = params['leagueId'];
-     this.route.params.subscribe(params => {
-      this.teamId = params['teamId'];
-     });
+     this.teamId = params['teamId'];
      this.players = this.playerService.getPlayersByTeamId(this.teamId).map(
        p => p.data
      );
@@ -64,25 +62,7 @@ export class TeamComponent implements OnInit {
     return y;
   }
 
-  onPitcherRoleChange(setPitcher, event) {
-    _.each(this.teamInstance.roster.pitchers, function(pitcher){
-      if (pitcher.startingPosition === event.value && pitcher.playerId !== setPitcher.playerId) {
-        pitcher.startingPosition = '';
-        pitcher.orderNumber = null
-      }
-    })
-    this.teamService.updateTeam(this.teamInstance)
-  }
-
-  overallPitchingAbility(player) {
-    return Math.round((player.pitchingAbility.velocity + player.pitchingAbility.control + player.pitchingAbility.movement) / 3);
-  }
-
-  overallPitchingPotential(player) {
-    return Math.round((player.pitchingPotential.velocity + player.pitchingPotential.control + player.pitchingPotential.movement) / 3);
-  }
-
-  getSeasonStats(playerId) {
+  getBatterSeasonStats(playerId) {
     let games = Array<Game>()
     this.gameService.getTeamsGamesBySeason(this.teamInstance._id, this.seasonInstance._id).subscribe(g => games = g.data as Array<Game>)
     const playerEvents = new Array<AtBat>()
@@ -99,19 +79,30 @@ export class TeamComponent implements OnInit {
       })
     })
 
-    const seasonStats = new SeasonStats()
+    const seasonStats = new BatterSeasonStats()
     seasonStats.buildSeasonStatsFromGameEvents(playerId, playerEvents)
     return seasonStats
   }
 
-  pitcherRoles=[
-    "",
-    "SP1",
-    "SP2",
-    "SP3",
-    "SP4",
-    "SP5"
-  ]
+  getPitcherSeasonStats(playerId) {
+    let games = Array<Game>()
+    this.gameService.getTeamsGamesBySeason(this.teamInstance._id, this.seasonInstance._id).subscribe(g => games = g.data as Array<Game>)
+    const playerEvents = new Array<PitcherAppearance>()
+    _.each(games, function(game){
+      _.each(game.homeTeamStats.pitcherAppearances, function(appearance){
+        if (appearance.pitcherId === playerId) {
+          playerEvents.push(appearance)
+        }
+      })
+      _.each(game.awayTeamStats.pitcherAppearances, function(appearance){
+        if (appearance.pitcherId === playerId) {
+          playerEvents.push(appearance)
+        }
+      })
+    })
 
-
+    const seasonStats = new PitcherSeasonStats()
+    seasonStats.buildSeasonStatsFromPitcherAppearances(playerId, playerEvents)
+    return seasonStats
+  }
 }

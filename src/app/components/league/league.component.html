@@ -1,4 +1,5 @@
 <md-toolbar color="primary">
+  <button md-button [routerLink]="'/'+ leagueId + '/league-home'">Home</button>
   <button md-button [mdMenuTriggerFor]="sim">{{leagueInstance?.simming ? 'Simming...' : 'Sim'}}</button>
   <md-menu #sim="mdMenu">
     <ng-container *ngIf="!leagueInstace?.simming">

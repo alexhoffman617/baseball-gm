@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GeneratePlayerService } from '../../services/generate-player.service';
 import { PlayerProgressionService } from '../../services/player-progression.service';
 import { AtBatService } from '../../services/at-bat.service';
-import { SeasonStats } from '../../models/season-stats';
+import { BatterSeasonStats } from '../../models/season-stats';
 import { Player, HittingSkillset } from '../../models/player';
 import { GamePlayer } from '../../models/game';
 
@@ -16,7 +16,7 @@ export class PlayerProgressionTestComponent implements OnInit {
   pitcher;
   fieldingTeam;
   improvement;
-  seasonStats: SeasonStats;
+  seasonStats: BatterSeasonStats;
   atBats;
   advance = true;
   constructor(private generatePlayerService: GeneratePlayerService,
@@ -35,7 +35,7 @@ export class PlayerProgressionTestComponent implements OnInit {
     this.pitcher.pitchingAbility.movement = 50;
     this.pitcher.pitchingAbility.type = 'std';
     this.pitcher.hittingAbility.fielding = 50;
-    this.seasonStats = new SeasonStats;
+    this.seasonStats = new BatterSeasonStats;
     this.seasonStats.buildSeasonStats('', 0, 0, 0, 0, 0, 0, 0, 0);
     this.fieldingTeam = [
         new GamePlayer('C', null, true, this.pitcher),
@@ -51,7 +51,7 @@ export class PlayerProgressionTestComponent implements OnInit {
   }
 
   newSeasonStats() {
-    this.seasonStats = new SeasonStats
+    this.seasonStats = new BatterSeasonStats
     this.seasonStats.buildSeasonStats(this.seasonStats.playerId, this.seasonStats.plateAppearences,
       this.seasonStats.singles, this.seasonStats.doubles, this.seasonStats.triples, this.seasonStats.homeruns,
       this.seasonStats.walks, this.seasonStats.strikeouts, this.seasonStats.sacrificeFlies);
@@ -62,7 +62,7 @@ export class PlayerProgressionTestComponent implements OnInit {
     for (let x = 0; x < 650; x++) {
       this.atBats.push(this.atBatService.atBat(this.batter, this.pitcher, this.fieldingTeam, true));
     }
-    this.seasonStats = new SeasonStats;
+    this.seasonStats = new BatterSeasonStats;
     this.seasonStats.buildSeasonStatsFromGameEvents(this.seasonStats.playerId, this.atBats);
     this.improvement = this.playerProgressionService.progressPlayer(this.batter, this.seasonStats);
 

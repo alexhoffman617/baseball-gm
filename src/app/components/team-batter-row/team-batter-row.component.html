@@ -19,11 +19,11 @@
   </md-select>
 </td>
 <td>
-  {{ overallHittingAbility(batter) }}
-  ({{ overallHittingPotential(batter) }})
+  {{ overallHittingAbility() }}
+  ({{ overallHittingPotential() }})
 </td>
 <td>
-  {{ batter.hittingAbility.contact }}
+  {{ batter?.hittingAbility.contact }}
   <span *ngIf="isHittingProgression()"
   [ngClass]="{ 'positive': hittingProgression?.hittingSkillset.contact > 0, 'negative': hittingProgression?.hittingSkillset.contact < 0 }" >
   [{{hittingProgression?.hittingSkillset.contact}}]</span>
