@@ -338,7 +338,7 @@ export class PlayGameService {
         } else if (outcome === 'triple') {
           this.thirdBase = batter;
         } else if (outcome === 'homerun') {
-        this.runScores(battingTeamStats, batter)
+        this.runScores(battingTeamStats, batter, true)
       }
     }
 
@@ -355,8 +355,14 @@ export class PlayGameService {
       this.currentPitcherAppearance.innings = parseFloat((this.currentPitcherAppearance.innings).toFixed(1))
     }
 
-    runScores(teamStats, scoredPlayer) {
+    runScores(teamStats: TeamStats, scoredPlayer, isHomerun = false) {
       teamStats.runs++
+      if (isHomerun) {
+        this.outcome.batterScored = true
+      } else {
+        const runScoringEvent = _.findLast(teamStats.events, {batterId: scoredPlayer._id})
+        runScoringEvent.outcome.batterScored = true
+      }
       this.outcome.scoredIds.push(scoredPlayer._id)
       this.currentPitcherAppearance.runs++
       if (this.isRunEarned(scoredPlayer)) {

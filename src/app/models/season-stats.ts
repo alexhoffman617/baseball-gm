@@ -21,6 +21,32 @@ export class BatterSeasonStats {
     babip: number;
     woba: number;
     steals: number;
+    rbis: number;
+    runs: number;
+
+    constructor() {
+      this.playerId = ''
+      this.plateAppearences = 0
+      this.atBats = 0
+      this.singles = 0
+      this.doubles = 0
+      this.triples = 0
+      this.homeruns = 0
+      this.hits = 0
+      this.walks = 0
+      this.strikeouts = 0
+      this.walkPercentage = 0
+      this.strikeoutPercentage = 0
+      this.sacrificeFlies = 0
+      this.average = 0
+      this.obp = 0
+      this.slg = 0
+      this.babip = 0
+      this.woba = 0
+      this.steals = 0
+      this.rbis = 0
+      this.runs = 0
+    }
 
     buildSeasonStats(playerId: string, plateAppearences: number,
         singles: number, doubles: number, triples: number, homeruns: number,
@@ -47,32 +73,38 @@ export class BatterSeasonStats {
     }
 
     buildSeasonStatsFromGameEvents(playerId: string, seasonEvents: Array<AtBat>) {
+      const that = this
         this.playerId = playerId,
         this.plateAppearences = seasonEvents.length,
-        this.singles = _.filter(seasonEvents, function(event){
-            return event.result === 'single';
-        }).length,
-        this.doubles = _.filter(seasonEvents, function(event){
-            return event.result === 'double';
-        }).length,
-        this.triples = _.filter(seasonEvents, function(event){
-            return event.result === 'triple';
-        }).length,
-        this.homeruns =  _.filter(seasonEvents, function(event){
-            return event.result === 'homerun';
-        }).length,
-        this.steals = 0,
-        this.walks = _.filter(seasonEvents, function(event){
-            return event.result === 'walk';
-        }).length,
-        this.strikeouts = _.filter(seasonEvents, function(event){
-            return event.result === 'strikeout';
-        }).length,
+        _.each(seasonEvents, function(event){
+          if (event.result === 'single') {
+            that.singles++
+          }
+          if (event.result === 'double') {
+            that.doubles++
+          }
+          if (event.result === 'triple') {
+            that.triples++
+          }
+          if (event.result === 'homerun') {
+            that.homeruns++
+          }
+          if (event.result === 'strikeout') {
+            that.strikeouts++
+          }
+          if (event.result === 'walk') {
+            that.walks++
+          }
+          if (event.result === 'sacrifice fly') {
+            that.sacrificeFlies++
+          }
+          if (event.batterScored) {
+            that.runs++
+          }
+          that.rbis += event.scoredIds.length
+        })
         this.walkPercentage = this.walks / this.plateAppearences,
         this.strikeoutPercentage = this.strikeouts / this.plateAppearences,
-        this.sacrificeFlies =  _.filter(seasonEvents, function(event){
-            return event.result === 'sacrifice fly';
-        }).length,
         this.atBats = this.plateAppearences - this.walks,
         this.hits = this.singles + this.doubles + this.triples + this.homeruns
         this.average = Math.round(this.hits / this.atBats * 1000) / 1000,
@@ -103,6 +135,8 @@ export class PitcherSeasonStats {
     era: number;
     whip: number;
     babip: number;
+    walksPerNine: number;
+    strikeoutsPerNine: number;
 
     constructor() {
       this.playerId = ''
@@ -122,6 +156,8 @@ export class PitcherSeasonStats {
       this.era = 0
       this.whip = 0
       this.babip = 0
+      this.walksPerNine = 0
+      this.strikeoutsPerNine = 0
     }
 
     buildSeasonStats() {
@@ -162,6 +198,8 @@ export class PitcherSeasonStats {
       this.era = Math.round(9 * this.earnedRuns / this.innings * 1000) / 1000
       this.whip = Math.round((this.walks + this.hits) / this.innings * 1000) / 1000
       this.babip = 0
+      this.walksPerNine = 9 * this.walks / this.innings
+      this.strikeoutsPerNine = 9 * this.strikeouts / this.innings
     }
 
     roundInnings() {

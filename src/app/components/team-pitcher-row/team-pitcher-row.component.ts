@@ -20,7 +20,7 @@ export class TeamPitcherRowComponent implements OnInit {
   pitchingProgression: PitchingProgression
 
   pitcherRoles = [
-    '',
+    null,
     'SP1',
     'SP2',
     'SP3',

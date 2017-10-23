@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
-import { FlexLayoutModule } from "@angular/flex-layout";
+import { FlexLayoutModule } from '@angular/flex-layout';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import { Feathers } from './backendServices/feathers.service';
@@ -29,6 +29,7 @@ import { GenerateLeagueService } from './services/generate-league.service';
 import { SeasonGenerator } from './services/season.generator';
 import { AtBatService } from './services/at-bat.service';
 import { PlayerProgressionService } from './services/player-progression.service';
+import { PitcherProgressionService } from './services/pitcher-progression.service';
 import { LeagueProgressionService } from './services/league-progression.service';
 import { TeamBatterRowComponent } from './components/team-batter-row/team-batter-row.component';
 
@@ -85,6 +86,7 @@ const routes: Routes = [
     GenerateLeagueService,
     SeasonGenerator,
     PlayerProgressionService,
+    PitcherProgressionService,
     LeagueProgressionService,
     PlayerService,
     LeagueService,

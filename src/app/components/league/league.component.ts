@@ -8,7 +8,7 @@ import { LeagueService } from '../../backendServices/league/league.service';
 import { Season } from '../../models/season';
 import { League } from '../../models/league';
 import { GamePlayer } from '../../models/game';
-import { Team } from '../../models/team';
+import { Team, RosterSpot } from '../../models/team';
 import { Player } from '../../models/player';
 import { PlayGameService } from '../../services/play-game.service';
 import { LeagueProgressionService } from '../../services/league-progression.service';
@@ -105,6 +105,8 @@ async playDays(daysLeft) {
       rosterGame.awayTeamScore = game.awayTeamStats.runs
       rosterGame.gameId = savedGame._id
       rosterGame.innings = game.inning
+      await this.setPitcherStamina(homeGamePlayers, rosterGame.homeTeamId)
+      await this.setPitcherStamina(awayGamePlayers, rosterGame.awayTeamId)
     }
         day.complete = true
         if (daysLeft === this.restOfSeason) {
@@ -133,11 +135,20 @@ async playDays(daysLeft) {
             return team._id === teamId;
           })
 
-          const rosterPitcher = _.find(gameTeam.roster.pitchers, function(pitcher){
-            return pitcher.startingPosition === 'SP1';
-          });
-          const pitcher = _.find(teamPlayers, function(tp){
-            return tp._id === rosterPitcher.playerId
+          const orderedPitchers = _.sortBy(gameTeam.roster.pitchers, function(p){
+            return p.startingPosition === '' ? null : p.startingPosition
+          })
+          let pitcher
+          _.some(orderedPitchers, function(p: RosterSpot){
+            const playerPitcher = _.find(teamPlayers, function(tp: Player){
+              return tp._id === p.playerId
+            })
+            if (playerPitcher.currentStamina > 90) {
+              pitcher = playerPitcher
+              return true
+            } else {
+              return false
+            }
           })
           gamePlayers.push(new GamePlayer('P', null, true, pitcher));
 
@@ -151,6 +162,27 @@ async playDays(daysLeft) {
             gamePlayers.push(new GamePlayer(rosterBatter.startingPosition, rosterBatter.orderNumber, true, batter))
           }
           resolve(gamePlayers)
+        })
+      })
+    }
+
+    setPitcherStamina (gamePlayers: Array<GamePlayer>, teamId) {
+      const that = this
+      return new Promise(function(resolve){
+        const gamePitcher =  _.find(gamePlayers, function(player: GamePlayer){
+          return player.position === 'P'
+        })
+        that.playerService.getPlayersByTeamId(teamId).first().subscribe(t => {
+          const teamPlayers = t.data as Array<Player>
+          _.each(teamPlayers, function(player){
+            if (gamePitcher.player._id === player._id) {
+              player.currentStamina = player.currentStamina - 40
+            } else {
+              player.currentStamina = Math.min(player.currentStamina + 10, 100)
+            }
+            that.playerService.updatePlayer(player)
+          })
+          resolve(true)
         })
       })
     }

@@ -25,10 +25,14 @@ export class GenerateTeamService {
             }
         }
 
-        for(let y = 0; y < 10; y++){
+        for(let y = 0; y < 10; y++) {
             const pitcher = await this.generatePlayerSerivce.generatePitcher(leagueId, id);
             this.players.push(pitcher);
-            team.roster.pitchers.push(new RosterSpot(pitcher._id, y == 0 ? 'SP1' : null, null, pitcher.tempId));
+            if (y < 5) {
+              team.roster.pitchers.push(new RosterSpot(pitcher._id, this.pitcherRoles[y], null, pitcher.tempId));
+            } else {
+              team.roster.pitchers.push(new RosterSpot(pitcher._id, null, null, pitcher.tempId));
+            }
         }
         return await this.teamService.createTeam(team);
     }
@@ -41,7 +45,15 @@ export class GenerateTeamService {
         return this.teamLocations[Math.round(Math.random() * (this.teamLocations.length - 1))];
     }
 
-    positions=[
+     pitcherRoles = [
+      'SP1',
+      'SP2',
+      'SP3',
+      'SP4',
+      'SP5'
+    ]
+
+     positions=[
       "C",
       "1B",
       "2B",

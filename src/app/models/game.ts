@@ -61,13 +61,15 @@ export class AtBat {
     direction: string;
     fielderId: string;
     scoredIds: Array<string>;
+    batterScored: boolean;
     constructor(result: string, contact: string, trajectory: string, direction: string, fielderId: string) {
         this.result = result;
         this.contact = contact;
         this.trajectory = trajectory;
         this.direction = direction;
         this.fielderId = fielderId;
-        this.scoredIds = []
+        this.scoredIds = [],
+        this.batterScored = false
     }
 }
 

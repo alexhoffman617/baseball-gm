@@ -4,6 +4,7 @@ export class Player {
   age: number;
   bats: string;
   throws: string;
+  currentStamina: number;
   hittingAbility: HittingSkillset;
   hittingPotential: HittingSkillset;
   hittingProgressions: Array<HittingProgression>
@@ -35,8 +36,9 @@ export class Player {
     pitchingAbility: PitchingSkillset, pitchingPotential: PitchingSkillset, leagueId: string, teamId: string) {
     this.name = name;
     this.age = age;
-    this.bats = bats,
-    this.throws = throws,
+    this.bats = bats;
+    this.throws = throws;
+    this.currentStamina = 100;
     this.hittingAbility = hittingAbility;
     this.hittingPotential = hittingPotential;
     this.pitchingAbility = pitchingAbility;

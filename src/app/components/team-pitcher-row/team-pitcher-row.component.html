@@ -15,13 +15,25 @@
   {{ overallPitchingAbility() }} ({{ overallPitchingPotential() }})
 </td>
 <td>
-  {{ pitcher?.pitchingAbility.velocity }} ({{ pitcher?.pitchingPotential.velocity }})
+  {{ pitcher?.pitchingAbility.velocity }}
+  <span *ngIf="isPitchingProgression()"
+  [ngClass]="{ 'positive': pitchingProgression?.pitchingSkillset.velocity > 0, 'negative': pitchingProgression?.pitchingSkillset.contact < 0 }" >
+  [{{ pitchingProgression?.pitchingSkillset.velocity}}]</span>
+  ({{ pitcher?.pitchingPotential.velocity }})
 </td>
 <td>
-  {{ pitcher?.pitchingAbility.control }} ({{ pitcher?.pitchingPotential.control }})
+  {{ pitcher?.pitchingAbility.control }}
+  <span *ngIf="isPitchingProgression()"
+  [ngClass]="{ 'positive': pitchingProgression?.pitchingSkillset.velocity > 0, 'negative': pitchingProgression?.pitchingSkillset.contact < 0 }" >
+  [{{ pitchingProgression?.pitchingSkillset.velocity}}]</span>
+  ({{ pitcher?.pitchingPotential.control }})
 </td>
 <td>
-  {{ pitcher?.pitchingAbility.movement }} ({{ pitcher?.pitchingPotential.movement }})
+  {{ pitcher?.pitchingAbility.movement }}
+  <span *ngIf="isPitchingProgression()"
+  [ngClass]="{ 'positive': pitchingProgression?.pitchingSkillset.velocity > 0, 'negative': pitchingProgression?.pitchingSkillset.contact < 0 }" >
+  [{{ pitchingProgression?.pitchingSkillset.velocity}}]</span>
+   ({{ pitcher?.pitchingPotential.movement }})
 </td>
 <td>
   {{ pitcher?.pitchingAbility.type }}
@@ -42,8 +54,17 @@
   {{ seasonStats?.starts }}
 </td>
 <td>
+  {{ seasonStats?.innings }}
+</td>
+<td>
   {{ seasonStats?.era }}
 </td>
 <td>
   {{ seasonStats?.whip }}
+</td>
+<td>
+  {{ seasonStats?.strikeouts }}
+</td>
+<td>
+  {{ seasonStats?.walks }}
 </td>
