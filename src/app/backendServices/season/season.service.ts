@@ -44,6 +44,18 @@ export class SeasonService {
       })
   }
 
+  getSeasonByLeagueAndYear(leagueId, year) {
+    return this.feathers
+      .service('seasons')
+      .watch()
+      .find({
+        query: {
+          leagueId: leagueId,
+          year: year
+        }
+      })
+  }
+
   createSeason(season: Season) {
     return this.feathers
       .service('seasons')

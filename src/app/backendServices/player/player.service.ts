@@ -42,6 +42,17 @@ export class PlayerService {
       })
   }
 
+  getPlayersByLeagueId(leagueId: string) {
+    return this.feathers
+      .service('players')
+      .watch()
+      .find({
+        query: {
+          leagueId: leagueId,
+        }
+      })
+  }
+
   createPlayer(player: Player) {
     return this.feathers
       .service('players')

@@ -16,7 +16,7 @@ export class TeamBatterRowComponent implements OnInit {
   @Input() seasonStats: BatterSeasonStats;
   @Input() seasonYear: number;
   @Input() teamInstance: Team
-  @Input() rosterBatter: RosterSpot
+  @Input() rosterBatter: RosterSpot;
   hittingProgression: HittingProgression
 
   positions= [

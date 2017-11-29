@@ -21,7 +21,7 @@ export class LeagueProgressionService {
               private playerService: PlayerService,
               private gameService: GameService) { }
 
-  async progressLeague(leagueId: string, currentSeason: Season, teams: Array<Team>) {
+  async progressLeague(leagueId: string, currentSeason: Season, teams: Array<Team>, structure) {
     const that = this
     const teamIds = new Array<string>()
     teams.forEach(team => {
@@ -37,7 +37,7 @@ export class LeagueProgressionService {
         })
       })
     })
-    await that.seasonGenerator.generateSeason(leagueId, teamIds, currentSeason.year + 1)
+    await that.seasonGenerator.generateSeason(leagueId, teamIds, currentSeason.year + 1, structure)
   }
 
   progressPitcher(player: Player, teamId, currentSeason: Season) {

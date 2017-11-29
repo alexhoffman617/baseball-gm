@@ -1,0 +1,96 @@
+<div>
+  <h3> {{ player?.name }}</h3>
+</div>
+<div>
+    Age: {{player?.age}}
+</div>
+<div>
+    Bats: {{player?.bats}}
+</div>
+<div>
+    Throws: {{player?.throws}}
+</div>
+<div>
+  Overall: {{overallHitting(player?.hittingAbility)}} ({{overallHitting(player?.hittingPotential)}})
+</div>
+<div>
+  Contact: {{player?.hittingAbility.contact}} ({{player?.hittingPotential.contact}})
+</div>
+<div>
+  Power: {{player?.hittingAbility.power}} ({{player?.hittingPotential.power}})
+</div>
+<div>
+  Patience: {{player?.hittingAbility.patience}} ({{player?.hittingPotential.patience}})
+</div>
+<div>
+  Speed: {{player?.hittingAbility.speed}} ({{player?.hittingPotential.speed}})
+</div>
+<div>
+  Fielding: {{player?.hittingAbility.fielding}} ({{player?.hittingPotential.fielding}})
+</div>
+<md-tab-group>
+  <md-tab label="Stats">
+      <table>
+          <thead>
+            <tr class="header">
+              <th>Year</th>
+              <th>AVG</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let year of years">
+              <tr>
+                <td>
+                  {{ year }}
+                </td>
+                <td>
+                  {{ getBatterSeasonStats(player._id, year).average }}
+                </td>
+            </ng-container>
+           </tbody>
+         </table>
+  </md-tab>
+  <md-tab label="Progression">
+    <table>
+      <thead>
+        <tr class="header">
+          <th>Year</th>
+          <th>Overall</th>
+          <th>Contact</th>
+          <th>Power</th>
+          <th>Patience</th>
+          <th>Speed</th>
+          <th>Fielding</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let hittingProgression of player?.hittingProgressions">
+          <tr>
+            <td>
+              {{ hittingProgression.year }}
+            </td>
+            <td [ngClass]="{ 'positive': overallHitting(hittingProgression.hittingSkillset) > 0, 'negative': overallHitting(hittingProgression.hittingSkillset) < 0 }" >
+              {{ overallHitting(hittingProgression.hittingSkillset) }}
+            </td>
+            <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.contact > 0, 'negative': hittingProgression.hittingSkillset.contact < 0 }" >
+              {{ hittingProgression.hittingSkillset.contact }}
+            </td>
+            <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.power > 0, 'negative': hittingProgression.hittingSkillset.power < 0 }" >
+              {{ hittingProgression.hittingSkillset.power }}
+            </td>
+            <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.patience > 0, 'negative': hittingProgression.hittingSkillset.patience < 0 }" >
+              {{ hittingProgression.hittingSkillset.patience }}
+            </td>
+            <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.speed > 0, 'negative': hittingProgression.hittingSkillset.speed < 0 }" >
+              {{ hittingProgression.hittingSkillset.speed }}
+            </td>
+            <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.fielding > 0, 'negative': hittingProgression.hittingSkillset.fielding < 0 }" >
+              {{ hittingProgression.hittingSkillset.fielding }}
+            </td>
+          </tr>
+        </ng-container>
+        </tbody>
+      </table>
+  </md-tab>
+</md-tab-group>
+

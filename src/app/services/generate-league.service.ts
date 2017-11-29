@@ -16,15 +16,23 @@ export class GenerateLeagueService {
 
      }
 
-    async generateLeague() {
-        const league = new League(4, 'test');
+    async generateLeague(leagueName: string, numberOfTeams: number) {
+        const league = new League(numberOfTeams, 'test', leagueName);
         const createdLeague = await this.leagueService.createLeague(league);
         const teamIds = []
         for (let x = 0; x < league.numberOfTeams; x++) {
             const team = await this.generateTeamService.generateTeam(createdLeague._id)
             teamIds.push(team._id)
         }
-        this.seasonGenerator.generateSeason(createdLeague._id, teamIds, null)
+        if (numberOfTeams === 30) {
+          const leagueArray = [
+            [teamIds.slice(0, 5), teamIds.slice(5, 10), teamIds.slice(10, 15)],
+            [teamIds.slice(15, 20), teamIds.slice(20, 25), teamIds.slice(25, 30)]
+          ]
+          league.structure = leagueArray
+          this.leagueService.updateLeague(league)
+        }
+        this.seasonGenerator.generateSeason(createdLeague._id, teamIds, null, league.structure)
     }
 
 }

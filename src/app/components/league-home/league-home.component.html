@@ -1,6 +1,6 @@
 <div>
   {{leagueId}}
 </div>
-<div *ngFor="let team of teams | async" [routerLink]="'/' + team.leagueId + '/team/' + team._id">
+<div *ngFor="let team of teams" [routerLink]="'/' + team.leagueId + '/team/' + team._id">
   {{team.location}} {{team.name}} ({{getWins(team._id)}}-{{getLosses(team._id)}})
 <div>

@@ -8,6 +8,7 @@ import { Season } from '../../models/season';
 import { GamePlayer } from '../../models/game';
 import { Team } from '../../models/team';
 import { Player } from '../../models/player';
+import { LeagueDataService } from '../../services/league-data.service';
 import { PlayGameService } from '../../services/play-game.service';
 import { LeagueProgressionService } from '../../services/league-progression.service';
 import * as _ from 'lodash';
@@ -19,41 +20,31 @@ import 'rxjs/add/operator/first'
   styleUrls: ['./league-home.component.css']
 })
 export class LeagueHomeComponent implements OnInit {
-
-  constructor(private route: ActivatedRoute,
-              private teamService: TeamService,
-              private seasonService: SeasonService,
-              private playerService: PlayerService,
-              private gameService: GameService,
-              private leagueProgressionService: LeagueProgressionService,
-              private playGameService: PlayGameService
-  ) { }
   restOfSeason = 'ROS'
   leagueId;
-  teams
-  season
-  teamsInstance: Array<Team>
-  seasonInstance: Season
+  teams: Array<Team>
+  season: Season
+  constructor(private route: ActivatedRoute,
+              private leagueDataService: LeagueDataService,
+  ) { }
+
   async ngOnInit() {
-    await this.route.parent.params.subscribe(params => {
+    this.route.parent.params.subscribe(params => {
      this.leagueId = params['leagueId'];
+     (async () => {
+        await this.leagueDataService.getData(this.leagueId)
+        this.teams =  this.leagueDataService.teams
+        this.season = this.leagueDataService.currentSeason
+      })();
     });
-    this.season = await this.seasonService.getCurrentSeason(this.leagueId).map(
-      s => s.data[0]
-    );
-    await this.season.subscribe(s => this.seasonInstance = s)
-    this.teams = await this.teamService.getLeagueTeams(this.leagueId).map(
-      l => l.data
-    );
-    await this.teams.subscribe(t => this.teamsInstance = t)
   }
 
   getWins(teamId) {
     let wins = 0;
-    if (!this.seasonInstance) {
+    if (!this.season) {
       return wins
     }
-    _.each(this.seasonInstance.schedule, function(scheduledDay){
+    _.each(this.season.schedule, function(scheduledDay){
       const game = _.find(scheduledDay.scheduledGames, function(g){
         return g.homeTeamId === teamId || g.awayTeamId === teamId;
       });
@@ -67,10 +58,10 @@ export class LeagueHomeComponent implements OnInit {
 
   getLosses(teamId) {
     let losses = 0;
-    if (!this.seasonInstance) {
+    if (!this.season) {
       return losses
     }
-    _.each(this.seasonInstance.schedule, function(scheduledDay){
+    _.each(this.season.schedule, function(scheduledDay){
       const game = _.find(scheduledDay.scheduledGames, function(g){
         return g.homeTeamId === teamId || g.awayTeamId === teamId;
       });

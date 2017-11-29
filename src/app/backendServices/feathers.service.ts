@@ -18,15 +18,15 @@ export class Feathers {
   private _socket: any;
 
   constructor() {
-    this._socket = io('https://secret-taiga-61058.herokuapp.com');       // init socket.io
-    //this._socket = io('http://localhost:3030/');       // init socket.io
+    //this._socket = io('https://secret-taiga-61058.herokuapp.com');       // init socket.io
+    this._socket = io('http://localhost:3030/');       // init socket.io
 
     this._feathers = feathers();                      // init Feathers
     this._feathers.configure(hooks());                // add hooks plugin
     this._feathers.configure(feathersRx({             // add feathers-reactive plugin
       idField: '_id'
     }));
-    this._feathers.configure(socketio(this._socket)); // add socket.io plugin
+    this._feathers.configure(socketio(this._socket, { timeout: 5000 })); // add socket.io plugin
     this._feathers.configure(authentication({         // add authentication plugin
       storage: window.localStorage
     }));

@@ -11,12 +11,12 @@ export class GenerateTeamService {
     constructor(private generatePlayerSerivce: GeneratePlayerService,
                 private teamService: TeamService) { }
 
-    async generateTeam(leagueId: string){
+    async generateTeam(leagueId: string) {
         var team = new Team(this.getTeamName(), this.getTeamLocation(), new Roster(new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId);
         var id = leagueId + team.location.replace(/\s+/g, '') + team.name.replace(/\s+/g, '');
         team._id = id;
         for(let x = 0; x < 15; x++){
-            var batter = await this.generatePlayerSerivce.generateBatter(leagueId, id);
+            var batter = await this.generatePlayerSerivce.generateBatter(leagueId, id, (new Date()).getFullYear());
             this.players.push(batter);
             if(x < 9){
               team.roster.batters.push(new RosterSpot(batter._id, this.positions[x], x+1, batter.tempId));
@@ -26,7 +26,7 @@ export class GenerateTeamService {
         }
 
         for(let y = 0; y < 10; y++) {
-            const pitcher = await this.generatePlayerSerivce.generatePitcher(leagueId, id);
+            const pitcher = await this.generatePlayerSerivce.generatePitcher(leagueId, id, (new Date()).getFullYear());
             this.players.push(pitcher);
             if (y < 5) {
               team.roster.pitchers.push(new RosterSpot(pitcher._id, this.pitcherRoles[y], null, pitcher.tempId));

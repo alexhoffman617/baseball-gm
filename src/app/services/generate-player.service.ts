@@ -10,7 +10,7 @@ export class GeneratePlayerService {
     constructor(private http: Http,
                 private playerService: PlayerService) { }
 
-    async generateBatter(leagueId: string, teamId: string) {
+    async generateBatter(leagueId: string, teamId: string, year: number) {
       const name = firstNames[Math.round(Math.random() * firstNames.length)] + ' '
       + lastNames[Math.round(Math.random() * lastNames.length)]
         const age = Math.round(18 + Math.random() * 22);
@@ -29,12 +29,13 @@ export class GeneratePlayerService {
             this.generateSkillValue('fielding', age, potential));
 
         const player = new Player(name, age, this.getBattingSide(), this.getThrowingSide(),
-                       skills, potential, new PitchingSkillset(0, 0, 0, 'std'), new PitchingSkillset(0, 0, 0, 'std'), leagueId, teamId);
+                       skills, potential, new PitchingSkillset(0, 0, 0, 'std'),
+                       new PitchingSkillset(0, 0, 0, 'std'), leagueId, teamId, year);
         const dbPlayer = await this.playerService.createPlayer(player);
         return dbPlayer;
     }
 
-    async generatePitcher(leagueId: string, teamId: string) {
+    async generatePitcher(leagueId: string, teamId: string, year: number) {
         const name = firstNames[Math.round(Math.random() * firstNames.length)] + ' '
             + lastNames[Math.round(Math.random() * lastNames.length)]
         const age = Math.round(18 + Math.random() * 22);
@@ -51,7 +52,8 @@ export class GeneratePlayerService {
             potential.type);
 
         const player =  new Player(name, age, this.getBattingSide(), this.getThrowingSide(),
-             new HittingSkillset(0, 0, 0, 0, 0), new HittingSkillset(0, 0, 0, 0, 0), skills, potential, leagueId, teamId);
+             new HittingSkillset(0, 0, 0, 0, 0), new HittingSkillset(0, 0, 0, 0, 0), skills,
+            potential, leagueId, teamId, year);
         const dbPlayer = await this.playerService.createPlayer(player);
         return dbPlayer;
     }

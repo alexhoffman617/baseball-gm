@@ -41,21 +41,21 @@ export class PlayGameTestComponent implements OnInit {
     this.teamA.batters = [];
     this.teamB.batters = [];
     for (let i = 0; i < 9; i++) {
-      this.teamA.batters.push(await this.generatePlayerService.generateBatter(null, null));
-      this.teamB.batters.push(await this.generatePlayerService.generateBatter(null, null));
+      this.teamA.batters.push(await this.generatePlayerService.generateBatter(null, null, null));
+      this.teamB.batters.push(await this.generatePlayerService.generateBatter(null, null, null));
     }
   }
 
   async randomPitchers() {
-      this.teamA.pitcher = await this.generatePlayerService.generatePitcher(null, null);
-      this.teamB.pitcher = await this.generatePlayerService.generatePitcher(null, null);
+      this.teamA.pitcher = await this.generatePlayerService.generatePitcher(null, null, null);
+      this.teamB.pitcher = await this.generatePlayerService.generatePitcher(null, null, null);
   }
 
   async avgBatters() {
     this.teamA.batters = [];
     this.teamB.batters = [];
     for (let i = 0; i < 9; i++) {
-      this.teamA.batters.push(await this.generatePlayerService.generateBatter(null, null));
+      this.teamA.batters.push(await this.generatePlayerService.generateBatter(null, null, null));
       this.teamA.batters.forEach(batter => {
         batter.hittingAbility.contact = 50;
         batter.hittingAbility.power = 50;
@@ -63,7 +63,7 @@ export class PlayGameTestComponent implements OnInit {
         batter.hittingAbility.speed = 50;
         batter.hittingAbility.fielding = 50;
       });
-      this.teamB.batters.push(await this.generatePlayerService.generateBatter(null, null));
+      this.teamB.batters.push(await this.generatePlayerService.generateBatter(null, null, null));
       this.teamB.batters.forEach(batter => {
         batter.hittingAbility.contact = 50;
         batter.hittingAbility.power = 50;

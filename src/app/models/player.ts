@@ -4,6 +4,8 @@ export class Player {
   age: number;
   bats: string;
   throws: string;
+  firstYear: number;
+  lastYear: number;
   currentStamina: number;
   hittingAbility: HittingSkillset;
   hittingPotential: HittingSkillset;
@@ -33,11 +35,13 @@ export class Player {
 
   constructor(name: string, age: number, bats: string, throws: string,
     hittingAbility: HittingSkillset, hittingPotential: HittingSkillset,
-    pitchingAbility: PitchingSkillset, pitchingPotential: PitchingSkillset, leagueId: string, teamId: string) {
+    pitchingAbility: PitchingSkillset, pitchingPotential: PitchingSkillset,
+    leagueId: string, teamId: string, firstYear: number) {
     this.name = name;
     this.age = age;
     this.bats = bats;
     this.throws = throws;
+    this.firstYear = firstYear;
     this.currentStamina = 100;
     this.hittingAbility = hittingAbility;
     this.hittingPotential = hittingPotential;

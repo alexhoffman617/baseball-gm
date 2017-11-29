@@ -11,6 +11,7 @@ import { Feathers } from './backendServices/feathers.service';
 import { AppComponent } from './app.component';
 
 import { MainComponent } from './components/main/main.component';
+import { CreateLeagueDialogComponent } from './components/main/main.component';
 import { LeagueComponent } from './components/league/league.component';
 import { LeagueHomeComponent } from './components/league-home/league-home.component';
 import { TeamComponent } from './components/team/team.component';
@@ -27,10 +28,12 @@ import { GeneratePlayerService } from './services/generate-player.service';
 import { GenerateTeamService } from './services/generate-team.service';
 import { GenerateLeagueService } from './services/generate-league.service';
 import { SeasonGenerator } from './services/season.generator';
+import { RealMlbScheduleGenerator } from './services/real-mlb-schedule.generator';
 import { AtBatService } from './services/at-bat.service';
 import { PlayerProgressionService } from './services/player-progression.service';
 import { PitcherProgressionService } from './services/pitcher-progression.service';
 import { LeagueProgressionService } from './services/league-progression.service';
+import { LeagueDataService } from './services/league-data.service';
 import { TeamBatterRowComponent } from './components/team-batter-row/team-batter-row.component';
 
 import { PlayerService } from './backendServices/player/player.service';
@@ -39,6 +42,7 @@ import { TeamService } from './backendServices/team/team.service';
 import { SeasonService } from './backendServices/season/season.service';
 import { GameService } from './backendServices/game/game.service';
 import { TeamPitcherRowComponent } from './components/team-pitcher-row/team-pitcher-row.component';
+import { PlayerComponent } from './components/player/player.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -48,7 +52,8 @@ const routes: Routes = [
   children: [
     {path: '', redirectTo: 'league-home', pathMatch: 'full'},
     {path: 'league-home', component: LeagueHomeComponent},
-    {path: 'team/:teamId', component: TeamComponent}
+    {path: 'team/:teamId', component: TeamComponent},
+    {path: 'player/:playerId', component: PlayerComponent}
   ]}
 ];
 
@@ -61,12 +66,14 @@ const routes: Routes = [
     CreateTeamTestComponent,
     PlayerProgressionTestComponent,
     MainComponent,
+    CreateLeagueDialogComponent,
     AdminDbCleanupComponent,
     LeagueHomeComponent,
     LeagueComponent,
     TeamComponent,
     TeamBatterRowComponent,
-    TeamPitcherRowComponent
+    TeamPitcherRowComponent,
+    PlayerComponent
   ],
   imports: [
     BrowserModule,
@@ -85,6 +92,7 @@ const routes: Routes = [
     GenerateTeamService,
     GenerateLeagueService,
     SeasonGenerator,
+    RealMlbScheduleGenerator,
     PlayerProgressionService,
     PitcherProgressionService,
     LeagueProgressionService,
@@ -92,8 +100,10 @@ const routes: Routes = [
     LeagueService,
     TeamService,
     SeasonService,
-    GameService
+    GameService,
+    LeagueDataService
   ],
+  entryComponents: [CreateLeagueDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

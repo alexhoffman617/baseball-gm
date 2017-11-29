@@ -43,6 +43,17 @@ export class GameService {
       })
   }
 
+  getGamesBySeason(seasonId) {
+    return this.feathers
+      .service('games')
+      .watch()
+      .find({
+        query: {
+             seasonId: seasonId
+        }
+      })
+  }
+
   createGame(game: Game) {
     return this.feathers
       .service('games')

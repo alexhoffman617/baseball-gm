@@ -28,8 +28,8 @@ export class PlayerProgressionTestComponent implements OnInit {
   }
 
   async reset() {
-    this.batter = await this.generatePlayerService.generateBatter(null, null);
-    this.pitcher = await this.generatePlayerService.generatePitcher(null, null);
+    this.batter = await this.generatePlayerService.generateBatter(null, null, null);
+    this.pitcher = await this.generatePlayerService.generatePitcher(null, null, null);
     this.pitcher.pitchingAbility.velocity = 50;
     this.pitcher.pitchingAbility.control = 50;
     this.pitcher.pitchingAbility.movement = 50;
