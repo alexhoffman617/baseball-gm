@@ -27,7 +27,7 @@
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngFor="let batter of teamInstance?.roster?.batters">
+    <ng-container *ngFor="let batter of team?.roster?.batters">
       <tr app-team-batter-row [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonStats]="getBatterSeasonStats(batter.playerId)" [seasonYear]="seasonInstance?.year" [teamInstance]="teamInstance"></tr>
     </ng-container>
    </tbody>
@@ -59,7 +59,7 @@
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngFor="let pitcher of teamInstance?.roster?.pitchers">
+    <ng-container *ngFor="let pitcher of team?.roster?.pitchers">
       <tr app-team-pitcher-row [pitcher]="getPlayerById(pitcher.playerId)" [rosterPitcher]="pitcher" [seasonStats]="getPitcherSeasonStats(pitcher.playerId)" [seasonYear]="seasonInstance?.year" [teamInstance]="teamInstance"></tr>
     </ng-container>
    </tbody>

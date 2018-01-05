@@ -66,7 +66,7 @@ export class LeagueDataService {
 
   getTeamById(teamId: string) {
     const that = this
-    return _.filter(that.teams, function(team){
+    return _.find(that.teams, function(team){
       return team._id === teamId
     })
   }

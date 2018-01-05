@@ -26,7 +26,7 @@ export class Feathers {
     this._feathers.configure(feathersRx({             // add feathers-reactive plugin
       idField: '_id'
     }));
-    this._feathers.configure(socketio(this._socket, { timeout: 5000 })); // add socket.io plugin
+    this._feathers.configure(socketio(this._socket, { timeout: 20000 })); // add socket.io plugin
     this._feathers.configure(authentication({         // add authentication plugin
       storage: window.localStorage
     }));
