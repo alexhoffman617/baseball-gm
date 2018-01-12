@@ -1,13 +1,16 @@
-<td *ngIf="showName" [routerLink]="'/' + teamInstance?.leagueId + '/player/' + pitcher?._id">
+<td *ngIf="showName" [routerLink]="'/' + pitcher?.leagueId + '/player/' + pitcher?._id">
   {{ pitcher?.name }}
+</td>
+<td *ngIf="showPosition">
+    Pit
 </td>
 <td *ngIf="showSeasonYear">
     {{ seasonYear }}
-  </td>
-<td *ngIf="showBatterAge">
+</td>
+<td *ngIf="showAge">
   {{ pitcher?.age }}
 </td>
-<td *ngIf="showPosition && rosterPitcher">
+<td *ngIf="showRosterPosition && rosterPitcher">
   <md-select [(ngModel)]="rosterPitcher.startingPosition" (change)="onPitcherRoleChange(rosterPitcher, $event)">
     <md-option *ngFor="let role of pitcherRoles" [value]="role">
       {{ role }}
@@ -74,4 +77,10 @@
 </td>
 <td *ngIf="showStats">
   {{ seasonStats?.walks }}
+</td>
+<td *ngIf="button === 'release'">
+  <button md-button color="primary" (click)="release()">Release</button>
+</td>
+<td *ngIf="button === 'negotiate'">
+  <button md-button color="primary" [routerLink]="'/' + pitcher?.leagueId + '/negotiate-contract/' + pitcher?._id">Negotiate</button>
 </td>

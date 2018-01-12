@@ -1,3 +1,17 @@
-<p>
-  free-agents works!
-</p>
+<table>
+    <thead>
+      <tr class="header">
+        <th>Name</th>
+        <th>Pos</th>
+        <th>Age</th>
+        <th>Overall</th>
+        <th>Negotiate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let player of freeAgents">
+        <tr *ngIf="player.pitchingPotential.velocity === 0" app-team-batter-row [batter]="player" displaySet="fa" button="negotiate"></tr>
+        <tr *ngIf="player.pitchingPotential.velocity > 0" app-team-pitcher-row [pitcher]="player" displaySet="fa" button="negotiate"></tr>
+      </ng-container>
+     </tbody>
+   </table>

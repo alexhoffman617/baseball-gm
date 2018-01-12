@@ -12,16 +12,18 @@ import * as _ from 'lodash';
   styleUrls: ['./team-pitcher-row.component.css']
 })
 export class TeamPitcherRowComponent implements OnChanges {
-  @Input() pitcher: Player;
-  @Input() seasonYear: number;
+  @Input() pitcher: Player
+  @Input() seasonYear: number
   @Input() teamInstance: Team
   @Input() rosterPitcher: RosterSpot
-  @Input() displaySet: string;
+  @Input() displaySet: string
+  @Input() button: string
   pitchingProgression: PitchingProgression
   seasonStats: PitcherSeasonStats
   showName = false
   showSeasonYear = false
-  showBatterAge = false
+  showAge = false
+  showRosterPosition = false
   showPosition = false
   showOverall = false
   showSkills = false
@@ -47,17 +49,28 @@ export class TeamPitcherRowComponent implements OnChanges {
   setDisplay() {
     if (this.displaySet === 'stats') {
       this.showName = false
-      this.showSeasonYear = true
-      this.showBatterAge = false
       this.showPosition = false
+      this.showSeasonYear = true
+      this.showAge = false
+      this.showRosterPosition = false
       this.showOverall = false
       this.showSkills = false
       this.showStats = true
+    } else if (this.displaySet === 'fa') {
+      this.showName = true
+      this.showPosition = true
+      this.showSeasonYear = false
+      this.showAge = true
+      this.showRosterPosition = false
+      this.showOverall = true
+      this.showSkills = false
+      this.showStats = false
     } else {
       this.showName = true
+      this.showPosition = false
       this.showSeasonYear = false
-      this.showBatterAge = true
-      this.showPosition = true
+      this.showAge = true
+      this.showRosterPosition = true
       this.showOverall = true
       this.showSkills = false
       this.showStats = true
@@ -107,4 +120,13 @@ export class TeamPitcherRowComponent implements OnChanges {
     this.leagueDataService.updateTeam(this.teamInstance)
   }
 
+  release() {
+    const that = this
+    _.remove(this.teamInstance.roster.pitchers, function(pitcher){
+      return pitcher.playerId === that.pitcher._id
+    })
+    this.leagueDataService.updateTeam(this.teamInstance)
+    this.pitcher.teamId = null
+    this.leagueDataService.updatePlayer(this.pitcher)
+  }
 }

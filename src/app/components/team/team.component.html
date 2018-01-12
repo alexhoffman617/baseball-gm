@@ -20,11 +20,12 @@
       <th>SLG</th>
       <th>HR</th>
       <th>SB</th>
+      <th>Release</th>
     </tr>
   </thead>
   <tbody>
     <ng-container *ngFor="let batter of team?.roster?.batters">
-      <tr app-team-batter-row [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team"></tr>
+      <tr app-team-batter-row [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team" button='release'></tr>
     </ng-container>
    </tbody>
  </table>
@@ -48,11 +49,12 @@
       <th>WHIP</th>
       <th>K</th>
       <th>BB</th>
+      <th>Release</th>
     </tr>
   </thead>
   <tbody>
     <ng-container *ngFor="let pitcher of team?.roster?.pitchers">
-      <tr app-team-pitcher-row [pitcher]="getPlayerById(pitcher.playerId)" [rosterPitcher]="pitcher" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team"></tr>
+      <tr app-team-pitcher-row [pitcher]="getPlayerById(pitcher.playerId)" [rosterPitcher]="pitcher" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team" button="release"></tr>
     </ng-container>
    </tbody>
  </table>

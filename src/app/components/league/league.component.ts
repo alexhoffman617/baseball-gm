@@ -10,7 +10,6 @@ import { LeagueProgressionService } from '../../services/league-progression.serv
 import { LeagueDataService } from '../../services/league-data.service';
 import { ProcessGameService } from '../../services/process-game.service';
 import * as _ from 'lodash';
-import 'rxjs/add/operator/first'
 import * as io from 'socket.io-client';
 
 @Component({

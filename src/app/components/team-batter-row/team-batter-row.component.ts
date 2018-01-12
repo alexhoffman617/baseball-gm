@@ -17,12 +17,14 @@ export class TeamBatterRowComponent implements OnChanges {
   @Input() teamInstance: Team
   @Input() rosterBatter: RosterSpot;
   @Input() displaySet: string;
+  @Input() button: string;
   hittingProgression: HittingProgression
   seasonStats: BatterSeasonStats
   showName = false
   showSeasonYear = false
   showBatterAge = false
   showPosition = false
+  showRosterPosition = false
   showOrderNumber = false
   showOverall = false
   showSkills = false
@@ -53,7 +55,7 @@ export class TeamBatterRowComponent implements OnChanges {
     9
   ]
 
-  constructor(private leagueDataService: LeagueDataService, public sharedFunctionsService: SharedFunctionsService) { }
+  constructor(public leagueDataService: LeagueDataService, public sharedFunctionsService: SharedFunctionsService) { }
 
   ngOnChanges() {
     this.hittingProgression = this.getHittingProgression()
@@ -67,15 +69,27 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showSeasonYear = true
       this.showBatterAge = false
       this.showPosition = false
+      this.showRosterPosition = false
       this.showOrderNumber = false
       this.showOverall = false
       this.showSkills = false
       this.showStats = true
-    } else {
+    } else if (this.displaySet === 'fa') {
       this.showName = true
       this.showSeasonYear = false
       this.showBatterAge = true
       this.showPosition = true
+      this.showRosterPosition = false
+      this.showOrderNumber = false
+      this.showOverall = true
+      this.showSkills = false
+      this.showStats = false
+    } else {
+      this.showName = true
+      this.showSeasonYear = false
+      this.showBatterAge = true
+      this.showPosition = false
+      this.showRosterPosition = true
       this.showOrderNumber = true
       this.showOverall = true
       this.showSkills = false
@@ -153,5 +167,15 @@ export class TeamBatterRowComponent implements OnChanges {
     }
     return Math.round((hittingSkillset.contact + hittingSkillset.power
       + hittingSkillset.patience + hittingSkillset.speed + hittingSkillset.fielding) * .2);
+  }
+
+  release() {
+    const that = this
+    _.remove(this.teamInstance.roster.batters, function(batter){
+      return batter.playerId === that.batter._id
+    })
+    this.leagueDataService.updateTeam(this.teamInstance)
+    this.batter.teamId = null
+    this.leagueDataService.updatePlayer(this.batter)
   }
 }
