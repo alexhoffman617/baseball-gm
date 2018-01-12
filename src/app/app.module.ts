@@ -41,6 +41,7 @@ import { TeamPitcherRowComponent } from './components/team-pitcher-row/team-pitc
 import { PlayerComponent } from './components/player/player.component';
 import { MessegesTestComponent } from './components/messeges-test/messeges-test.component';
 import { FreeAgentsComponent } from './components/free-agents/free-agents.component';
+import { NegotiateContractComponent } from './components/negotiate-contract/negotiate-contract.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -51,7 +52,9 @@ const routes: Routes = [
     {path: '', redirectTo: 'league-home', pathMatch: 'full'},
     {path: 'league-home', component: LeagueHomeComponent},
     {path: 'team/:teamId', component: TeamComponent},
-    {path: 'player/:playerId', component: PlayerComponent}
+    {path: 'player/:playerId', component: PlayerComponent},
+    {path: 'negotiate-contract/:playerId', component: NegotiateContractComponent},
+    {path: 'free-agents', component: FreeAgentsComponent}
   ]}
 ];
 
@@ -73,7 +76,8 @@ const routes: Routes = [
     TeamPitcherRowComponent,
     PlayerComponent,
     MessegesTestComponent,
-    FreeAgentsComponent
+    FreeAgentsComponent,
+    NegotiateContractComponent
   ],
   imports: [
     BrowserModule,

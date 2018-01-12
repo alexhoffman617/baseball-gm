@@ -12,6 +12,15 @@ export class GeneratePlayerService {
                 private staticListsService: StaticListsService,
                 private leagueDataService: LeagueDataService) { }
 
+    async generateFreeAgents(leagueId: string, year: number, numberNeeded: number) {
+     for (let x = 0; x < numberNeeded; x++) {
+      if (x % 2 === 1) {
+        await this.generateBatter(leagueId, null, year)
+      } else {
+        await this.generatePitcher(leagueId, null, year)
+      }
+     }
+    }
     async generateBatter(leagueId: string, teamId: string, year: number) {
       const name = this.staticListsService.firstNames[Math.round(Math.random() * this.staticListsService.firstNames.length)] + ' '
       + this.staticListsService.lastNames[Math.round(Math.random() * this.staticListsService.lastNames.length)]

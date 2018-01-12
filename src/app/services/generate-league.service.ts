@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { League } from '../models/league';
 import { Team, Roster, RosterSpot } from '../models/team';
 import { GenerateTeamService } from './generate-team.service';
+import { GeneratePlayerService } from './generate-player.service';
 import { SeasonGenerator } from './season.generator';
 import { LeagueDataService } from './league-data.service'
 import 'rxjs/add/operator/toPromise';
@@ -12,6 +13,7 @@ export class GenerateLeagueService {
 
     constructor(private leagueDataService: LeagueDataService,
                 private generateTeamService: GenerateTeamService,
+                private generatePlayerService: GeneratePlayerService,
                 private seasonGenerator: SeasonGenerator) {
 
      }
@@ -34,6 +36,7 @@ export class GenerateLeagueService {
           createdLeague.structure = leagueArray
           this.leagueDataService.updateLeague(createdLeague)
         }
+        await this.generatePlayerService.generateFreeAgents(createdLeague._id, (new Date()).getFullYear(), 20)
         this.seasonGenerator.generateSeason(createdLeague._id, teamIds, null, league.structure)
     }
 
