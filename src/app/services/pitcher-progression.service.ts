@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Player, PitchingSkillset } from '../models/player';
-import { PitcherSeasonStats } from '../models/season-stats';
+import { Player, PitchingSkillset, PitcherSeasonStats } from '../models/player';
+import { SharedFunctionsService } from '../services/shared-functions.service';
 
 @Injectable()
 export class PitcherProgressionService {
@@ -17,7 +17,7 @@ export class PitcherProgressionService {
   whipMin = .8;
   whipMax = 1.6;
 
-  constructor() {}
+  constructor(private sharedFunctionsService: SharedFunctionsService) {}
 
   progressPlayer(player: Player, seasonStats: PitcherSeasonStats) {
     const controlAgeChange = this.getAgeImprovement(player.pitchingAbility.control, player.pitchingPotential.control, player.age, 28);
@@ -25,11 +25,11 @@ export class PitcherProgressionService {
     const velocityAgeChange = this.getAgeImprovement(player.pitchingAbility.velocity, player.pitchingPotential.velocity, player.age, 26);
     const fieldingAgeChange = this.getAgeImprovement(player.hittingAbility.speed, player.hittingPotential.speed, player.age, 24);
 
-    const controlPerformanceChange = this.getControlPerformanceImprovement(seasonStats.walksPerNine,
+    const controlPerformanceChange = this.getControlPerformanceImprovement(this.sharedFunctionsService.walksPerNine(seasonStats),
       player.pitchingAbility.control, player.pitchingPotential.control);
-    const movementPerformanceChange = this.getMovementPerformanceImprovement(seasonStats.era, seasonStats.whip,
-      player.pitchingAbility.movement, player.pitchingPotential.movement);
-    const velocityPerformanceChange = this.getVelocityPerformanceImprovement(seasonStats.strikeoutsPerNine,
+    const movementPerformanceChange = this.getMovementPerformanceImprovement(this.sharedFunctionsService.era(seasonStats),
+     this.sharedFunctionsService.whip(seasonStats), player.pitchingAbility.movement, player.pitchingPotential.movement);
+    const velocityPerformanceChange = this.getVelocityPerformanceImprovement(this.sharedFunctionsService.strikeoutsPerNine(seasonStats),
       player.pitchingAbility.velocity, player.pitchingPotential.velocity);
     const fieldingPerformanceChange = 0
 

@@ -1,5 +1,5 @@
 <div>
-  <h3> {{ teamInstance?.location }} {{ teamInstance?.name }}</h3>
+  <h3> {{ team?.location }} {{ team?.name }}</h3>
 </div>
 <div>
   <h5>Batters</h5>
@@ -12,10 +12,6 @@
       <th>Position</th>
       <th>Order #</th>
       <th>Overall</th>
-      <th>Contact</th>
-      <th>Power</th>
-      <th>Patience</th>
-      <th>Speed</th>
       <th>AB</th>
       <th>R</th>
       <th>RBI</th>
@@ -28,7 +24,7 @@
   </thead>
   <tbody>
     <ng-container *ngFor="let batter of team?.roster?.batters">
-      <tr app-team-batter-row [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonStats]="getBatterSeasonStats(batter.playerId)" [seasonYear]="seasonInstance?.year" [teamInstance]="teamInstance"></tr>
+      <tr app-team-batter-row [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team"></tr>
     </ng-container>
    </tbody>
  </table>
@@ -42,10 +38,6 @@
       <th>Age</th>
       <th>Role</th>
       <th>Overall</th>
-      <th>Velocity</th>
-      <th>Control</th>
-      <th>Movement</th>
-      <th>Type</th>
       <th>W</th>
       <th>L</th>
       <th>SV</th>
@@ -60,7 +52,7 @@
   </thead>
   <tbody>
     <ng-container *ngFor="let pitcher of team?.roster?.pitchers">
-      <tr app-team-pitcher-row [pitcher]="getPlayerById(pitcher.playerId)" [rosterPitcher]="pitcher" [seasonStats]="getPitcherSeasonStats(pitcher.playerId)" [seasonYear]="seasonInstance?.year" [teamInstance]="teamInstance"></tr>
+      <tr app-team-pitcher-row [pitcher]="getPlayerById(pitcher.playerId)" [rosterPitcher]="pitcher" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team"></tr>
     </ng-container>
    </tbody>
  </table>

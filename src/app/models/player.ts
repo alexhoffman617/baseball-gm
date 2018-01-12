@@ -1,3 +1,6 @@
+import { GameEvent, AtBat, PitcherAppearance } from '../models/game';
+import * as _ from 'lodash';
+
 export class Player {
   name: string;
   _id: string;
@@ -13,16 +16,19 @@ export class Player {
   pitchingAbility: PitchingSkillset;
   pitchingPotential: PitchingSkillset;
   pitchingProgressions: Array<PitchingProgression>
-
+  hittingSeasonStats: Array<BatterSeasonStats>
+  pitchingSeasonStats: Array<PitcherSeasonStats>
   leagueId: string;
   teamId: string;
 
   overallHittingAbility() {
-    return Math.round((this.hittingAbility.contact + this.hittingAbility.power + this.hittingAbility.patience + this.hittingAbility.speed + this.hittingAbility.fielding) * .2);
+    return Math.round((this.hittingAbility.contact + this.hittingAbility.power + this.hittingAbility.patience
+      + this.hittingAbility.speed + this.hittingAbility.fielding) * .2);
   }
 
   overallHittingPotential() {
-    return Math.round((this.hittingPotential.contact + this.hittingPotential.power + this.hittingPotential.patience + this.hittingPotential.speed + this.hittingPotential.fielding) * .2);
+    return Math.round((this.hittingPotential.contact + this.hittingPotential.power + this.hittingPotential.patience
+      + this.hittingPotential.speed + this.hittingPotential.fielding) * .2);
   }
 
   overallPitchingAbility() {
@@ -103,3 +109,78 @@ export class PitchingSkillset {
     this.type = type;
   }
 }
+
+export class BatterSeasonStats {
+    year: number;
+    gamesPlayed: number
+    plateAppearences: number;
+    singles: number;
+    doubles: number;
+    triples: number;
+    homeruns: number;
+    walks: number;
+    strikeouts: number;
+    sacrificeFlies: number
+    steals: number;
+    rbis: number;
+    runs: number;
+
+    constructor(year) {
+      this.year = year
+      this.gamesPlayed = 0
+      this.plateAppearences = 0
+      this.singles = 0
+      this.doubles = 0
+      this.triples = 0
+      this.homeruns = 0
+      this.walks = 0
+      this.strikeouts = 0
+      this.sacrificeFlies = 0
+      this.steals = 0
+      this.rbis = 0
+      this.runs = 0
+    }
+  }
+
+export class PitcherSeasonStats {
+    year: number;
+    appearances: number;
+    starts: number;
+    innings: number;
+    strikeouts: number;
+    walks: number;
+    hits: number;
+    earnedRuns: number;
+    runs: number;
+    wins: number;
+    losses: number;
+    saves: number;
+    holds: number;
+    qs: number;
+
+    constructor(year: number) {
+      this.year = year
+      this.appearances = 0
+      this.starts = 0
+      this.innings = 0
+      this.strikeouts = 0
+      this.walks = 0
+      this.hits = 0;
+      this.earnedRuns = 0
+      this.runs = 0
+      this.wins = 0
+      this.losses = 0
+      this.saves = 0
+      this.holds = 0
+      this.qs = 0
+    }
+
+    roundInnings() {
+      if (parseFloat((this.innings % 1).toFixed(1)) === .3) {
+        this.innings += .7
+      }
+      this.innings = parseFloat((this.innings).toFixed(1))
+    }
+
+}
+

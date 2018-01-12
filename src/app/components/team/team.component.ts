@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PlayerService } from '../../backendServices/player/player.service';
-import { TeamService } from '../../backendServices/team/team.service';
-import { GameService } from '../../backendServices/game/game.service';
-import { SeasonService } from '../../backendServices/season/season.service';
 import { LeagueDataService } from '../../services/league-data.service';
 import { Team } from '../../models/team';
 import { Player, HittingProgression } from '../../models/player';
@@ -23,24 +19,26 @@ export class TeamComponent implements OnInit {
   teamId: string;
   team: Team;
   players: Array<Player>;
-  season: Season;
   constructor(private route: ActivatedRoute,
-              private playerService: PlayerService,
-              private gameService: GameService,
-              private seasonService: SeasonService,
-              private leagueDataService: LeagueDataService,
-              private teamService: TeamService) { }
+              public leagueDataService: LeagueDataService) { }
 
   async ngOnInit() {
     await this.route.parent.params.subscribe(parentParams => {
+      const that = this
       this.leagueId = parentParams['leagueId'];
       this.route.params.subscribe(params => {
         (async () => {
-        await this.leagueDataService.getData(this.leagueId)
         this.teamId = params['teamId'];
-        this.players = this.leagueDataService.getPlayersByTeamId(this.teamId)
-        this.team = this.leagueDataService.getTeamById(this.teamId)
-        this.season = this.leagueDataService.currentSeason
+        this.leagueDataService.playersObservable.subscribe(players => {
+          that.players = _.filter(players, function(player){
+            return player.teamId === that.teamId
+          })
+        })
+        this.leagueDataService.teamsObservable.subscribe(teams => {
+          that.team = _.find(teams, function(team){
+            return team._id === that.teamId
+          })
+        })
        })();
       });
     });
@@ -56,30 +54,17 @@ export class TeamComponent implements OnInit {
   }
 
   getBatterSeasonStats(playerId) {
-    let games = Array<Game>()
-    this.gameService.getTeamsGamesBySeason(this.team._id, this.season._id).subscribe(g => games = g.data as Array<Game>)
-    const playerEvents = new Array<AtBat>()
-    _.each(games, function(game){
-      _.each(game.homeTeamStats.events, function(event){
-        if (event.batterId === playerId) {
-          playerEvents.push(event.outcome)
-        }
-      })
-      _.each(game.awayTeamStats.events, function(event){
-        if (event.batterId === playerId) {
-          playerEvents.push(event.outcome)
-        }
-      })
-    })
-
-    const seasonStats = new BatterSeasonStats()
-    seasonStats.buildSeasonStatsFromGameEvents(playerId, playerEvents)
-    return seasonStats
+    if (!this.team || !this.leagueDataService.currentSeason) {
+      return null
+    }
+    return this.leagueDataService.getBatterSeasonStats(playerId, this.leagueDataService.currentSeason.year)
   }
 
   getPitcherSeasonStats(playerId) {
-    let games = Array<Game>()
-    this.gameService.getTeamsGamesBySeason(this.team._id, this.season._id).subscribe(g => games = g.data as Array<Game>)
+    if (!this.team || !this.leagueDataService.currentSeason) {
+      return null
+    }
+    const games = this.leagueDataService.getTeamsGamesBySeason(this.team._id, this.leagueDataService.currentSeason._id)
     const playerEvents = new Array<PitcherAppearance>()
     _.each(games, function(game){
       _.each(game.homeTeamStats.pitcherAppearances, function(appearance){

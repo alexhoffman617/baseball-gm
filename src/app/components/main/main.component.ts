@@ -1,8 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { League } from '../../models/league';
-import { LeagueService } from '../../backendServices/league/league.service'
 import { GenerateLeagueService } from '../../services/generate-league.service'
 import {MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';
+import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Observable'
+import * as io from 'socket.io-client';
 
 @Component({
   selector: 'app-main',
@@ -11,12 +13,26 @@ import {MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';
 })
 export class MainComponent implements OnInit {
   leagues;
-  constructor(private leagueService: LeagueService,
-              public dialog: MdDialog) { }
+  socket;
+  constructor(public dialog: MdDialog,
+              private http: Http) { }
 
   ngOnInit() {
-    this.leagues = this.leagueService.leagues$().map(l => l.data)
-  }
+    this.socket = io.connect('http://localhost:3000/');
+    new Observable(observer => {
+      this.http.get('/api/leagues', {params: {}}).subscribe(data => {
+        observer.next(data.json());
+      });
+    this.socket.on('leagues', (data) => {
+      observer.next(data);
+    });
+    return () => {
+      this.socket.disconnect();
+    };
+  }).subscribe(leagues => {
+    this.leagues = leagues
+  })
+}
 
   generateNewLeague() {
     const dialogRef = this.dialog.open(CreateLeagueDialogComponent, {
@@ -34,6 +50,7 @@ export class MainComponent implements OnInit {
 export class CreateLeagueDialogComponent {
   leagueName: string
   numberOfTeams: number
+  useMlbTeams = false
   isGenerating = false
   constructor(
     public dialogRef: MdDialogRef<CreateLeagueDialogComponent>,
@@ -46,7 +63,7 @@ export class CreateLeagueDialogComponent {
 
   async generateLeague() {
     this.isGenerating = true
-    await this.generateLeagueService.generateLeague(this.leagueName, this.numberOfTeams)
+    await this.generateLeagueService.generateLeague(this.leagueName, this.numberOfTeams, this.useMlbTeams)
     this.isGenerating = false
     this.dialogRef.close();
   }

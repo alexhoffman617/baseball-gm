@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LeagueService } from '../../backendServices/league/league.service'
-import { TeamService } from '../../backendServices/team/team.service'
-import { PlayerService } from '../../backendServices/player/player.service'
-import { SeasonService } from '../../backendServices/season/season.service'
-import { GameService } from '../../backendServices/game/game.service'
+import { LeagueDataService } from '../../services/league-data.service'
 
 @Component({
   selector: 'admin-db-cleanup',
@@ -12,41 +8,16 @@ import { GameService } from '../../backendServices/game/game.service'
 })
 export class AdminDbCleanupComponent implements OnInit {
 
-  constructor(private leagueService: LeagueService,
-              private teamService: TeamService,
-              private seasonService: SeasonService,
-              private gameService: GameService,
-              private playerService: PlayerService) { }
+  constructor(private leagueDataService: LeagueDataService) { }
 
   ngOnInit() {
   }
 
-  clearLeagues() {
-    this.leagueService.deleteAllLeagues();
+  deleateLeague(leagueId) {
+    this.leagueDataService.deleteLeague();
   }
 
-  clearTeams() {
-    this.teamService.deleteAllTeams();
+  deleteAll() {
+    this.leagueDataService.deleteAll();
   }
-
-  clearPlayers() {
-    this.playerService.deleteAllPlayers();
-  }
-
-  clearSeasons() {
-    this.seasonService.deleteAllSeasons();
-  }
-
-  clearGames() {
-    this.gameService.deleteAllGames();
-  }
-
-  clearAll() {
-    this.clearLeagues();
-    this.clearTeams();
-    this.clearPlayers();
-    this.clearSeasons();
-    this.clearGames();
-  }
-
 }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Season, ScheduledDay, ScheduledGame } from '../models/season';
-import { SeasonService } from '../backendServices/season/season.service';
 import * as _ from 'lodash';
 
 @Injectable()

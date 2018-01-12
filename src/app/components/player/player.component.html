@@ -34,18 +34,19 @@
           <thead>
             <tr class="header">
               <th>Year</th>
+              <th>AB</th>
+              <th>R</th>
+              <th>RBI</th>
               <th>AVG</th>
+              <th>OBP</th>
+              <th>SLG</th>
+              <th>HR</th>
+              <th>SB</th>
             </tr>
           </thead>
           <tbody>
             <ng-container *ngFor="let year of years">
-              <tr>
-                <td>
-                  {{ year }}
-                </td>
-                <td>
-                  {{ getBatterSeasonStats(player._id, year).average }}
-                </td>
+                <tr app-team-batter-row [displaySet]="'stats'" [batter]="player" [rosterBatter]="null" [seasonYear]="year" [teamInstance]="null"></tr>
             </ng-container>
            </tbody>
          </table>

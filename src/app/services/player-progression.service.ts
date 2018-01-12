@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Player, HittingSkillset } from '../models/player';
-import { BatterSeasonStats } from '../models/season-stats';
+import { Player, HittingSkillset, BatterSeasonStats } from '../models/player';
+import { SharedFunctionsService } from '../services/shared-functions.service';
 
 @Injectable()
 export class PlayerProgressionService {
@@ -29,7 +29,7 @@ export class PlayerProgressionService {
   leagueMaxSlg = .500;
   leagueMinSlg = .300;
   leagueAvgSlg = .400;
-  constructor() {}
+  constructor(private sharedFunctionsService: SharedFunctionsService) {}
 
   progressPlayer(player: Player, seasonStats: BatterSeasonStats) {
     const contactAgeChange = this.getAgeImprovement(player.hittingAbility.contact, player.hittingPotential.contact, player.age, 26);
@@ -38,12 +38,13 @@ export class PlayerProgressionService {
     const speedAgeChange = this.getAgeImprovement(player.hittingAbility.speed, player.hittingPotential.speed, player.age, 24);
     const fieldingAgeChange = this.getAgeImprovement(player.hittingAbility.speed, player.hittingPotential.speed, player.age, 24);
 
-    const contactPerformanceChange = this.getContactPerformanceImprovement(seasonStats.strikeoutPercentage, seasonStats.average,
+    const contactPerformanceChange = this.getContactPerformanceImprovement(this.sharedFunctionsService.strikeoutPercentage(seasonStats),
+       this.sharedFunctionsService.average(seasonStats),
       player.hittingAbility.contact, player.hittingPotential.contact);
-    const powerPerformanceChange = this.getPowerPerformanceImprovement(seasonStats.slg, seasonStats.homeruns,
+    const powerPerformanceChange = this.getPowerPerformanceImprovement(this.sharedFunctionsService.slg(seasonStats), seasonStats.homeruns,
       player.hittingAbility.power, player.hittingPotential.power);
-    const patiencePerformanceChange = this.getPatiencePerformanceImprovement(seasonStats.walkPercentage, player.hittingAbility.patience,
-      player.hittingPotential.patience);
+    const patiencePerformanceChange = this.getPatiencePerformanceImprovement(this.sharedFunctionsService.walkPercentage(seasonStats),
+     player.hittingAbility.patience, player.hittingPotential.patience);
     const speedPerformanceChange = this.getSpeedPerformanceImprovement(seasonStats.steals, player.hittingAbility.speed,
       player.hittingPotential.speed);
     const fieldingPerformanceChange = this.getSpeedPerformanceImprovement(seasonStats.steals, player.hittingAbility.speed,

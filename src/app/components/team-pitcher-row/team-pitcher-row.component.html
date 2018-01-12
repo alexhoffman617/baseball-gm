@@ -1,70 +1,77 @@
-<td>
+<td *ngIf="showName" [routerLink]="'/' + teamInstance?.leagueId + '/player/' + pitcher?._id">
   {{ pitcher?.name }}
 </td>
-<td>
+<td *ngIf="showSeasonYear">
+    {{ seasonYear }}
+  </td>
+<td *ngIf="showBatterAge">
   {{ pitcher?.age }}
 </td>
-<td>
+<td *ngIf="showPosition && rosterPitcher">
   <md-select [(ngModel)]="rosterPitcher.startingPosition" (change)="onPitcherRoleChange(rosterPitcher, $event)">
     <md-option *ngFor="let role of pitcherRoles" [value]="role">
       {{ role }}
     </md-option>
   </md-select>
 </td>
-<td>
-  {{ overallPitchingAbility() }} ({{ overallPitchingPotential() }})
+<td *ngIf="showOverall">
+  {{ overallPitching(pitcher?.pitchingAbility) }}
+  <span *ngIf="isPitchingProgression()"
+  [ngClass]="{ 'positive': overallPitching(pitchingProgression?.pitchingSkillset) > 0, 'negative': overallPitching(pitchingProgression?.pitchingSkillset) < 0 }" >
+  [{{ overallPitching(pitchingProgression?.pitchingSkillset) }}]</span>
+  ({{ overallPitching(pitcher?.pitchingPotential) }})
 </td>
-<td>
+<td *ngIf="showSkills">
   {{ pitcher?.pitchingAbility.velocity }}
   <span *ngIf="isPitchingProgression()"
   [ngClass]="{ 'positive': pitchingProgression?.pitchingSkillset.velocity > 0, 'negative': pitchingProgression?.pitchingSkillset.contact < 0 }" >
   [{{ pitchingProgression?.pitchingSkillset.velocity}}]</span>
   ({{ pitcher?.pitchingPotential.velocity }})
 </td>
-<td>
+<td *ngIf="showSkills">
   {{ pitcher?.pitchingAbility.control }}
   <span *ngIf="isPitchingProgression()"
   [ngClass]="{ 'positive': pitchingProgression?.pitchingSkillset.velocity > 0, 'negative': pitchingProgression?.pitchingSkillset.contact < 0 }" >
   [{{ pitchingProgression?.pitchingSkillset.velocity}}]</span>
   ({{ pitcher?.pitchingPotential.control }})
 </td>
-<td>
+<td *ngIf="showSkills">
   {{ pitcher?.pitchingAbility.movement }}
   <span *ngIf="isPitchingProgression()"
   [ngClass]="{ 'positive': pitchingProgression?.pitchingSkillset.velocity > 0, 'negative': pitchingProgression?.pitchingSkillset.contact < 0 }" >
   [{{ pitchingProgression?.pitchingSkillset.velocity}}]</span>
    ({{ pitcher?.pitchingPotential.movement }})
 </td>
-<td>
+<td *ngIf="showSkills">
   {{ pitcher?.pitchingAbility.type }}
 </td>
-<td>
+<td *ngIf="showStats">
   {{ seasonStats?.wins }}
 </td>
-<td>
+<td *ngIf="showStats">
   {{ seasonStats?.losses }}
 </td>
-<td>
+<td *ngIf="showStats">
   {{ seasonStats?.saves }}
 </td>
-<td>
+<td *ngIf="showStats">
   {{ seasonStats?.appearances }}
 </td>
-<td>
+<td *ngIf="showStats">
   {{ seasonStats?.starts }}
 </td>
-<td>
+<td *ngIf="showStats">
   {{ seasonStats?.innings }}
 </td>
-<td>
-  {{ seasonStats?.era }}
+<td *ngIf="showStats">
+  {{ sharedFunctionsService.era(seasonStats) }}
 </td>
-<td>
-  {{ seasonStats?.whip }}
+<td *ngIf="showStats">
+  {{ sharedFunctionsService.whip(seasonStats) }}
 </td>
-<td>
+<td *ngIf="showStats">
   {{ seasonStats?.strikeouts }}
 </td>
-<td>
+<td *ngIf="showStats">
   {{ seasonStats?.walks }}
 </td>

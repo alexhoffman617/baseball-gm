@@ -1,9 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Player } from '../../models/player';
-import { BatterSeasonStats } from '../../models/season-stats';
+import { Component, OnChanges, Input } from '@angular/core';
+import { Player, BatterSeasonStats } from '../../models/player';
 import { RosterSpot, Team } from '../../models/team';
 import { HittingProgression } from '../../models/player';
-import { TeamService } from '../../backendServices/team/team.service';
+import { LeagueDataService } from '../../services/league-data.service';
+import { SharedFunctionsService } from '../../services/shared-functions.service';
 import * as _ from 'lodash';
 
 @Component({
@@ -11,13 +11,22 @@ import * as _ from 'lodash';
   templateUrl: './team-batter-row.component.html',
   styleUrls: ['./team-batter-row.component.css']
 })
-export class TeamBatterRowComponent implements OnInit {
+export class TeamBatterRowComponent implements OnChanges {
   @Input() batter: Player;
-  @Input() seasonStats: BatterSeasonStats;
   @Input() seasonYear: number;
   @Input() teamInstance: Team
   @Input() rosterBatter: RosterSpot;
+  @Input() displaySet: string;
   hittingProgression: HittingProgression
+  seasonStats: BatterSeasonStats
+  showName = false
+  showSeasonYear = false
+  showBatterAge = false
+  showPosition = false
+  showOrderNumber = false
+  showOverall = false
+  showSkills = false
+  showStats = false
 
   positions= [
     'C',
@@ -44,10 +53,34 @@ export class TeamBatterRowComponent implements OnInit {
     9
   ]
 
-  constructor(private teamService: TeamService) { }
+  constructor(private leagueDataService: LeagueDataService, public sharedFunctionsService: SharedFunctionsService) { }
 
-  ngOnInit() {
+  ngOnChanges() {
     this.hittingProgression = this.getHittingProgression()
+    this.seasonStats = this.getHittingStats()
+    this.setDisplay()
+  }
+
+  setDisplay() {
+    if (this.displaySet === 'stats') {
+      this.showName = false
+      this.showSeasonYear = true
+      this.showBatterAge = false
+      this.showPosition = false
+      this.showOrderNumber = false
+      this.showOverall = false
+      this.showSkills = false
+      this.showStats = true
+    } else {
+      this.showName = true
+      this.showSeasonYear = false
+      this.showBatterAge = true
+      this.showPosition = true
+      this.showOrderNumber = true
+      this.showOverall = true
+      this.showSkills = false
+      this.showStats = true
+    }
   }
 
   isHittingProgression() {
@@ -71,6 +104,16 @@ export class TeamBatterRowComponent implements OnInit {
       + this.batter.hittingPotential.patience + this.batter.hittingPotential.speed + this.batter.hittingPotential.fielding) * .2);
   }
 
+  getHittingStats() {
+    if (!this.batter) {
+      return
+    }
+    const that = this
+    return _.find(this.batter.hittingSeasonStats, function(hss: BatterSeasonStats){
+      return hss.year === that.seasonYear
+    })
+  }
+
   getHittingProgression() {
     if (!this.batter) {
       return
@@ -90,7 +133,7 @@ export class TeamBatterRowComponent implements OnInit {
         batter.orderNumber = null;
       }
     })
-    this.teamService.updateTeam(this.teamInstance)
+    this.leagueDataService.updateTeam(this.teamInstance)
   }
 
   onOrderChange(setBatter, event) {
@@ -101,6 +144,14 @@ export class TeamBatterRowComponent implements OnInit {
         batter.orderNumber = null;
       }
     })
-    this.teamService.updateTeam(this.teamInstance)
+    this.leagueDataService.updateTeam(this.teamInstance)
+  }
+
+  overallHitting(hittingSkillset) {
+    if (!hittingSkillset) {
+      return null
+    }
+    return Math.round((hittingSkillset.contact + hittingSkillset.power
+      + hittingSkillset.patience + hittingSkillset.speed + hittingSkillset.fielding) * .2);
   }
 }

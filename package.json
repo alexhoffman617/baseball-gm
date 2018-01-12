@@ -8,7 +8,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "run": "ng build; node server/server.js"
   },
   "private": true,
   "dependencies": {
@@ -26,13 +27,11 @@
     "@types/socket.io-client": "^1.4.29",
     "core-js": "^2.4.1",
     "express": "^4.16.2",
-    "feathers-client": "^2.0.0",
-    "feathers-hooks": "^2.0.2",
-    "feathers-hooks-common": "^3.6.1",
-    "feathers-reactive": "^0.5.1",
     "getbase": "^3.5.1",
     "lodash": "^4.17.4",
-    "rxjs": "^5.1.0",
+    "mongoose": "^5.0.0-rc2",
+    "rxjs": "^5.5.6",
+    "socket.io": "^2.0.4",
     "socket.io-client": "^1.7.3",
     "zone.js": "^0.8.4"
   },

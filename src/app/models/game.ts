@@ -7,12 +7,16 @@ export class Game {
   awayTeamId: string;
   inning: number;
   seasonId: string;
-  constructor(homeTeamStats: TeamStats, awayTeamStats: TeamStats, homeTeamId: string, awayTeamId: string, seasonId: string) {
+  leagueId: string;
+  _id: string;
+  constructor(homeTeamStats: TeamStats, awayTeamStats: TeamStats, homeTeamId: string,
+    awayTeamId: string, seasonId: string, leagueId: string) {
     this.homeTeamStats = homeTeamStats,
     this.awayTeamStats = awayTeamStats,
     this.homeTeamId = homeTeamId,
     this.awayTeamId = awayTeamId,
-    this.seasonId = seasonId
+    this.seasonId = seasonId,
+    this.leagueId = leagueId
   }
 }
 
@@ -82,10 +86,12 @@ export class PitcherAppearance {
   runs: number;
   earnedRuns: number;
   start: boolean;
+  qs: boolean;
   win: boolean;
   loss: boolean;
   save: boolean;
   hold: boolean;
+  blownSave: boolean;
 
   constructor(pitcherId: string, isStart: boolean) {
     this.pitcherId = pitcherId;

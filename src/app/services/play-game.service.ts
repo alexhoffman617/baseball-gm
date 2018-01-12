@@ -13,6 +13,9 @@ export class PlayGameService {
     thirdBase;
     outcome;
     currentPitcherAppearance: PitcherAppearance;
+    halfInningEvents: Array<GameEvent>;
+    battingTeamStats: TeamStats
+    pitchingTeamStats: TeamStats
     leagueStrikeOutFreq = 0.203563;
     leagueMinStrikeOutFreq = .07;
     leagueMaxStrikeOutFreq = .33;
@@ -52,7 +55,7 @@ export class PlayGameService {
     }
     }
 
-    playGame(homeTeam: Array<GamePlayer>, awayTeam: Array<GamePlayer>, homeTeamId, awayTeamId, seasonId) {
+    playGame(homeTeam: Array<GamePlayer>, awayTeam: Array<GamePlayer>, homeTeamId, awayTeamId, seasonId, leagueId) {
         if (!homeTeam || !awayTeam || homeTeam.length === 0 || awayTeam.length === 0) {
           return
         }
@@ -61,6 +64,7 @@ export class PlayGameService {
         this.gameObject.homeTeamId = homeTeamId
         this.gameObject.awayTeamId = awayTeamId
         this.gameObject.seasonId = seasonId
+        this.gameObject.leagueId = leagueId
 
         const homeStartingPitcher = _.find(homeTeam, function(player){
           return player.position  === 'P';
@@ -89,33 +93,36 @@ export class PlayGameService {
     }
 
     halfInning(battingTeam: Array<GamePlayer>, battingTeamStats, pitchingTeam: Array<GamePlayer>, pitchingTeamStats, side) {
+      const that = this
       this.outs = 0;
       this.firstBase = 0;
       this.secondBase = 0;
       this.thirdBase = 0;
-
-      while (this.outs < 3 && (side !== 'Bottom' || this.currentInning < 9 || battingTeamStats.runs <= pitchingTeamStats.runs)) {
+      this.halfInningEvents = new Array<GameEvent>()
+      this.battingTeamStats = battingTeamStats
+      this.pitchingTeamStats = pitchingTeamStats
+      while (this.outs < 3 && (side !== 'Bottom' || this.currentInning < 9 || this.battingTeamStats.runs <= this.pitchingTeamStats.runs)) {
         const batter = _.find(battingTeam, function(player){
-          return player.orderNumber === (battingTeamStats.events.length % 9 + 1);
+          return player.orderNumber === (that.battingTeamStats.events.length % 9 + 1);
         }).player;
         const pitcher = _.find(pitchingTeam, function(player){
           return player.position  === 'P';
         }).player;
-        this.currentPitcherAppearance = pitchingTeamStats.pitcherAppearances[pitchingTeamStats.pitcherAppearances.length - 1]
+        this.currentPitcherAppearance = this.pitchingTeamStats.pitcherAppearances[this.pitchingTeamStats.pitcherAppearances.length - 1]
         // determine outcome of PA
         this.outcome = this.atBatService.atBat(batter, pitcher, pitchingTeam, side === 'Bottom');
-        this.advanceRunners(batter, pitcher, battingTeamStats);
-
-        battingTeamStats.events.push({'batterId': batter._id, 'pitcherId': pitcher._id, 'outcome': this.outcome});
+        this.advanceRunners(batter, pitcher);
+        this.halfInningEvents.push({'batterId': batter._id, 'pitcherId': pitcher._id, 'outcome': this.outcome});
+        this.battingTeamStats.events.push({'batterId': batter._id, 'pitcherId': pitcher._id, 'outcome': this.outcome})
       }
     }
 
-    advanceRunners(batter, pitcher, battingTeam) {
+    advanceRunners(batter, pitcher) {
       if (this.outcome.result === 'strikeout') {
         this.addOut()
         this.currentPitcherAppearance.strikeouts++
       } else if (this.outcome.result === 'out') {
-        this.processOut(batter, pitcher, battingTeam)
+        this.processOut(batter, pitcher)
       } else {
         if (this.outcome.result === 'walk') {
           this.currentPitcherAppearance.walks++
@@ -123,19 +130,19 @@ export class PlayGameService {
           this.currentPitcherAppearance.hits++
         }
         if (this.thirdBase) {
-          this.advanceThirdBaseRunner(batter, pitcher, this.outcome.result, battingTeam);
+          this.advanceThirdBaseRunner(batter, pitcher, this.outcome.result);
         }
         if (this.secondBase) {
-          this.advanceSecondBaseRunner(batter, pitcher, this.outcome.result, battingTeam);
+          this.advanceSecondBaseRunner(batter, pitcher, this.outcome.result);
         }
         if (this.firstBase) {
-          this.advanceFirstBaseRunner(batter, pitcher, this.outcome.result, battingTeam);
+          this.advanceFirstBaseRunner(batter, pitcher, this.outcome.result);
         }
-        this.advanceBatter(batter, pitcher, this.outcome.result, battingTeam);
+        this.advanceBatter(batter, pitcher, this.outcome.result);
       }
     }
 
-    processOut(batter, pitcher, battingTeamStats) {
+    processOut(batter, pitcher) {
       const prob = Math.random();
       if (this.outs === 2) {
         this.addOut()
@@ -147,17 +154,17 @@ export class PlayGameService {
           this.outcome.result = 'triple play';
         } else if (prob <= .2) {
           if (prob < .05) {
-            this.runScores(battingTeamStats, this.thirdBase)
+            this.runScores(this.thirdBase)
             this.thirdBase = null
             this.secondBase = null;
             this.firstBase = batter;
           } else if (prob < .1) {
-            this.runScores(battingTeamStats, this.thirdBase)
+            this.runScores(this.thirdBase)
             this.thirdBase = this.secondBase;
             this.secondBase = null;
             this.firstBase = null;
           } else if (prob < .15) {
-            this.runScores(battingTeamStats, this.thirdBase)
+            this.runScores(this.thirdBase)
             this.outcome.scoredIds.push(this.thirdBase)
             this.thirdBase = null;
             this.secondBase = this.firstBase;
@@ -185,7 +192,7 @@ export class PlayGameService {
           }
           this.outcome.result = 'fielders choice';
         } else if (prob < .45) {
-          this.runScores(battingTeamStats, this.thirdBase)
+          this.runScores(this.thirdBase)
           this.thirdBase = this.secondBase;
           this.secondBase = this.firstBase;
           this.firstBase = null;
@@ -204,7 +211,7 @@ export class PlayGameService {
           this.firstBase = null;
         }
         if (this.outs < 3) {
-          this.runScores(battingTeamStats, this.thirdBase)
+          this.runScores(this.thirdBase)
         }
       } else if (this.secondBase && this.firstBase) {
         this.addOut()
@@ -252,27 +259,27 @@ export class PlayGameService {
       }
     }
 
-    advanceThirdBaseRunner(batter, pitcher, outcome, battingTeamStats) {
+    advanceThirdBaseRunner(batter, pitcher, outcome) {
       if (outcome === 'walk') {
         if (this.firstBase && this.secondBase && this.thirdBase) {
-          this.runScores(battingTeamStats, this.thirdBase)
+          this.runScores(this.thirdBase)
           this.thirdBase = null;
         }
       } else if (outcome === 'single' || outcome === 'error') {
-        this.runScores(battingTeamStats, this.thirdBase)
+        this.runScores(this.thirdBase)
         this.thirdBase = null;
       } else if (outcome === 'double') {
-        this.runScores(battingTeamStats, this.thirdBase)
+        this.runScores(this.thirdBase)
         this.thirdBase = null;
       } else if (outcome === 'triple') {
-        this.runScores(battingTeamStats, this.thirdBase)
+        this.runScores(this.thirdBase)
         this.thirdBase = null;
       } else if (outcome === 'homerun') {
-        this.runScores(battingTeamStats, this.thirdBase)
+        this.runScores(this.thirdBase)
         this.thirdBase = null;
       }
     }
-    advanceSecondBaseRunner(batter, pitcher, outcome, battingTeamStats) {
+    advanceSecondBaseRunner(batter, pitcher, outcome) {
       if (outcome === 'walk') {
         if (this.firstBase && this.secondBase) {
           this.thirdBase = this.secondBase;
@@ -284,22 +291,22 @@ export class PlayGameService {
           this.thirdBase = this.secondBase;
           this.secondBase = null;
         } else {
-          this.runScores(battingTeamStats, this.secondBase)
+          this.runScores(this.secondBase)
           this.secondBase = null;
         }
       } else if (outcome === 'double') {
-        this.runScores(battingTeamStats, this.secondBase)
+        this.runScores(this.secondBase)
         this.secondBase = null;
       } else if (outcome === 'triple') {
-        this.runScores(battingTeamStats, this.secondBase)
+        this.runScores(this.secondBase)
         this.secondBase = null;
       } else if (outcome === 'homerun') {
-        this.runScores(battingTeamStats, this.secondBase)
+        this.runScores(this.secondBase)
         this.secondBase = null;
       }
     }
 
-    advanceFirstBaseRunner(batter, pitcher, outcome, battingTeamStats) {
+    advanceFirstBaseRunner(batter, pitcher, outcome) {
       if (outcome === 'walk') {
         this.secondBase = this.firstBase;
         this.firstBase = null;
@@ -318,19 +325,19 @@ export class PlayGameService {
           this.thirdBase = this.firstBase;
           this.firstBase = null;
         } else {
-          this.runScores(battingTeamStats, this.firstBase)
+          this.runScores(this.firstBase)
           this.firstBase = null;
         }
       } else if (outcome === 'triple') {
-        this.runScores(battingTeamStats, this.firstBase)
+        this.runScores(this.firstBase)
         this.firstBase = null;
       } else if (outcome === 'homerun') {
-        this.runScores(battingTeamStats, this.firstBase)
+        this.runScores(this.firstBase)
         this.firstBase = null;
       }
     }
 
-    advanceBatter(batter, pitcher, outcome, battingTeamStats) {
+    advanceBatter(batter, pitcher, outcome) {
         if (outcome === 'single' || outcome === 'walk' || outcome === 'error') {
           this.firstBase = batter;
         } else if (outcome === 'double') {
@@ -338,7 +345,7 @@ export class PlayGameService {
         } else if (outcome === 'triple') {
           this.thirdBase = batter;
         } else if (outcome === 'homerun') {
-        this.runScores(battingTeamStats, batter, true)
+        this.runScores(batter, true)
       }
     }
 
@@ -355,23 +362,49 @@ export class PlayGameService {
       this.currentPitcherAppearance.innings = parseFloat((this.currentPitcherAppearance.innings).toFixed(1))
     }
 
-    runScores(teamStats: TeamStats, scoredPlayer, isHomerun = false) {
-      teamStats.runs++
+    runScores(scoredPlayer, isHomerun = false) {
+      this.battingTeamStats.runs++
       if (isHomerun) {
         this.outcome.batterScored = true
       } else {
-        const runScoringEvent = _.findLast(teamStats.events, {batterId: scoredPlayer._id})
+        const runScoringEvent = _.findLast(this.halfInningEvents, {batterId: scoredPlayer._id})
         runScoringEvent.outcome.batterScored = true
       }
       this.outcome.scoredIds.push(scoredPlayer._id)
       this.currentPitcherAppearance.runs++
-      if (this.isRunEarned(scoredPlayer)) {
-        this.currentPitcherAppearance.earnedRuns++
-      }
+      this.scoreRunsAsEarned(scoredPlayer, isHomerun)
     }
 
-    isRunEarned(scoredPlayer) {
-      // no logic yet
-      return true
+    scoreRunsAsEarned(scoredPlayer, isHomerun) {
+      const inningExtendedDueToErrors = _.filter(this.halfInningEvents, function(event){
+        return event.outcome.result === 'out' || event.outcome.result === 'error'
+      }).length >= 3
+      const isEarned = !inningExtendedDueToErrors && this.outcome.result !== 'error'
+      const atBatOfScorer = _.findLast(this.halfInningEvents, {batterId: scoredPlayer._id})
+      const pitcherAppearance = isHomerun ? this.currentPitcherAppearance :
+             _.find(this.pitchingTeamStats.pitcherAppearances, {pitcherId: atBatOfScorer.pitcherId})
+      pitcherAppearance.runs++
+      if (isEarned) {
+        pitcherAppearance.earnedRuns++
+      }
+      if (pitcherAppearance.start && pitcherAppearance.earnedRuns > 3) {
+        pitcherAppearance.qs = false
+      }
+      if (this.battingTeamStats.runs === this.pitchingTeamStats.runs) {
+        _.each(this.pitchingTeamStats.pitcherAppearances, function(appearance){
+          appearance.win = false
+        })
+        _.each(this.battingTeamStats.pitcherAppearances, function(appearance){
+          appearance.loss = false
+        })
+        if (this.currentPitcherAppearance.save) {
+          this.currentPitcherAppearance.save = false
+          this.currentPitcherAppearance.blownSave = true
+        }
+      } else if (this.battingTeamStats.runs === this.pitchingTeamStats.runs + 1) {
+        pitcherAppearance.loss = true
+        this.battingTeamStats.pitcherAppearances[this.battingTeamStats.pitcherAppearances.length - 1].win = true
+      }
+
     }
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Season, ScheduledDay, ScheduledGame } from '../models/season';
-import { SeasonService } from '../backendServices/season/season.service';
 import { RealMlbScheduleGenerator } from '../services/real-mlb-schedule.generator';
+import { LeagueDataService } from './league-data.service';
 
 @Injectable()
 export class SeasonGenerator {
 
-    constructor(private seasonService: SeasonService, private realMlbScheduleGenerator: RealMlbScheduleGenerator) {
+    constructor(private leagueDataService: LeagueDataService, private realMlbScheduleGenerator: RealMlbScheduleGenerator) {
 
      }
 
@@ -21,7 +21,7 @@ export class SeasonGenerator {
           year = (new Date()).getFullYear()
         }
         const season = new Season(year, schedule, leagueId);
-        return await this.seasonService.createSeason(season);
+        return await this.leagueDataService.createSeason(season);
     }
 
     createNewSchedule(teamIds: Array<string>) {

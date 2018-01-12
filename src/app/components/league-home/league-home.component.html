@@ -1,6 +1,19 @@
 <div>
   {{leagueId}}
 </div>
-<div *ngFor="let team of teams" [routerLink]="'/' + team.leagueId + '/team/' + team._id">
+<ng-container *ngIf="!leagueDataService.league?.structure">
+<div *ngFor="let team of getRecordOrderedTeams()" [routerLink]="'/' + team.leagueId + '/team/' + team._id">
   {{team.location}} {{team.name}} ({{getWins(team._id)}}-{{getLosses(team._id)}})
-<div>
+</div>
+</ng-container>
+<ng-container *ngIf="leagueDataService.league?.structure">
+  <ng-container *ngFor="let conf of leagueDataService.league.structure; let iconf = index" >
+      <ng-container *ngFor="let div of conf; let idiv = index" >
+        <h3>{{staticListsService.mlbConfs[iconf]}} {{staticListsService.mlbDivs[idiv]}}</h3>
+        <div *ngFor="let team of getRecordOrderedTeamsById(div)" [routerLink]="'/' + team?.leagueId + '/team/' + team?._id">
+          {{team?.location}} {{team?.name}} ({{getWins(team?._id)}}-{{getLosses(team?._id)}})
+        </div>
+        <hr>
+      </ng-container>
+  </ng-container>
+</ng-container>

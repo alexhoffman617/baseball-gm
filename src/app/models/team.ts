@@ -28,9 +28,8 @@ export class RosterSpot {
   startingPosition: string;
   orderNumber: number;
   tempId: number;
-  constructor(playerId: string, startingPosition: string, orderNumber: number, tempId) {
+  constructor(playerId: string, startingPosition: string, orderNumber: number) {
     this.playerId = playerId
-    this.tempId = tempId
     this.startingPosition = startingPosition
     this.orderNumber = orderNumber
   }

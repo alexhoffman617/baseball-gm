@@ -1,9 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, Input } from '@angular/core';
 import { Player } from '../../models/player';
-import { PitcherSeasonStats } from '../../models/season-stats';
 import { RosterSpot, Team } from '../../models/team';
-import { PitchingProgression } from '../../models/player';
-import { TeamService } from '../../backendServices/team/team.service';
+import { PitchingProgression, PitcherSeasonStats } from '../../models/player';
+import { LeagueDataService } from '../../services/league-data.service';
+import { SharedFunctionsService } from '../../services/shared-functions.service';
 import * as _ from 'lodash';
 
 @Component({
@@ -11,13 +11,21 @@ import * as _ from 'lodash';
   templateUrl: './team-pitcher-row.component.html',
   styleUrls: ['./team-pitcher-row.component.css']
 })
-export class TeamPitcherRowComponent implements OnInit {
+export class TeamPitcherRowComponent implements OnChanges {
   @Input() pitcher: Player;
-  @Input() seasonStats: PitcherSeasonStats;
   @Input() seasonYear: number;
   @Input() teamInstance: Team
   @Input() rosterPitcher: RosterSpot
+  @Input() displaySet: string;
   pitchingProgression: PitchingProgression
+  seasonStats: PitcherSeasonStats
+  showName = false
+  showSeasonYear = false
+  showBatterAge = false
+  showPosition = false
+  showOverall = false
+  showSkills = false
+  showStats = false
 
   pitcherRoles = [
     null,
@@ -28,10 +36,32 @@ export class TeamPitcherRowComponent implements OnInit {
     'SP5'
   ]
 
-  constructor(private teamService: TeamService) { }
+  constructor(private leagueDataService: LeagueDataService, public sharedFunctionsService: SharedFunctionsService) { }
 
-  ngOnInit() {
+  ngOnChanges() {
     this.pitchingProgression = this.getPitchingProgression()
+    this.seasonStats = this.getPitchingStats()
+    this.setDisplay()
+  }
+
+  setDisplay() {
+    if (this.displaySet === 'stats') {
+      this.showName = false
+      this.showSeasonYear = true
+      this.showBatterAge = false
+      this.showPosition = false
+      this.showOverall = false
+      this.showSkills = false
+      this.showStats = true
+    } else {
+      this.showName = true
+      this.showSeasonYear = false
+      this.showBatterAge = true
+      this.showPosition = true
+      this.showOverall = true
+      this.showSkills = false
+      this.showStats = true
+    }
   }
 
   isPitchingProgression() {
@@ -39,20 +69,12 @@ export class TeamPitcherRowComponent implements OnInit {
     return !!this.pitchingProgression
   }
 
-  overallPitchingAbility() {
+  overallPitching(skillset) {
     if (!this.pitcher) {
       return
     }
-    return Math.round((this.pitcher.pitchingAbility.velocity + this.pitcher.pitchingAbility.control
-       + this.pitcher.pitchingAbility.movement) / 3);
-  }
-
-  overallPitchingPotential() {
-    if (!this.pitcher) {
-      return
-    }
-    return Math.round((this.pitcher.pitchingPotential.velocity + this.pitcher.pitchingPotential.control
-       + this.pitcher.pitchingPotential.movement) / 3);
+    return Math.round((skillset.velocity + skillset.control
+       + skillset.movement) / 3);
   }
 
   getPitchingProgression() {
@@ -65,6 +87,16 @@ export class TeamPitcherRowComponent implements OnInit {
     })
   }
 
+  getPitchingStats() {
+    if (!this.pitcher) {
+      return
+    }
+    const that = this
+    return _.find(this.pitcher.pitchingSeasonStats, function(hss: PitcherSeasonStats){
+      return hss.year === that.seasonYear
+    })
+  }
+
   onPitcherRoleChange(setPitcher, event) {
     _.each(this.teamInstance.roster.pitchers, function(pitcher){
       if (pitcher.startingPosition === event.value && pitcher.playerId !== setPitcher.playerId) {
@@ -72,7 +104,7 @@ export class TeamPitcherRowComponent implements OnInit {
         pitcher.orderNumber = null
       }
     })
-    this.teamService.updateTeam(this.teamInstance)
+    this.leagueDataService.updateTeam(this.teamInstance)
   }
 
 }

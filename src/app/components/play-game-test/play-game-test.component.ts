@@ -106,7 +106,7 @@ export class PlayGameTestComponent implements OnInit {
     ];
     for (let i = 0; i < times; i++) {
       if (!(i % 2)) {
-        this.game = this.playGameService.playGame(a, b, null, null, null);
+        this.game = this.playGameService.playGame(a, b, null, null, null, null);
         this.teamAStats.runs += this.game.homeTeamStats.runs;
         this.teamAStats.events = this.teamAStats.events.concat(this.game.homeTeamStats.events);
         this.teamBStats.runs += this.game.awayTeamStats.runs;
@@ -117,7 +117,7 @@ export class PlayGameTestComponent implements OnInit {
           this.awayWins ++;
         }
       } else {
-        this.game = this.playGameService.playGame(b, a, null, null, null);
+        this.game = this.playGameService.playGame(b, a, null, null, null, null);
         this.teamBStats.runs += this.game.homeTeamStats.runs;
         this.teamBStats.events = this.teamBStats.events.concat(this.game.homeTeamStats.events);
         this.teamAStats.runs += this.game.awayTeamStats.runs;

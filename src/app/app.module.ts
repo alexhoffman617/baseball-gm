@@ -3,10 +3,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
-import { Feathers } from './backendServices/feathers.service';
 
 import { AppComponent } from './app.component';
 
@@ -34,15 +32,15 @@ import { PlayerProgressionService } from './services/player-progression.service'
 import { PitcherProgressionService } from './services/pitcher-progression.service';
 import { LeagueProgressionService } from './services/league-progression.service';
 import { LeagueDataService } from './services/league-data.service';
-import { TeamBatterRowComponent } from './components/team-batter-row/team-batter-row.component';
+import { StaticListsService } from './services/static-lists.service';
+import { ProcessGameService } from './services/process-game.service';
+import { SharedFunctionsService } from './services/shared-functions.service';
 
-import { PlayerService } from './backendServices/player/player.service';
-import { LeagueService } from './backendServices/league/league.service';
-import { TeamService } from './backendServices/team/team.service';
-import { SeasonService } from './backendServices/season/season.service';
-import { GameService } from './backendServices/game/game.service';
+import { TeamBatterRowComponent } from './components/team-batter-row/team-batter-row.component';
 import { TeamPitcherRowComponent } from './components/team-pitcher-row/team-pitcher-row.component';
 import { PlayerComponent } from './components/player/player.component';
+import { MessegesTestComponent } from './components/messeges-test/messeges-test.component';
+import { FreeAgentsComponent } from './components/free-agents/free-agents.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -73,7 +71,9 @@ const routes: Routes = [
     TeamComponent,
     TeamBatterRowComponent,
     TeamPitcherRowComponent,
-    PlayerComponent
+    PlayerComponent,
+    MessegesTestComponent,
+    FreeAgentsComponent
   ],
   imports: [
     BrowserModule,
@@ -81,11 +81,9 @@ const routes: Routes = [
     BrowserAnimationsModule,
     FormsModule,
     RouterModule.forRoot(routes),
-    FlexLayoutModule,
     HttpModule
   ],
   providers: [
-    Feathers,
     PlayGameService,
     GeneratePlayerService,
     AtBatService,
@@ -96,12 +94,10 @@ const routes: Routes = [
     PlayerProgressionService,
     PitcherProgressionService,
     LeagueProgressionService,
-    PlayerService,
-    LeagueService,
-    TeamService,
-    SeasonService,
-    GameService,
-    LeagueDataService
+    LeagueDataService,
+    StaticListsService,
+    ProcessGameService,
+    SharedFunctionsService
   ],
   entryComponents: [CreateLeagueDialogComponent],
   bootstrap: [AppComponent]

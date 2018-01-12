@@ -13,6 +13,9 @@
           <md-option [value]="30">30</md-option>
         </md-select>
       </div>
+      <div style="margin-top: 20px">
+        <md-slide-toggle [(ngModel)]="useMlbTeams">Use Real MLB Teams</md-slide-toggle>
+      </div>
       <div md-dialog-actions>
         <button md-button md-raised-button (click)="onNoClick()">Cancel</button>
         <button md-button md-raised-button (click)="generateLeague()" color="primary">Ok</button>
