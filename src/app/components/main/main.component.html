@@ -1,0 +1,6 @@
+<div>
+  <button md-raised-button color="primary" (click)="generateNewLeague()">Generate League</button>
+</div>
+<div *ngFor="let league of leagues" >
+  <a [routerLink]="'/'+ league._id + '/league-home'">{{ league.name }}</a>
+</div>

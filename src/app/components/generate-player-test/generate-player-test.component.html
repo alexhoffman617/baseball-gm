@@ -4,3 +4,6 @@
 <div>
   {{ generatedPlayer }}
 </div>
+<div *ngFor="let player of players | async">
+  {{player.name}}
+</div>

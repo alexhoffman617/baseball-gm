@@ -1,0 +1,82 @@
+<td *ngIf="showName" [routerLink]="'/' + teamInstance?.leagueId + '/player/' + batter?._id">
+  {{ batter?.name }}
+</td>
+<td *ngIf="showSeasonYear">
+  {{ seasonYear }}
+</td>
+<td *ngIf="showBatterAge">
+  {{ batter?.age }}
+</td>
+<td *ngIf="showPosition && rosterBatter">
+  <md-select [(ngModel)]="rosterBatter.startingPosition" (change)="onPositionChange(batter, $event)">
+    <md-option *ngFor="let position of positions" [value]="position">
+      {{ position }}
+    </md-option>
+  </md-select>
+</td>
+<td *ngIf="showOrderNumber && rosterBatter">
+  <md-select [(ngModel)]="rosterBatter.orderNumber" (change)="onOrderChange(batter, $event)">
+    <md-option *ngFor="let orderNumber of orderNumbers" [value]="orderNumber">
+      {{ orderNumber }}
+    </md-option>
+  </md-select>
+</td>
+<td *ngIf="showOverall">
+  {{ overallHittingAbility() }}
+  <span *ngIf="isHittingProgression()"
+  [ngClass]="{ 'positive': overallHitting(hittingProgression?.hittingSkillset) > 0, 'negative': overallHitting(hittingProgression?.hittingSkillset) < 0 }" >
+  [{{ overallHitting(hittingProgression?.hittingSkillset) }}]</span>
+  ({{ overallHittingPotential() }})
+</td>
+<td *ngIf="showSkills">
+  {{ batter?.hittingAbility.contact }}
+  <span *ngIf="isHittingProgression()"
+  [ngClass]="{ 'positive': hittingProgression?.hittingSkillset.contact > 0, 'negative': hittingProgression?.hittingSkillset.contact < 0 }" >
+  [{{hittingProgression?.hittingSkillset.contact}}]</span>
+   ({{ batter?.hittingPotential.contact }})
+</td>
+<td *ngIf="showSkills">
+  {{ batter?.hittingAbility.power }}
+  <span *ngIf="isHittingProgression()"
+  [ngClass]="{ 'positive': hittingProgression?.hittingSkillset.power > 0, 'negative': hittingProgression?.hittingSkillset.power < 0 }" >
+  [{{hittingProgression?.hittingSkillset.power}}]</span>
+  ({{ batter?.hittingPotential.power }})
+</td>
+<td *ngIf="showSkills">
+  {{ batter?.hittingAbility.patience }}
+  <span *ngIf="isHittingProgression()"
+  [ngClass]="{ 'positive': hittingProgression?.hittingSkillset.patience > 0, 'negative': hittingProgression?.hittingSkillset.patience < 0 }" >
+  [{{hittingProgression?.hittingSkillset.patience}}]</span>
+  ({{ batter?.hittingPotential.patience }})
+</td>
+<td *ngIf="showSkills">
+  {{ batter?.hittingAbility.speed }}
+  <span *ngIf="isHittingProgression()"
+  [ngClass]="{ 'positive': hittingProgression?.hittingSkillset.speed > 0, 'negative': hittingProgression?.hittingSkillset.speed < 0 }" >
+  [{{hittingProgression?.hittingSkillset.speed}}]</span>
+  ({{ batter?.hittingPotential.speed }})
+</td>
+<td *ngIf="showStats">
+  {{ sharedFunctionsService.atBats(seasonStats) }}
+</td>
+<td *ngIf="showStats">
+  {{ seasonStats?.runs }}
+</td>
+<td *ngIf="showStats">
+  {{ seasonStats?.rbis }}
+</td>
+<td *ngIf="showStats">
+  {{ sharedFunctionsService.average(seasonStats) }}
+</td>
+<td *ngIf="showStats">
+  {{ sharedFunctionsService.obp(seasonStats) }}
+</td>
+<td *ngIf="showStats">
+  {{ sharedFunctionsService.slg(seasonStats) }}
+</td>
+<td *ngIf="showStats">
+  {{ seasonStats?.homeruns }}
+</td>
+<td *ngIf="showStats">
+  {{ seasonStats?.steals }}
+</td>

@@ -1,0 +1,19 @@
+<md-toolbar color="primary">
+  <button md-button [routerLink]="'/'+ leagueId + '/league-home'">Home</button>
+  <button md-button [mdMenuTriggerFor]="sim">{{leagueDataService.league?.simming ? 'Simming...' : 'Sim'}}</button>
+  <md-menu #sim="mdMenu">
+    <ng-container *ngIf="!leagueDataService.league?.simming">
+      <ng-container *ngIf="areDaysLeftInSeason()">
+          <button md-menu-item (click)="simDays(1)">Sim Day</button>
+          <button md-menu-item (click)="simDays(6)">Sim Week</button>
+          <button md-menu-item (click)="simDays('ROS')">Sim Rest Of Season</button>
+      </ng-container>
+      <button md-menu-item *ngIf="!areDaysLeftInSeason()" (click)="playOffseason()">Sim Offseason</button>
+    </ng-container>
+    <ng-container *ngIf="leagueDataService.league?.simming && areDaysLeftInSeason()">
+      <button md-menu-item  (click)="stopSimming()">Stop Simming</button>
+    </ng-container>
+  </md-menu>
+</md-toolbar>
+
+<router-outlet></router-outlet>

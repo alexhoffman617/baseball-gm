@@ -1,0 +1,110 @@
+import { Component, OnChanges, Input } from '@angular/core';
+import { Player } from '../../models/player';
+import { RosterSpot, Team } from '../../models/team';
+import { PitchingProgression, PitcherSeasonStats } from '../../models/player';
+import { LeagueDataService } from '../../services/league-data.service';
+import { SharedFunctionsService } from '../../services/shared-functions.service';
+import * as _ from 'lodash';
+
+@Component({
+  selector: '[app-team-pitcher-row]',
+  templateUrl: './team-pitcher-row.component.html',
+  styleUrls: ['./team-pitcher-row.component.css']
+})
+export class TeamPitcherRowComponent implements OnChanges {
+  @Input() pitcher: Player;
+  @Input() seasonYear: number;
+  @Input() teamInstance: Team
+  @Input() rosterPitcher: RosterSpot
+  @Input() displaySet: string;
+  pitchingProgression: PitchingProgression
+  seasonStats: PitcherSeasonStats
+  showName = false
+  showSeasonYear = false
+  showBatterAge = false
+  showPosition = false
+  showOverall = false
+  showSkills = false
+  showStats = false
+
+  pitcherRoles = [
+    null,
+    'SP1',
+    'SP2',
+    'SP3',
+    'SP4',
+    'SP5'
+  ]
+
+  constructor(private leagueDataService: LeagueDataService, public sharedFunctionsService: SharedFunctionsService) { }
+
+  ngOnChanges() {
+    this.pitchingProgression = this.getPitchingProgression()
+    this.seasonStats = this.getPitchingStats()
+    this.setDisplay()
+  }
+
+  setDisplay() {
+    if (this.displaySet === 'stats') {
+      this.showName = false
+      this.showSeasonYear = true
+      this.showBatterAge = false
+      this.showPosition = false
+      this.showOverall = false
+      this.showSkills = false
+      this.showStats = true
+    } else {
+      this.showName = true
+      this.showSeasonYear = false
+      this.showBatterAge = true
+      this.showPosition = true
+      this.showOverall = true
+      this.showSkills = false
+      this.showStats = true
+    }
+  }
+
+  isPitchingProgression() {
+    this.pitchingProgression = this.getPitchingProgression()
+    return !!this.pitchingProgression
+  }
+
+  overallPitching(skillset) {
+    if (!this.pitcher) {
+      return
+    }
+    return Math.round((skillset.velocity + skillset.control
+       + skillset.movement) / 3);
+  }
+
+  getPitchingProgression() {
+    if (!this.pitcher) {
+      return
+    }
+    const that = this
+    return _.find(this.pitcher.pitchingProgressions, function(pp: PitchingProgression){
+      return pp.year === that.seasonYear - 1
+    })
+  }
+
+  getPitchingStats() {
+    if (!this.pitcher) {
+      return
+    }
+    const that = this
+    return _.find(this.pitcher.pitchingSeasonStats, function(hss: PitcherSeasonStats){
+      return hss.year === that.seasonYear
+    })
+  }
+
+  onPitcherRoleChange(setPitcher, event) {
+    _.each(this.teamInstance.roster.pitchers, function(pitcher){
+      if (pitcher.startingPosition === event.value && pitcher.playerId !== setPitcher.playerId) {
+        pitcher.startingPosition = '';
+        pitcher.orderNumber = null
+      }
+    })
+    this.leagueDataService.updateTeam(this.teamInstance)
+  }
+
+}

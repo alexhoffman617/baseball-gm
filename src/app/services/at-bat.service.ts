@@ -220,9 +220,9 @@ export class AtBatService {
 	getFieldedBallOutcome(trajectory, hitDirection, contactType, fieldingTeam, isHomeTeam){
 		var fielder = this.getFielder(fieldingTeam, hitDirection, contactType);
 		if(Math.random() < this.getErrorChance(trajectory, contactType, isHomeTeam, fielder)){
-			return new AtBat("error", contactType, trajectory, hitDirection, fielder.id);
+			return new AtBat("error", contactType, trajectory, hitDirection, fielder._id);
 		}
-		return new AtBat("out", contactType, trajectory, hitDirection, fielder.id);
+		return new AtBat("out", contactType, trajectory, hitDirection, fielder._id);
 	}
   
   atBat(batter, pitcher, fieldingTeam, fieldingTeamIsHome = false){
