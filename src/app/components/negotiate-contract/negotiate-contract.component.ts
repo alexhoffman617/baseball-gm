@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Team, RosterSpot } from '../../models/team';
 import { Player } from '../../models/player';
 import { LeagueDataService } from '../../services/league-data.service';
-import {MdSnackBar} from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-negotiate-contract',
@@ -14,7 +14,7 @@ export class NegotiateContractComponent implements OnInit {
   selectedTeam: Team
   playerId: string
   player: Player
-  constructor(public leagueDataService: LeagueDataService, private route: ActivatedRoute, public snackBar: MdSnackBar) { }
+  constructor(public leagueDataService: LeagueDataService, private route: ActivatedRoute, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     const that = this

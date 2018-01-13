@@ -1,20 +1,20 @@
-<md-toolbar color="primary">
-  <button md-button [routerLink]="'/'+ leagueId + '/league-home'">Home</button>
-  <button md-button [mdMenuTriggerFor]="sim">{{leagueDataService.league?.simming ? 'Simming...' : 'Sim'}}</button>
-  <md-menu #sim="mdMenu">
+<mat-toolbar color="primary">
+  <button mat-button [routerLink]="'/'+ leagueId + '/league-home'">Home</button>
+  <button mat-button [matMenuTriggerFor]="sim">{{leagueDataService.league?.simming ? 'Simming...' : 'Sim'}}</button>
+  <mat-menu #sim="matMenu">
     <ng-container *ngIf="!leagueDataService.league?.simming">
       <ng-container *ngIf="areDaysLeftInSeason()">
-          <button md-menu-item (click)="simDays(1)">Sim Day</button>
-          <button md-menu-item (click)="simDays(6)">Sim Week</button>
-          <button md-menu-item (click)="simDays('ROS')">Sim Rest Of Season</button>
+          <button mat-menu-item (click)="simatays(1)">Sim Day</button>
+          <button mat-menu-item (click)="simatays(6)">Sim Week</button>
+          <button mat-menu-item (click)="simatays('ROS')">Sim Rest Of Season</button>
       </ng-container>
-      <button md-menu-item *ngIf="!areDaysLeftInSeason()" (click)="playOffseason()">Sim Offseason</button>
+      <button mat-menu-item *ngIf="!areDaysLeftInSeason()" (click)="playOffseason()">Sim Offseason</button>
     </ng-container>
     <ng-container *ngIf="leagueDataService.league?.simming && areDaysLeftInSeason()">
-      <button md-menu-item  (click)="stopSimming()">Stop Simming</button>
+      <button mat-menu-item  (click)="stopSimming()">Stop Simming</button>
     </ng-container>
-  </md-menu>
-  <button md-button [routerLink]="'/'+ leagueId + '/free-agents'">Free Agents</button>
-</md-toolbar>
+  </mat-menu>
+  <button mat-button [routerLink]="'/'+ leagueId + '/free-agents'">Free Agents</button>
+</mat-toolbar>
 
 <router-outlet></router-outlet>

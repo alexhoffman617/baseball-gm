@@ -11,11 +11,11 @@
   {{ pitcher?.age }}
 </td>
 <td *ngIf="showRosterPosition && rosterPitcher">
-  <md-select [(ngModel)]="rosterPitcher.startingPosition" (change)="onPitcherRoleChange(rosterPitcher, $event)">
-    <md-option *ngFor="let role of pitcherRoles" [value]="role">
+  <mat-select [(ngModel)]="rosterPitcher.startingPosition" (change)="onPitcherRoleChange(rosterPitcher, $event)">
+    <mat-option *ngFor="let role of pitcherRoles" [value]="role">
       {{ role }}
-    </md-option>
-  </md-select>
+    </mat-option>
+  </mat-select>
 </td>
 <td *ngIf="showOverall">
   {{ overallPitching(pitcher?.pitchingAbility) }}
@@ -79,8 +79,8 @@
   {{ seasonStats?.walks }}
 </td>
 <td *ngIf="button === 'release'">
-  <button md-raised-button color="primary" (click)="release()">Release</button>
+  <button mat-raised-button color="primary" (click)="release()">Release</button>
 </td>
 <td *ngIf="button === 'negotiate'">
-  <button md-raised-button color="primary" [routerLink]="'/' + pitcher?.leagueId + '/negotiate-contract/' + pitcher?._id">Negotiate</button>
+  <button mat-raised-button color="primary" [routerLink]="'/' + pitcher?.leagueId + '/negotiate-contract/' + pitcher?._id">Negotiate</button>
 </td>

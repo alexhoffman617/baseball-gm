@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { League } from '../../models/league';
 import { GenerateLeagueService } from '../../services/generate-league.service'
-import {MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable'
 import * as io from 'socket.io-client';
@@ -14,7 +14,7 @@ import * as io from 'socket.io-client';
 export class MainComponent implements OnInit {
   leagues;
   socket;
-  constructor(public dialog: MdDialog,
+  constructor(public dialog: MatDialog,
               private http: Http) { }
 
   ngOnInit() {
@@ -53,9 +53,9 @@ export class CreateLeagueDialogComponent {
   useMlbTeams = false
   isGenerating = false
   constructor(
-    public dialogRef: MdDialogRef<CreateLeagueDialogComponent>,
+    public dialogRef: MatDialogRef<CreateLeagueDialogComponent>,
     private generateLeagueService: GenerateLeagueService,
-    @Inject(MD_DIALOG_DATA) public data: any) { }
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   onNoClick(): void {
     this.dialogRef.close();

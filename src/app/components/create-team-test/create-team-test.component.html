@@ -1,5 +1,5 @@
 <div>
-  <button md-raised-button color="primary" (click)="generateTeam()">Create Team</button>
+  <button mat-raised-button color="primary" (click)="generateTeam()">Create Team</button>
 </div>
 <div>
   <h3> {{ generatedTeam?.location }} {{ generatedTeam?.name }}</h3>
@@ -10,10 +10,10 @@
 <table>
   <thead>
     <tr class="header">
-      <th>Name</th> 
+      <th>Name</th>
       <th>Age</th>
-      <th>Position</th> 
-      <th>Order #</th>    
+      <th>Position</th>
+      <th>Order #</th>
       <th>Overall</th>
       <th>Contact</th>
       <th>Power</th>
@@ -30,18 +30,18 @@
         {{ getPlayerById(batter.playerId)?.age }}
       </td>
       <td>
-        <md-select [(ngModel)]="batter.position" (change)="onPositionChange(batter, $event)">
-          <md-option *ngFor="let position of positions" [value]="position">
+        <mat-select [(ngModel)]="batter.position" (change)="onPositionChange(batter, $event)">
+          <mat-option *ngFor="let position of positions" [value]="position">
             {{ position }}
-          </md-option>
-        </md-select>
+          </mat-option>
+        </mat-select>
       </td>
       <td>
-        <md-select [disabled]="!batter.position" [(ngModel)]="batter.orderNumber" (change)="onOrderChange(batter, $event)">
-          <md-option *ngFor="let orderNumber of orderNumbers" [value]="orderNumber">
+        <mat-select [disabled]="!batter.position" [(ngModel)]="batter.orderNumber" (change)="onOrderChange(batter, $event)">
+          <mat-option *ngFor="let orderNumber of orderNumbers" [value]="orderNumber">
             {{ orderNumber }}
-          </md-option>
-        </md-select>
+          </mat-option>
+        </mat-select>
       </td>
       <td>
         {{ getPlayerById(batter.playerId).overallHittingAbility() }} ({{ getPlayerById(batter.playerId)?.overallHittingPotential() }})
@@ -67,9 +67,9 @@
 <table>
   <thead>
     <tr class="header">
-      <th>Name</th> 
+      <th>Name</th>
       <th>Age</th>
-      <th>Role</th> 
+      <th>Role</th>
       <th>Overall</th>
       <th>Velocity</th>
       <th>Control</th>
@@ -86,11 +86,11 @@
         {{ getPlayerById(pitcher.playerId)?.age }}
       </td>
       <td>
-        <md-select [(ngModel)]="pitcher.position" (change)="onPitcherRoleChange(pitcher, $event)">
-          <md-option *ngFor="let role of pitcherRoles" [value]="role">
+        <mat-select [(ngModel)]="pitcher.position" (change)="onPitcherRoleChange(pitcher, $event)">
+          <mat-option *ngFor="let role of pitcherRoles" [value]="role">
             {{ role }}
-          </md-option>
-        </md-select>
+          </mat-option>
+        </mat-select>
       </td>
       <td>
         {{ getPlayerById(pitcher.playerId).overallPitchingAbility() }} ({{ getPlayerById(pitcher.playerId)?.overallPitchingPotential() }})
@@ -105,7 +105,7 @@
         {{ getPlayerById(pitcher.playerId)?.pitchingAbility.movement }} ({{ getPlayerById(pitcher.playerId)?.pitchingPotential.movement }})
       </td>
       <td>
-        {{ getPlayerById(pitcher.playerId)?.pitchingAbility.type }} 
+        {{ getPlayerById(pitcher.playerId)?.pitchingAbility.type }}
       </td>
     </tr>
    </tbody>

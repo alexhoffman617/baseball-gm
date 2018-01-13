@@ -1,95 +1,95 @@
 <div>
-  <button md-raised-button color="primary" (click)="progressPlayer()">Progress Player</button>
-    <button md-raised-button color="primary" (click)="reset()">Reset</button>
+  <button mat-raised-button color="primary" (click)="progressPlayer()">Progress Player</button>
+    <button mat-raised-button color="primary" (click)="reset()">Reset</button>
 </div>
 <div *ngIf="seasonStats">
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.plateAppearences" (ngModelChange)="newSeasonStats()" placeholder="PA"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.singles" (ngModelChange)="newSeasonStats()" placeholder="1B"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.doubles" (ngModelChange)="newSeasonStats()" placeholder="2B"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.triples" (ngModelChange)="newSeasonStats()" placeholder="3B"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.homeruns" (ngModelChange)="newSeasonStats()" placeholder="HR"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.walks" (ngModelChange)="newSeasonStats()" placeholder="BB"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.strikeouts" (ngModelChange)="newSeasonStats()" placeholder="K"/>
-  </md-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.plateAppearences" (ngModelChange)="newSeasonStats()" placeholder="PA"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.singles" (ngModelChange)="newSeasonStats()" placeholder="1B"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.doubles" (ngModelChange)="newSeasonStats()" placeholder="2B"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.triples" (ngModelChange)="newSeasonStats()" placeholder="3B"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.homeruns" (ngModelChange)="newSeasonStats()" placeholder="HR"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.walks" (ngModelChange)="newSeasonStats()" placeholder="BB"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.strikeouts" (ngModelChange)="newSeasonStats()" placeholder="K"/>
+  </mat-input-container>
 </div>
 <div *ngIf="seasonStats" >
-  <md-input-container>
-    <input mdInput  disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.average" placeholder="AVG"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.obp" placeholder="OBP"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.slg" placeholder="SLG"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.babip" placeholder="BABIP"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.woba" placeholder="wOBA"/>
-  </md-input-container>
+  <mat-input-container>
+    <input matInput  disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.average" placeholder="AVG"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.obp" placeholder="OBP"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.slg" placeholder="SLG"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.babip" placeholder="BABIP"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput disabled="true" type="number" min="0" max="100" style="width: 60px" [(ngModel)]="seasonStats.woba" placeholder="wOBA"/>
+  </mat-input-container>
 </div>
 <div *ngIf="batter">
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.age" placeholder="age"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="CT"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="POW"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="PAT"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="SPD"/>
-  </md-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" [(ngModel)]="batter.age" placeholder="age"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="CT"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="POW"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="PAT"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="SPD"/>
+  </mat-input-container>
 </div>
 <div *ngIf="batter">
-  <md-input-container>
-    <input mdInput disabled="true" style="width: 40px"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.contact" placeholder="CT"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.power" placeholder="POW"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.patience" placeholder="PAT"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.speed" placeholder="SPD"/>
-  </md-input-container>
+  <mat-input-container>
+    <input matInput disabled="true" style="width: 40px"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.contact" placeholder="CT"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.power" placeholder="POW"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.patience" placeholder="PAT"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingPotential.speed" placeholder="SPD"/>
+  </mat-input-container>
 </div>
 <div *ngIf="improvement" >
-  <md-input-container>
-    <input mdInput disabled="true" style="width: 40px"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.contact" placeholder="CT"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.power" placeholder="POW"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.patience" placeholder="PAT"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.speed" placeholder="SPD"/>
-  </md-input-container>
+  <mat-input-container>
+    <input matInput disabled="true" style="width: 40px"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.contact" placeholder="CT"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.power" placeholder="POW"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.patience" placeholder="PAT"/>
+  </mat-input-container>
+  <mat-input-container>
+    <input matInput disabled="true" type="number" style="width: 40px" [(ngModel)]="improvement.speed" placeholder="SPD"/>
+  </mat-input-container>
 </div>

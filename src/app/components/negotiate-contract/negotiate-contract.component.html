@@ -1,6 +1,6 @@
-<md-select [(ngModel)]="selectedTeam">
-  <md-option *ngFor="let team of leagueDataService.teams" [value]="team">{{ team?.location }} {{ team?.name }}</md-option>
-</md-select>
+<mat-select [(ngModel)]="selectedTeam">
+  <mat-option *ngFor="let team of leagueDataService.teams" [value]="team">{{ team?.location }} {{ team?.name }}</mat-option>
+</mat-select>
 <div>
-  <button md-raised-button color="primary" (click)="add()">Add</button>
+  <button mat-raised-button color="primary" (click)="add()">Add</button>
 </div>

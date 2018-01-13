@@ -11,18 +11,18 @@
   {{ batter?.age }}
 </td>
 <td *ngIf="showRosterPosition && rosterBatter">
-  <md-select [(ngModel)]="rosterBatter.startingPosition" (change)="onPositionChange(batter, $event)">
-    <md-option *ngFor="let position of positions" [value]="position">
+  <mat-select [(ngModel)]="rosterBatter.startingPosition" (change)="onPositionChange(batter, $event)">
+    <mat-option *ngFor="let position of positions" [value]="position">
       {{ position }}
-    </md-option>
-  </md-select>
+    </mat-option>
+  </mat-select>
 </td>
 <td *ngIf="showOrderNumber && rosterBatter">
-  <md-select [(ngModel)]="rosterBatter.orderNumber" (change)="onOrderChange(batter, $event)">
-    <md-option *ngFor="let orderNumber of orderNumbers" [value]="orderNumber">
+  <mat-select [(ngModel)]="rosterBatter.orderNumber" (change)="onOrderChange(batter, $event)">
+    <mat-option *ngFor="let orderNumber of orderNumbers" [value]="orderNumber">
       {{ orderNumber }}
-    </md-option>
-  </md-select>
+    </mat-option>
+  </mat-select>
 </td>
 <td *ngIf="showOverall">
   {{ overallHittingAbility() }}
@@ -84,8 +84,8 @@
   {{ seasonStats?.steals }}
 </td>
 <td *ngIf="button === 'release'">
-  <button md-raised-button color="primary" (click)="release()">Release</button>
+  <button mat-raised-button color="primary" (click)="release()">Release</button>
 </td>
 <td *ngIf="button === 'negotiate'">
-  <button md-raised-button color="primary" [routerLink]="'/' + batter?.leagueId + '/negotiate-contract/' + batter?._id">Negotiate</button>
+  <button mat-raised-button color="primary" [routerLink]="'/' + batter?.leagueId + '/negotiate-contract/' + batter?._id">Negotiate</button>
 </td>

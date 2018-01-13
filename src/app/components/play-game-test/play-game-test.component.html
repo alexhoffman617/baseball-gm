@@ -1,18 +1,18 @@
 <div>
-  <button md-raised-button color="primary" (click)="playGame(1)">Play Game</button>
+  <button mat-raised-button color="primary" (click)="playGame(1)">Play Game</button>
 
-  <button md-raised-button color="primary" (click)="playGame(10)">Play 10 Games</button>
+  <button mat-raised-button color="primary" (click)="playGame(10)">Play 10 Games</button>
 
-  <button md-raised-button color="primary" (click)="playGame(162)">Play Season</button>
+  <button mat-raised-button color="primary" (click)="playGame(162)">Play Season</button>
 
-  <button md-raised-button color="primary" (click)="playGame(156)">Play Season (Days off)</button>
+  <button mat-raised-button color="primary" (click)="playGame(156)">Play Season (Days off)</button>
 </div>
 <div style="margin-top: 10px">
 </div>
 <div>
-  <button md-raised-button color="primary" (click)="randomBatters()">Random Batters</button>
+  <button mat-raised-button color="primary" (click)="randomBatters()">Random Batters</button>
 
-  <button md-raised-button color="primary" (click)="avgBatters(10)">Avg Batters</button>
+  <button mat-raised-button color="primary" (click)="avgBatters(10)">Avg Batters</button>
 </div>
 <div fxLayout
      fxLayout.xs="column"
@@ -22,246 +22,246 @@
 <div fxFlex="50%">
   <h4>Team A</h4>
   <div *ngFor="let batter of teamA.batters">
-    <md-input-container>
-     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="batter.name" placeholder="name"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.fielding" placeholder="fielding"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'plateAppearance', teamAStats)" placeholder="PA"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'single', teamAStats)" placeholder="1B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'double', teamAStats)" placeholder="2B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'triple', teamAStats)" placeholder="3B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'homerun', teamAStats)" placeholder="HR"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'strikeout', teamAStats)" placeholder="K"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'walk', teamAStats)" placeholder="BB"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="AVG"
+    <mat-input-container>
+     <input matInput disabled="true" style="width: 80px" [(ngModel)]="batter.name" placeholder="name"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.fielding" placeholder="fielding"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'plateAppearance', teamAStats)" placeholder="PA"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'single', teamAStats)" placeholder="1B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'double', teamAStats)" placeholder="2B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'triple', teamAStats)" placeholder="3B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'homerun', teamAStats)" placeholder="HR"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'strikeout', teamAStats)" placeholder="K"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'walk', teamAStats)" placeholder="BB"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="AVG"
      [value]="getOutcomeTotal(batter.id, 'hits', teamAStats) / (getOutcomeTotal(batter.id, 'plateAppearance', teamAStats) - getOutcomeTotal(batter.id, 'walk', teamAStats))" />
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="OBP"
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="OBP"
      [value]="(getOutcomeTotal(batter.id, 'hits', teamAStats) + getOutcomeTotal(batter.id, 'walk', teamAStats)) / getOutcomeTotal(batter.id, 'plateAppearance', teamAStats)" />
-    </md-input-container>
+    </mat-input-container>
   </div>
     <div>
-    <md-input-container>
-     <input mdInput disabled="true" style="width: 80px"  placeholder="Total"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'plateAppearance', teamAStats)" placeholder="PA"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'single', teamAStats)" placeholder="1B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'double', teamAStats)" placeholder="2B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'triple', teamAStats)" placeholder="3B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'homerun', teamAStats)" placeholder="HR"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'strikeout', teamAStats)" placeholder="K"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'walk', teamAStats)" placeholder="BB"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="AVG"
+    <mat-input-container>
+     <input matInput disabled="true" style="width: 80px"  placeholder="Total"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'plateAppearance', teamAStats)" placeholder="PA"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'single', teamAStats)" placeholder="1B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'double', teamAStats)" placeholder="2B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'triple', teamAStats)" placeholder="3B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'homerun', teamAStats)" placeholder="HR"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'strikeout', teamAStats)" placeholder="K"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'walk', teamAStats)" placeholder="BB"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="AVG"
      [value]="getOutcomeTotal('all', 'hits', teamAStats) / (getOutcomeTotal('all', 'plateAppearance', teamAStats) - getOutcomeTotal('all', 'walk', teamAStats))" />
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="OBP"
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="OBP"
      [value]="(getOutcomeTotal('all', 'hits', teamAStats) + getOutcomeTotal('all', 'walk', teamAStats)) / getOutcomeTotal('all', 'plateAppearance', teamAStats)" />
-    </md-input-container>
+    </mat-input-container>
   </div>
   <div>
-    <!-- <md-input-container>
-     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="teamA.pitcher.name" placeholder="name"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="teamA.pitcher.pitchingAbility.velocity" placeholder="velocity"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="teamA.pitcher.pitichingAbility.control" placeholder="control"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="teamA.pitcher.pitchingAbility.movement" placeholder="movement"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput  [(ngModel)]="teamA.pitcher.pitchingAbility.type" placeholder="type"/>
-    </md-input-container>-->
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="ERA"
+    <!-- <mat-input-container>
+     <input matInput disabled="true" style="width: 80px" [(ngModel)]="teamA.pitcher.name" placeholder="name"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="teamA.pitcher.pitchingAbility.velocity" placeholder="velocity"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="teamA.pitcher.pitichingAbility.control" placeholder="control"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="teamA.pitcher.pitchingAbility.movement" placeholder="movement"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput  [(ngModel)]="teamA.pitcher.pitchingAbility.type" placeholder="type"/>
+    </mat-input-container>-->
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="ERA"
      [value]="teamBStats?.runs * 27 / getOutcomeTotal('all', 'outs', teamBStats)" />
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="K/9"
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="K/9"
      [value]="getOutcomeTotal('all', 'strikeout', teamBStats) * 27 / getOutcomeTotal('all', 'outs', teamBStats)" />
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="BB/9"
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="BB/9"
      [value]="getOutcomeTotal('all', 'walk', teamBStats) * 27 / getOutcomeTotal('all', 'outs', teamBStats)" />
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="E/9"
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="E/9"
      [value]="getOutcomeTotal('all', 'error', teamBStats) * 27 / getOutcomeTotal('all', 'outs', teamBStats)" />
-    </md-input-container>
+    </mat-input-container>
   </div>
 </div>
 <div fxFlex="50%">
   <h4>Team B</h4>
   <div *ngFor="let batter of teamB.batters">
-    <md-input-container>
-     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="batter.name" placeholder="name"/>
-    </md-input-container>
-    <!-- <md-input-container>
-     <input mdInput disabled="true" [(ngModel)]="batter.position" placeholder="position"/>
-    </md-input-container> -->
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.fielding" placeholder="fielding"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'plateAppearance', teamBStats)" placeholder="PA"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'single', teamBStats)" placeholder="1B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'double', teamBStats)" placeholder="2B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'triple', teamBStats)" placeholder="3B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'homerun', teamBStats)" placeholder="HR"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'strikeout', teamBStats)" placeholder="K"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'walk', teamBStats)" placeholder="BB"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="AVG"
+    <mat-input-container>
+     <input matInput disabled="true" style="width: 80px" [(ngModel)]="batter.name" placeholder="name"/>
+    </mat-input-container>
+    <!-- <mat-input-container>
+     <input matInput disabled="true" [(ngModel)]="batter.position" placeholder="position"/>
+    </mat-input-container> -->
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.contact" placeholder="contact"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.power" placeholder="power"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.patience" placeholder="patience"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.speed" placeholder="speed"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="100" [(ngModel)]="batter.hittingAbility.fielding" placeholder="fielding"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'plateAppearance', teamBStats)" placeholder="PA"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'single', teamBStats)" placeholder="1B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'double', teamBStats)" placeholder="2B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'triple', teamBStats)" placeholder="3B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'homerun', teamBStats)" placeholder="HR"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'strikeout', teamBStats)" placeholder="K"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal(batter.id, 'walk', teamBStats)" placeholder="BB"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="AVG"
      [value]="getOutcomeTotal(batter.id, 'hits', teamBStats) / (getOutcomeTotal(batter.id, 'plateAppearance', teamBStats) - getOutcomeTotal(batter.id, 'walk', teamBStats))" />
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="OBP"
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="OBP"
      [value]="(getOutcomeTotal(batter.id, 'hits', teamBStats) + getOutcomeTotal(batter.id, 'walk', teamBStats)) / getOutcomeTotal(batter.id, 'plateAppearance', teamBStats)" />
-    </md-input-container>
+    </mat-input-container>
   </div>
   <div>
-    <md-input-container>
-     <input mdInput disabled="true" style="width: 80px"  placeholder="Total"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'double play', teamBStats)" placeholder="DP"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'plateAppearance', teamBStats)" placeholder="PA"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'single', teamBStats)" placeholder="1B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'double', teamBStats)" placeholder="2B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'triple', teamBStats)" placeholder="3B"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'homerun', teamBStats)" placeholder="HR"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'strikeout', teamBStats)" placeholder="K"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'walk', teamBStats)" placeholder="BB"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="AVG"
+    <mat-input-container>
+     <input matInput disabled="true" style="width: 80px"  placeholder="Total"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'double play', teamBStats)" placeholder="DP"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'plateAppearance', teamBStats)" placeholder="PA"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'single', teamBStats)" placeholder="1B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'double', teamBStats)" placeholder="2B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'triple', teamBStats)" placeholder="3B"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'homerun', teamBStats)" placeholder="HR"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'strikeout', teamBStats)" placeholder="K"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 40px" [value]="getOutcomeTotal('all', 'walk', teamBStats)" placeholder="BB"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="AVG"
      [value]="getOutcomeTotal('all', 'hits', teamBStats) / (getOutcomeTotal('all', 'plateAppearance', teamBStats) - getOutcomeTotal('all', 'walk', teamBStats))" />
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="OBP"
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="OBP"
      [value]="(getOutcomeTotal('all', 'hits', teamBStats) + getOutcomeTotal('all', 'walk', teamBStats)) / getOutcomeTotal('all', 'plateAppearance', teamBStats)" />
-    </md-input-container>
+    </mat-input-container>
   </div>
 
   <div>
-    <md-input-container>
-     <input mdInput disabled="true" style="width: 80px" [(ngModel)]="teamB.pitcher.name" placeholder="name"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.pitchingAbility.velocity" placeholder="velocity"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.pitchingAbility.control" placeholder="control"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.pitchingAbility.movement" placeholder="movement"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput  [(ngModel)]="teamB.pitcher.pitchingAbility.type" placeholder="type"/>
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="ERA"
+    <mat-input-container>
+     <input matInput disabled="true" style="width: 80px" [(ngModel)]="teamB.pitcher.name" placeholder="name"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.pitchingAbility.velocity" placeholder="velocity"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.pitchingAbility.control" placeholder="control"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" min="0" max="20" [(ngModel)]="teamB.pitcher.pitchingAbility.movement" placeholder="movement"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput  [(ngModel)]="teamB.pitcher.pitchingAbility.type" placeholder="type"/>
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="ERA"
      [value]="teamAStats?.runs * 27 / getOutcomeTotal('all', 'outs', teamAStats)" />
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="K/9"
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="K/9"
      [value]="getOutcomeTotal('all', 'strikeout', teamAStats) * 27 / getOutcomeTotal('all', 'outs', teamAStats)" />
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="BB/9"
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="BB/9"
      [value]="getOutcomeTotal('all', 'walk', teamAStats) * 27 / getOutcomeTotal('all', 'outs', teamAStats)" />
-    </md-input-container>
-    <md-input-container>
-     <input mdInput type="number" disabled="true" style="width: 50px" placeholder="E/9"
+    </mat-input-container>
+    <mat-input-container>
+     <input matInput type="number" disabled="true" style="width: 50px" placeholder="E/9"
      [value]="getOutcomeTotal('all', 'error', teamAStats)  * 27 / getOutcomeTotal('all', 'outs', teamAStats)" />
-    </md-input-container>
+    </mat-input-container>
   </div>
 </div>
 </div>
