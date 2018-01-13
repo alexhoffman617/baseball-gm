@@ -84,8 +84,8 @@
   {{ seasonStats?.steals }}
 </td>
 <td *ngIf="button === 'release'">
-  <button md-button (click)="release()">Release</button>
+  <button md-raised-button color="primary" (click)="release()">Release</button>
 </td>
 <td *ngIf="button === 'negotiate'">
-  <button md-button [routerLink]="'/' + batter?.leagueId + '/negotiate-contract/' + batter?._id">Negotiate</button>
+  <button md-raised-button color="primary" [routerLink]="'/' + batter?.leagueId + '/negotiate-contract/' + batter?._id">Negotiate</button>
 </td>

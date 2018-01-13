@@ -79,8 +79,8 @@
   {{ seasonStats?.walks }}
 </td>
 <td *ngIf="button === 'release'">
-  <button md-button color="primary" (click)="release()">Release</button>
+  <button md-raised-button color="primary" (click)="release()">Release</button>
 </td>
 <td *ngIf="button === 'negotiate'">
-  <button md-button color="primary" [routerLink]="'/' + pitcher?.leagueId + '/negotiate-contract/' + pitcher?._id">Negotiate</button>
+  <button md-raised-button color="primary" [routerLink]="'/' + pitcher?.leagueId + '/negotiate-contract/' + pitcher?._id">Negotiate</button>
 </td>

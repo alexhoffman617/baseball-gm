@@ -2,5 +2,5 @@
   <md-option *ngFor="let team of leagueDataService.teams" [value]="team">{{ team?.location }} {{ team?.name }}</md-option>
 </md-select>
 <div>
-  <button md-button (click)="add()">Add</button>
+  <button md-raised-button color="primary" (click)="add()">Add</button>
 </div>

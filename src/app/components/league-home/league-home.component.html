@@ -17,3 +17,41 @@
       </ng-container>
   </ng-container>
 </ng-container>
+
+<div>
+  <h3>HR</h3>
+  <div *ngFor="let player of getLeaders('homeruns')">
+    {{player.name}}: {{getStat(player, 'homeruns')}}
+  </div>
+</div>
+<div>
+  <h3>AVG</h3>
+  <div *ngFor="let player of getLeaders('average', true)">
+    {{player.name}}: {{getStat(player, 'average', true)}}
+  </div>
+</div>
+<div>
+  <h3>RBI</h3>
+  <div *ngFor="let player of getLeaders('rbis')">
+    {{player.name}}: {{getStat(player, 'rbis')}}
+  </div>
+</div>
+
+<div>
+  <h3>ERA</h3>
+  <div *ngFor="let player of getLeaders('era', true, true, true)">
+    {{player.name}}: {{getStat(player, 'era', true, true)}}
+  </div>
+</div>
+<div>
+  <h3>WHIP</h3>
+  <div *ngFor="let player of getLeaders('whip', true, true, true)">
+    {{player.name}}: {{getStat(player, 'whip', true, true)}}
+  </div>
+</div>
+<div>
+  <h3>W</h3>
+  <div *ngFor="let player of getLeaders('wins', false, true, false)">
+    {{player.name}}: {{getStat(player, 'wins', false, true)}}
+  </div>
+</div>
