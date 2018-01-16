@@ -1,0 +1,28 @@
+<main id="tournament">
+	<ul *ngFor="let round of leagueDataService.currentSeason.playoffSchedule" class="round">
+    <ng-container *ngFor="let matchup of round">
+        <li class="spacer">&nbsp;</li>
+        <li class="game game-top"
+            [ngClass]="{ 'winner': matchup.higherSeedWins > matchup.bestOf / 2 }">
+          {{leagueDataService.getTeamById(matchup.higherSeedTeamId).location}} {{leagueDataService.getTeamById(matchup.higherSeedTeamId).name}}
+           <span>{{matchup.higherSeedWins}}</span>
+        </li>
+        <li class="game game-spacer">&nbsp;</li>
+        <li class="game game-bottom"
+          [ngClass]="{ 'winner': matchup.lowerSeedWins > matchup.bestOf / 2 }">
+          {{leagueDataService.getTeamById(matchup.lowerSeedTeamId).location}} {{leagueDataService.getTeamById(matchup.lowerSeedTeamId).name}}
+          <span>{{matchup.lowerSeedWins}}</span>
+        </li>
+        <li class="spacer">&nbsp;</li>
+    </ng-container>
+  </ul>
+  <ul class="round">
+      <li class="game game-top winner">
+        {{ (getLastPlayoffMatchup().length === 1 && (getLastPlayoffMatchup()[0].higherSeedWins > getLastPlayoffMatchup()[0].bestOf / 2 || getLastPlayoffMatchup()[0].lowerSeedWins > getLastPlayoffMatchup()[0].bestOf / 2)) ?
+          (getLastPlayoffMatchup()[0].higherSeedWins > getLastPlayoffMatchup()[0].lowerSeedWins ?
+          leagueDataService.getTeamById(getLastPlayoffMatchup()[0].higherSeedTeamId).location + ' ' +  leagueDataService.getTeamById(getLastPlayoffMatchup()[0].higherSeedTeamId).name :
+          leagueDataService.getTeamById(getLastPlayoffMatchup()[0].lowerSeedTeamId).location + ' ' +  leagueDataService.getTeamById(getLastPlayoffMatchup()[0].lowerSeedTeamId).name) :
+        ''}}
+      </li>
+  </ul>
+</main>

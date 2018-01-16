@@ -44,6 +44,7 @@ import { MessegesTestComponent } from './components/messeges-test/messeges-test.
 import { FreeAgentsComponent } from './components/free-agents/free-agents.component';
 import { NegotiateContractComponent } from './components/negotiate-contract/negotiate-contract.component';
 import { GenerateScheduleTestComponent } from './components/generate-schedule-test/generate-schedule-test.component';
+import { PlayoffBracketComponent } from './components/playoff-bracket/playoff-bracket.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -80,7 +81,8 @@ const routes: Routes = [
     MessegesTestComponent,
     FreeAgentsComponent,
     NegotiateContractComponent,
-    GenerateScheduleTestComponent
+    GenerateScheduleTestComponent,
+    PlayoffBracketComponent
   ],
   imports: [
     BrowserModule,

@@ -3,12 +3,12 @@
     <div>
       {{leagueId}}
     </div>
-    <ng-container *ngIf="!leagueDataService.league?.structure">
+    <ng-container *ngIf="!leagueDataService.league?.structure && !leagueDataService.currentSeason?.playoffSchedule">
     <div *ngFor="let team of sharedFunctionsService.getRecordOrderedTeams()" [routerLink]="'/' + team.leagueId + '/team/' + team._id">
       {{team.location}} {{team.name}} ({{sharedFunctionsService.getWins(team._id)}}-{{sharedFunctionsService.getLosses(team._id)}})
     </div>
     </ng-container>
-    <ng-container *ngIf="leagueDataService.league?.structure">
+    <ng-container *ngIf="leagueDataService.league?.structure && !leagueDataService.currentSeason?.playoffSchedule">
       <ng-container *ngFor="let conf of leagueDataService.league.structure; let iconf = index" >
           <ng-container *ngFor="let div of conf; let idiv = index" >
             <h3>{{staticListsService.mlbConfs[iconf]}} {{staticListsService.mlbDivs[idiv]}}</h3>
@@ -18,6 +18,9 @@
             <hr>
           </ng-container>
       </ng-container>
+    </ng-container>
+    <ng-container *ngIf="leagueDataService.currentSeason?.playoffSchedule">
+      <app-playoff-bracket></app-playoff-bracket>
     </ng-container>
   </div>
   <div fxFlex="40">
