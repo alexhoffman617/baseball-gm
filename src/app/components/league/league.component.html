@@ -4,11 +4,20 @@
   <mat-menu #sim="matMenu">
     <ng-container *ngIf="!leagueDataService.league?.simming">
       <ng-container *ngIf="areDaysLeftInSeason()">
-          <button mat-menu-item (click)="simatays(1)">Sim Day</button>
-          <button mat-menu-item (click)="simatays(6)">Sim Week</button>
-          <button mat-menu-item (click)="simatays('ROS')">Sim Rest Of Season</button>
+          <button mat-menu-item (click)="simDays(1)">Sim Day</button>
+          <button mat-menu-item (click)="simDays(6)">Sim Week</button>
+          <button mat-menu-item (click)="simDays(restOfSeason)">Sim Rest Of Season</button>
       </ng-container>
-      <button mat-menu-item *ngIf="!areDaysLeftInSeason()" (click)="playOffseason()">Sim Offseason</button>
+      <ng-container *ngIf="!areDaysLeftInSeason() && !leagueDataService.currentSeason.playoffSchedule">
+        <button mat-menu-item  (click)="generatePlayoffs()">Generate Playoffs</button>
+      </ng-container>
+      <ng-container *ngIf="!areDaysLeftInSeason() && leagueDataService.currentSeason.playoffSchedule && !playoffsCompleted()">
+        <button mat-menu-item (click)="simPlayoffDays(1)">Sim Day</button>
+        <button mat-menu-item (click)="simPlayoffDays(restOfPlayoffRound)">Sim Matchup</button>
+      </ng-container>
+      <ng-container *ngIf="playoffsCompleted()">
+        <button mat-menu-item (click)="playOffseason()">Sim Offseason </button>
+      </ng-container>
     </ng-container>
     <ng-container *ngIf="leagueDataService.league?.simming && areDaysLeftInSeason()">
       <button mat-menu-item  (click)="stopSimming()">Stop Simming</button>
@@ -17,4 +26,4 @@
   <button mat-button [routerLink]="'/'+ leagueId + '/free-agents'">Free Agents</button>
 </mat-toolbar>
 
-<router-outlet></router-outlet>
+<router-outlet class="league-page-container"></router-outlet>

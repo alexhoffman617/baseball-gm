@@ -72,4 +72,10 @@ router.get('/games/:leagueId', (req, res) => {
   })
 })
 
+router.get('/removeSeasonGames/:seasonId', (req, res) => {
+  games.deleteAllSeasonsGames(req.params.seasonId, function(status, value){
+    res.status(status).send(value)
+  })
+})
+
 module.exports = router;

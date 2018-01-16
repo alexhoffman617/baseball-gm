@@ -21,4 +21,9 @@
         <button mat-button mat-raised-button (click)="generateLeague()" color="primary">Ok</button>
       </div>
 </div>
-<mat-spinner *ngIf="isGenerating"></mat-spinner>
+<div *ngIf="isGenerating">
+    <mat-progress-bar  mode="determinate" [value]="sharedFunctionsService.progressBarValue"></mat-progress-bar>
+    <div>
+      {{sharedFunctionsService.loadingText}}...
+    </div>
+</div>

@@ -12,7 +12,7 @@
 </td>
 <td *ngIf="showRosterPosition && rosterPitcher">
   <mat-select [(ngModel)]="rosterPitcher.startingPosition" (change)="onPitcherRoleChange(rosterPitcher, $event)">
-    <mat-option *ngFor="let role of pitcherRoles" [value]="role">
+    <mat-option *ngFor="let role of staticListsService.pitcherRoles" [value]="role">
       {{ role }}
     </mat-option>
   </mat-select>

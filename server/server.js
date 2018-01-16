@@ -132,9 +132,15 @@ io.on('connection', function(socket){
 
   socket.on('update-game', (game, callback) => {
     Games.updateGame(game, function(status, savedGame){
-      Games.getGamess(game.leagueId, function(status, games){
+      Games.getGames(game.leagueId, function(status, games){
        io.emit('games:' + game.leagueId, games)
       })
+    })
+  })
+
+  socket.on('delete-all-seasons-games', (seasonId, leagueId, callback) => {
+    Games.deleteAllSeasonsGames(seasonId, function(status, deletedGames){
+      io.emit('games:' + leagueId, [])
     })
   })
 

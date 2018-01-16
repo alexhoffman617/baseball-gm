@@ -4,6 +4,7 @@ import { RosterSpot, Team } from '../../models/team';
 import { PitchingProgression, PitcherSeasonStats } from '../../models/player';
 import { LeagueDataService } from '../../services/league-data.service';
 import { SharedFunctionsService } from '../../services/shared-functions.service';
+import { StaticListsService } from '../../services/static-lists.service';
 import * as _ from 'lodash';
 
 @Component({
@@ -29,16 +30,9 @@ export class TeamPitcherRowComponent implements OnChanges {
   showSkills = false
   showStats = false
 
-  pitcherRoles = [
-    null,
-    'SP1',
-    'SP2',
-    'SP3',
-    'SP4',
-    'SP5'
-  ]
-
-  constructor(private leagueDataService: LeagueDataService, public sharedFunctionsService: SharedFunctionsService) { }
+  constructor(private leagueDataService: LeagueDataService,
+     public staticListsService: StaticListsService,
+     public sharedFunctionsService: SharedFunctionsService) { }
 
   ngOnChanges() {
     this.pitchingProgression = this.getPitchingProgression()

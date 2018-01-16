@@ -307,6 +307,15 @@ export class LeagueDataService  {
     })
   }
 
+  deleteAllGamesInSeason(seasonId: string) {
+    const that = this
+    return new Promise(function(resolve){
+      that.socket.emit('delete-all-seasons-games', seasonId, that.league._id, function(completed){
+        resolve(completed)
+      })
+    })
+  }
+
   getPlayer(playerId) {
     return _.find(this.players, function(player){
       return player._id === playerId

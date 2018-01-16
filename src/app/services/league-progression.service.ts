@@ -34,6 +34,7 @@ export class LeagueProgressionService {
           that.progressPitcher(player, team._id, currentSeason)
         })
     })
+    that.leagueDataService.deleteAllGamesInSeason(currentSeason._id)
     await that.seasonGenerator.generateSeason(leagueId, teamIds, currentSeason.year + 1, structure)
     that.leagueDataService.league.simming = false
     that.leagueDataService.updateLeague()

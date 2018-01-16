@@ -5,6 +5,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable'
 import * as io from 'socket.io-client';
+import { SharedFunctionsService } from 'app/services/shared-functions.service';
 
 @Component({
   selector: 'app-main',
@@ -55,6 +56,7 @@ export class CreateLeagueDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<CreateLeagueDialogComponent>,
     private generateLeagueService: GenerateLeagueService,
+    public sharedFunctionsService: SharedFunctionsService,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   onNoClick(): void {

@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect("mongodb://website:password@ds129344.mlab.com:29344/baseball-gm");
+mongoose.connect("mongodb://website:password@ds255797.mlab.com:55797/baseballgm");
 var Schema = mongoose.Schema
 var gameSchema = new Schema({}, {strict: false})
 var Game = mongoose.model('games', gameSchema);
@@ -20,6 +20,11 @@ var exports = {
   updateGame: function(game, callback){
     Game.update({_id: game._id}, game, function(err, game){
       callback(200, game)
+    })
+  },
+  deleteAllSeasonsGames: function(seasonId, callback){
+    Game.deleteMany({seasonId: seasonId}, function(err, games){
+      callback(200, true)
     })
   }
 }

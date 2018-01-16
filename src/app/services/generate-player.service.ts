@@ -39,7 +39,7 @@ export class GeneratePlayerService {
             this.generateSkillValue('speed', age, potential),
             this.generateSkillValue('fielding', age, potential));
 
-        const player = new Player(name, age, this.getBattingSide(), this.getThrowingSide(),
+        const player = new Player(name, age, this.staticListsService.playerTypes.batter, this.getBattingSide(), this.getThrowingSide(),
                        skills, potential, new PitchingSkillset(0, 0, 0, 'std'),
                        new PitchingSkillset(0, 0, 0, 'std'), leagueId, teamId, year);
         player.hittingSeasonStats = [new BatterSeasonStats(year)]
@@ -64,7 +64,7 @@ export class GeneratePlayerService {
             this.generateSkillValue('movement', age, potential),
             potential.type);
 
-        const player =  new Player(name, age, this.getBattingSide(), this.getThrowingSide(),
+        const player =  new Player(name, age, this.staticListsService.playerTypes.pitcher, this.getBattingSide(), this.getThrowingSide(),
              new HittingSkillset(0, 0, 0, 0, 0), new HittingSkillset(0, 0, 0, 0, 0), skills,
             potential, leagueId, teamId, year);
         player.hittingSeasonStats = [new BatterSeasonStats(year)]

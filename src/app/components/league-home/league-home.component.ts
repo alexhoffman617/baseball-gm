@@ -10,7 +10,6 @@ import { PlayGameService } from '../../services/play-game.service';
 import { LeagueProgressionService } from '../../services/league-progression.service';
 import { StaticListsService } from '../../services/static-lists.service';
 import * as _ from 'lodash';
-import 'rxjs/add/operator/first'
 
 @Component({
   selector: 'app-league-home',
@@ -33,59 +32,6 @@ export class LeagueHomeComponent implements OnInit {
     })
   }
 
-  getWins(teamId) {
-    let wins = 0;
-    if (!this.leagueDataService.currentSeason) {
-      return wins
-    }
-    _.each(this.leagueDataService.currentSeason.schedule, function(scheduledDay){
-      const game = _.find(scheduledDay.scheduledGames, function(g){
-        return g.homeTeamId === teamId || g.awayTeamId === teamId;
-      });
-      if ((game.homeTeamId === teamId && game.homeTeamScore > game.awayTeamScore)
-          || (game.awayTeamId === teamId && game.awayTeamScore > game.homeTeamScore) ) {
-        wins++;
-      }
-    })
-    return wins;
-  }
-
-  getLosses(teamId) {
-    let losses = 0;
-    if (!this.leagueDataService.currentSeason) {
-      return losses
-    }
-    _.each(this.leagueDataService.currentSeason.schedule, function(scheduledDay){
-      const game = _.find(scheduledDay.scheduledGames, function(g){
-        return g.homeTeamId === teamId || g.awayTeamId === teamId;
-      });
-      if ((game.homeTeamId === teamId && game.homeTeamScore < game.awayTeamScore)
-          || (game.awayTeamId === teamId && game.awayTeamScore < game.homeTeamScore) ) {
-        losses++;
-      }
-    })
-    return losses;
-  }
-
-  getRecordOrderedTeams() {
-    const that = this
-    return _.orderBy(this.leagueDataService.teams, function(team){
-      return that.getWins(team._id)
-    }, 'desc')
-  }
-
-  getRecordOrderedTeamsById(teamIds: Array<string>) {
-    const that = this
-    const resultArray = []
-    const orderedTeamId = _.orderBy(teamIds, function(teamId){
-      return that.getWins(teamId)
-    }, 'desc')
-    _.each(orderedTeamId, function(id){
-      resultArray.push(that.leagueDataService.getTeamById(id))
-    })
-    return resultArray
-  }
-
   getLeaders(attribute: string, isSharedFunction: boolean = false, isPitching: boolean = false, asc: boolean = false) {
     const that = this
     const filteredPlayers = _.filter(this.players, function(player){
@@ -95,7 +41,7 @@ export class LeagueHomeComponent implements OnInit {
         return that.getStat(player, 'plateAppearences', false, false) > 0
       }
     })
-    return _.orderBy(filteredPlayers, function(player){
+    return filteredPlayers.length === 0 ? ['', '', ''] : _.orderBy(filteredPlayers, function(player){
      return that.getStat(player, attribute, isSharedFunction, isPitching)
     }, asc ? 'asc' : 'desc').slice(0, 3)
   }
@@ -113,6 +59,6 @@ export class LeagueHomeComponent implements OnInit {
       })
     }
 
-    return isSharedFunction ? that.sharedFunctionsService[attribute](stats) : stats[attribute]
+    return stats ? (isSharedFunction ? that.sharedFunctionsService[attribute](stats) : stats[attribute]) : null
   }
 }

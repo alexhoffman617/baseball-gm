@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Season } from '../../models/season';
+import { Season, PlayoffMatchup } from '../../models/season';
 import { League } from '../../models/league';
 import { GamePlayer, Game } from '../../models/game';
 import { Team, RosterSpot } from '../../models/team';
@@ -9,6 +9,7 @@ import { PlayGameService } from '../../services/play-game.service';
 import { LeagueProgressionService } from '../../services/league-progression.service';
 import { LeagueDataService } from '../../services/league-data.service';
 import { ProcessGameService } from '../../services/process-game.service';
+import { PlayoffScheduleGenerator } from '../../services/playoff-schedule.generator';
 import * as _ from 'lodash';
 import * as io from 'socket.io-client';
 
@@ -20,6 +21,7 @@ styleUrls: ['./league.component.css']
 export class LeagueComponent implements OnInit {
 
 restOfSeason = 'ROS'
+restOfPlayoffRound = 'ROPR'
 leagueId;
 teams
 seasonSnapshot: Season;
@@ -28,6 +30,7 @@ seasonSnapshot: Season;
               private leagueProgressionService: LeagueProgressionService,
               private playGameService: PlayGameService,
               public leagueDataService: LeagueDataService,
+              public playoffScheduleGenerator: PlayoffScheduleGenerator,
               public processGameService: ProcessGameService,
   ) { }
 
@@ -50,18 +53,29 @@ async stopSimming() {
 }
 
 areDaysLeftInSeason() {
-  if (!this.seasonSnapshot) {
+  if (!this.leagueDataService.currentSeason) {
     return true
   }
-  return !!_.find(this.seasonSnapshot.schedule, function(d){
+  return !!_.find(this.leagueDataService.currentSeason.schedule, function(d){
     return !d.complete
   });
 }
 
-  playOffseason() {
-    this.leagueProgressionService.progressLeague(this.leagueId, this.leagueDataService.currentSeason,
-      this.leagueDataService.teams, this.leagueDataService.league.structure)
-  }
+async generatePlayoffs() {
+  await this.playoffScheduleGenerator.generatePlayoffSchedule()
+}
+
+playoffsCompleted() {
+  return this.leagueDataService.currentSeason &&
+  this.leagueDataService.currentSeason.playoffSchedule &&
+  this.leagueDataService.currentSeason.playoffSchedule[this.leagueDataService.currentSeason.playoffSchedule.length - 1].length === 1 &&
+  this.playoffScheduleGenerator.isCurrentRoundDone()
+}
+
+playOffseason() {
+  this.leagueProgressionService.progressLeague(this.leagueId, this.leagueDataService.currentSeason,
+    this.leagueDataService.teams, this.leagueDataService.league.structure)
+}
 
 simDays(days) {
   this.seasonSnapshot = this.leagueDataService.currentSeason
@@ -101,12 +115,10 @@ async playDays(daysLeft) {
   completeDaySim(day, daysLeft) {
     day.complete = true
     this.leagueDataService.updateLocalSeason(this.seasonSnapshot)
-    if (daysLeft === this.restOfSeason) {
-      if (this.areDaysLeftInSeason()) {
-        this.playDays(daysLeft)
-      } else {
-        this.stopSimming()
-      }
+    if (!this.areDaysLeftInSeason()) {
+      this.stopSimming()
+    } else if (daysLeft === this.restOfSeason) {
+      this.playDays(daysLeft)
     } else if (daysLeft > 1) {
       daysLeft--
       this.playDays(daysLeft)
@@ -115,13 +127,78 @@ async playDays(daysLeft) {
     }
   }
 
-    constructRoster(teamId) {
-      const that = this
-      const gamePlayers = new Array<GamePlayer>();
-      const teamPlayers = that.leagueDataService.getPlayersByTeamId(teamId) as Array<Player>
-      const gameTeam = _.find(that.leagueDataService.teams, function(team){
-        return team._id === teamId;
-      })
+  simPlayoffDays(days) {
+    this.seasonSnapshot = this.leagueDataService.currentSeason
+    this.leagueDataService.league.simming = true
+    this.leagueDataService.updateLeague()
+    this.playPlayoffDay(days)
+  }
+
+  async playPlayoffDay(daysLeft) {
+    const that = this
+    if (this.leagueDataService.league.simming === false) {
+      this.leagueDataService.updateSeason(this.seasonSnapshot)
+      return
+    }
+    const round = this.seasonSnapshot.playoffSchedule[this.seasonSnapshot.playoffSchedule.length - 1]
+    for (const matchup of round) {
+      if (this.playoffScheduleGenerator.getPlayoffMatchupWinner(matchup)) {
+        continue
+      }
+      let homeTeamId
+      let awayTeamId
+      if (matchup.gameIds.length % 2 === 0) {
+        homeTeamId = matchup.higherSeedTeamId
+        awayTeamId = matchup.lowerSeedTeamId
+      } else {
+        homeTeamId = matchup.lowerSeedTeamId
+        awayTeamId = matchup.higherSeedTeamId
+      }
+      const homeGamePlayers = that.constructRoster(homeTeamId)
+      const awayGamePlayers = that.constructRoster(matchup.higherSeedTeamId)
+      const game = that.playGameService.playGame(homeGamePlayers, awayGamePlayers,
+        homeTeamId, awayTeamId, that.seasonSnapshot._id, that.leagueId);
+      const savedGame = await that.leagueDataService.createGame(game) as Game
+      matchup.gameIds.push(savedGame._id)
+      if (savedGame.homeTeamStats.runs > savedGame.awayTeamStats.runs) {
+        if (homeTeamId === matchup.higherSeedTeamId) {
+          matchup.higherSeedWins ++
+        } else {
+          matchup.lowerSeedWins ++
+        }
+      } else {
+        if (awayTeamId === matchup.higherSeedTeamId) {
+          matchup.higherSeedWins ++
+        } else {
+          matchup.lowerSeedWins ++
+        }
+      }
+    }
+    // that.processGameService.processPlayoffGame(savedGame)
+    await that.completePlayoffDaySim(daysLeft)
+  }
+
+  async completePlayoffDaySim(daysLeft) {
+    this.leagueDataService.updateLocalSeason(this.seasonSnapshot)
+    if (this.playoffScheduleGenerator.isCurrentRoundDone()) {
+      if (!this.playoffsCompleted()) {
+        await this.playoffScheduleGenerator.generateNextRound(this.seasonSnapshot.playoffSchedule)
+      }
+      this.stopSimming()
+    } else if (daysLeft === this.restOfPlayoffRound) {
+      this.simPlayoffDays(daysLeft)
+    } else {
+      this.stopSimming()
+    }
+  }
+
+  constructRoster(teamId) {
+    const that = this
+    const gamePlayers = new Array<GamePlayer>();
+    const teamPlayers = that.leagueDataService.getPlayersByTeamId(teamId) as Array<Player>
+    const gameTeam = _.find(that.leagueDataService.teams, function(team){
+      return team._id === teamId;
+    })
 
     const orderedPitchers = _.sortBy(gameTeam.roster.pitchers, function(p){
       return p.startingPosition === '' ? null : p.startingPosition

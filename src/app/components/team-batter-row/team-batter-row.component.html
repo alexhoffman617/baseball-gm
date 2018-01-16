@@ -12,14 +12,14 @@
 </td>
 <td *ngIf="showRosterPosition && rosterBatter">
   <mat-select [(ngModel)]="rosterBatter.startingPosition" (change)="onPositionChange(batter, $event)">
-    <mat-option *ngFor="let position of positions" [value]="position">
+    <mat-option *ngFor="let position of staticListsService.fieldingPositions" [value]="position">
       {{ position }}
     </mat-option>
   </mat-select>
 </td>
 <td *ngIf="showOrderNumber && rosterBatter">
   <mat-select [(ngModel)]="rosterBatter.orderNumber" (change)="onOrderChange(batter, $event)">
-    <mat-option *ngFor="let orderNumber of orderNumbers" [value]="orderNumber">
+    <mat-option *ngFor="let orderNumber of staticListsService.battingOrderNumbers" [value]="orderNumber">
       {{ orderNumber }}
     </mat-option>
   </mat-select>

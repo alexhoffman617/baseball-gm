@@ -3,27 +3,46 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class StaticListsService {
-     pitcherRoles = [
-      'SP1',
-      'SP2',
-      'SP3',
-      'SP4',
-      'SP5'
-    ]
 
-     positions = [
-      'C',
-      '1B',
-      '2B',
-      '3B',
-      'SS',
-      'LF',
-      'CF',
-      'RF',
-      'DH'
-    ]
+  playerTypes = {
+    pitcher: 'pitcher',
+    batter: 'batter'
+  }
+  pitcherRoles = [
+  'SP1',
+  'SP2',
+  'SP3',
+  'SP4',
+  'SP5'
+  ]
 
-    teamLocations = [
+  fieldingPositions = [
+  'C',
+  '1B',
+  '2B',
+  '3B',
+  'SS',
+  'LF',
+  'CF',
+  'RF',
+  'DH'
+  ]
+
+  battingOrderNumbers= [
+    null,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+
+
+  teamLocations = [
  'Akron',
 'Albuquerque',
 'Alexandria',

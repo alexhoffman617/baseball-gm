@@ -10,6 +10,7 @@ export class Player {
   firstYear: number;
   lastYear: number;
   currentStamina: number;
+  playerType: string;
   hittingAbility: HittingSkillset;
   hittingPotential: HittingSkillset;
   hittingProgressions: Array<HittingProgression>
@@ -39,12 +40,13 @@ export class Player {
     return Math.round((this.pitchingPotential.velocity + this.pitchingPotential.control + this.pitchingPotential.movement) / 3);
   }
 
-  constructor(name: string, age: number, bats: string, throws: string,
+  constructor(name: string, age: number, playerType: string, bats: string, throws: string,
     hittingAbility: HittingSkillset, hittingPotential: HittingSkillset,
     pitchingAbility: PitchingSkillset, pitchingPotential: PitchingSkillset,
     leagueId: string, teamId: string, firstYear: number) {
     this.name = name;
     this.age = age;
+    this.playerType = playerType
     this.bats = bats;
     this.throws = throws;
     this.firstYear = firstYear;

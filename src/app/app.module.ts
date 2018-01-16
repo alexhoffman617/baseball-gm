@@ -5,6 +5,7 @@ import { MaterialModule } from './material.module';
 import { FormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
+import { FlexLayoutModule } from '@angular/flex-layout'
 
 import { AppComponent } from './app.component';
 
@@ -20,12 +21,12 @@ import { GeneratePlayerTestComponent } from './components/generate-player-test/g
 import { CreateTeamTestComponent } from './components/create-team-test/create-team-test.component';
 import { PlayerProgressionTestComponent } from './components/player-progression-test/player-progression-test.component';
 import { AdminDbCleanupComponent } from './components/admin-db-cleanup/admin-db-cleanup.component';
-
 import { PlayGameService } from './services/play-game.service';
 import { GeneratePlayerService } from './services/generate-player.service';
 import { GenerateTeamService } from './services/generate-team.service';
 import { GenerateLeagueService } from './services/generate-league.service';
 import { SeasonGenerator } from './services/season.generator';
+import { PlayoffScheduleGenerator } from './services/playoff-schedule.generator';
 import { RealMlbScheduleGenerator } from './services/real-mlb-schedule.generator';
 import { AtBatService } from './services/at-bat.service';
 import { PlayerProgressionService } from './services/player-progression.service';
@@ -42,6 +43,7 @@ import { PlayerComponent } from './components/player/player.component';
 import { MessegesTestComponent } from './components/messeges-test/messeges-test.component';
 import { FreeAgentsComponent } from './components/free-agents/free-agents.component';
 import { NegotiateContractComponent } from './components/negotiate-contract/negotiate-contract.component';
+import { GenerateScheduleTestComponent } from './components/generate-schedule-test/generate-schedule-test.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -77,7 +79,8 @@ const routes: Routes = [
     PlayerComponent,
     MessegesTestComponent,
     FreeAgentsComponent,
-    NegotiateContractComponent
+    NegotiateContractComponent,
+    GenerateScheduleTestComponent
   ],
   imports: [
     BrowserModule,
@@ -85,7 +88,8 @@ const routes: Routes = [
     BrowserAnimationsModule,
     FormsModule,
     RouterModule.forRoot(routes),
-    HttpModule
+    HttpModule,
+    FlexLayoutModule
   ],
   providers: [
     PlayGameService,
@@ -95,6 +99,7 @@ const routes: Routes = [
     GenerateLeagueService,
     SeasonGenerator,
     RealMlbScheduleGenerator,
+    PlayoffScheduleGenerator,
     PlayerProgressionService,
     PitcherProgressionService,
     LeagueProgressionService,

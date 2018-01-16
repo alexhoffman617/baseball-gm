@@ -6,6 +6,8 @@ import { Player, HittingProgression } from '../../models/player';
 import { Game, AtBat, PitcherAppearance } from '../../models/game';
 import { BatterSeasonStats, PitcherSeasonStats } from '../../models/season-stats';
 import { Season } from '../../models/season';
+import { StaticListsService } from '../../services/static-lists.service';
+
 import * as _ from 'lodash';
 import 'rxjs/add/operator/first'
 
@@ -20,6 +22,7 @@ export class TeamComponent implements OnInit {
   team: Team;
   players: Array<Player>;
   constructor(private route: ActivatedRoute,
+              public staticListsService: StaticListsService,
               public leagueDataService: LeagueDataService) { }
 
   async ngOnInit() {
@@ -82,5 +85,24 @@ export class TeamComponent implements OnInit {
     const seasonStats = new PitcherSeasonStats()
     seasonStats.buildSeasonStatsFromPitcherAppearances(playerId, playerEvents)
     return seasonStats
+  }
+
+  getOrderedBatters() {
+    return this.team && this.team.roster ?
+     _.orderBy(this.team.roster.batters, ['orderNumber', 'startingPosition'], ['asc', 'asc']) :
+    []
+  }
+
+  getOrderedPitchers() {
+    const that = this
+    return this.team && this.team.roster ?
+     _.orderBy(this.team.roster.pitchers, function(batter){
+      let index = that.staticListsService.pitcherRoles.indexOf(batter.startingPosition)
+      if (index === -1) {
+        index = 100
+      }
+      return index
+     }) :
+    []
   }
 }

@@ -102,7 +102,7 @@ export class ProcessGameService {
     }
 
     roundInnings(innings) {
-      if (parseFloat((innings % 1).toFixed(1)) === .3) {
+      if (parseFloat((innings % 1).toFixed(1)) >= .3) {
         innings += .7
       }
       innings = parseFloat((innings).toFixed(1))

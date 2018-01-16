@@ -4,6 +4,7 @@ import { RosterSpot, Team } from '../../models/team';
 import { HittingProgression } from '../../models/player';
 import { LeagueDataService } from '../../services/league-data.service';
 import { SharedFunctionsService } from '../../services/shared-functions.service';
+import { StaticListsService } from '../../services/static-lists.service';
 import * as _ from 'lodash';
 
 @Component({
@@ -30,32 +31,10 @@ export class TeamBatterRowComponent implements OnChanges {
   showSkills = false
   showStats = false
 
-  positions= [
-    'C',
-    '1B',
-    '2B',
-    '3B',
-    'SS',
-    'LF',
-    'CF',
-    'RF',
-    'DH'
-  ]
-
-  orderNumbers= [
-    null,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9
-  ]
-
-  constructor(public leagueDataService: LeagueDataService, public sharedFunctionsService: SharedFunctionsService) { }
+  constructor(public leagueDataService: LeagueDataService,
+    public sharedFunctionsService: SharedFunctionsService,
+    public staticListsService: StaticListsService,
+  ) { }
 
   ngOnChanges() {
     this.hittingProgression = this.getHittingProgression()

@@ -1,0 +1,7 @@
+<div *ngFor="let scheduleDay of mlbSchedule; let i = index">
+  <h3>Day {{i}}</h3>
+  <div *ngFor="let matchup of scheduleDay.scheduledGames">
+    {{ matchup.homeTeamId }} @ {{ matchup.awayTeamId }}
+  </div>
+</div>
+
