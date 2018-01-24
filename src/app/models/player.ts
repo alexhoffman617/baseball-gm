@@ -9,8 +9,10 @@ export class Player {
   throws: string;
   firstYear: number;
   lastYear: number;
+  retired: boolean;
   currentStamina: number;
   playerType: string;
+  primaryPositions: Array<string>;
   hittingAbility: HittingSkillset;
   hittingPotential: HittingSkillset;
   hittingProgressions: Array<HittingProgression>
@@ -19,6 +21,7 @@ export class Player {
   pitchingProgressions: Array<PitchingProgression>
   hittingSeasonStats: Array<BatterSeasonStats>
   pitchingSeasonStats: Array<PitcherSeasonStats>
+  fieldingSeasonStats: Array<FieldingSeasonStats>
   leagueId: string;
   teamId: string;
 
@@ -43,13 +46,15 @@ export class Player {
   constructor(name: string, age: number, playerType: string, bats: string, throws: string,
     hittingAbility: HittingSkillset, hittingPotential: HittingSkillset,
     pitchingAbility: PitchingSkillset, pitchingPotential: PitchingSkillset,
-    leagueId: string, teamId: string, firstYear: number) {
+    leagueId: string, teamId: string, firstYear: number, primaryPositions: Array<string>) {
     this.name = name;
     this.age = age;
     this.playerType = playerType
+    this.primaryPositions = primaryPositions
     this.bats = bats;
     this.throws = throws;
     this.firstYear = firstYear;
+    this.retired = false
     this.currentStamina = 100;
     this.hittingAbility = hittingAbility;
     this.hittingPotential = hittingPotential;
@@ -59,6 +64,7 @@ export class Player {
     this.teamId = teamId;
     this.hittingProgressions = new Array<HittingProgression>()
     this.pitchingProgressions = new Array<PitchingProgression>()
+    this.fieldingSeasonStats = new Array<FieldingSeasonStats>()
   }
 }
 
@@ -124,6 +130,7 @@ export class BatterSeasonStats {
     strikeouts: number;
     sacrificeFlies: number
     steals: number;
+    caughtStealing: number;
     rbis: number;
     runs: number;
 
@@ -139,6 +146,7 @@ export class BatterSeasonStats {
       this.strikeouts = 0
       this.sacrificeFlies = 0
       this.steals = 0
+      this.caughtStealing = 0
       this.rbis = 0
       this.runs = 0
     }
@@ -183,6 +191,17 @@ export class PitcherSeasonStats {
       }
       this.innings = parseFloat((this.innings).toFixed(1))
     }
+}
 
+export class FieldingSeasonStats {
+  year: number
+  putOuts: number
+  errors: number
+
+  constructor(year: number) {
+    this.year = year
+    this.putOuts = 0
+    this.errors = 0
+  }
 }
 

@@ -55,13 +55,7 @@ io.on('connection', function(socket){
 
   socket.on('update-league', (league) => {
     Leagues.updateLeague(league, function(status, updatedLeague){
-      io.emit('league:' + league._id, league)
-      Games.getGames(league._id, function(status, games){
-        io.emit('games:' + league._id, games)
-      })
-      Seasons.getSeasons(league._id, function(status, seasons){
-        io.emit('seasons:' + league._id, seasons)
-      })
+      io.emit('league:' + league._id, updatedLeague)
     })
   })
 
@@ -111,9 +105,7 @@ io.on('connection', function(socket){
 
   socket.on('update-player', (player, callback) => {
     Players.updatePlayer(player, function(status, savedPlayer){
-      Players.getPlayers(player.leagueId, function(status, players){
-       io.emit('players:' + player.leagueId, players)
-      })
+       io.emit('player:' + player.leagueId, savedPlayer)
     })
   })
 

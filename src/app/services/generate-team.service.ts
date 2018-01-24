@@ -5,12 +5,14 @@ import { GeneratePlayerService } from './generate-player.service';
 import { LeagueDataService } from './league-data.service';
 import { StaticListsService } from './static-lists.service';
 import 'rxjs/add/operator/toPromise';
+import { SharedFunctionsService } from 'app/services/shared-functions.service';
 
 @Injectable()
 export class GenerateTeamService {
     players = [];
     constructor(private generatePlayerSerivce: GeneratePlayerService,
                 private staticListsService: StaticListsService,
+                private sharedFunctionsService: SharedFunctionsService,
                 private leagueDataService: LeagueDataService) { }
 
     async generateRandomTeam(leagueId: string) {
@@ -27,24 +29,16 @@ export class GenerateTeamService {
     }
 
     async generateTeam(leagueId: string, team: Team) {
-        for (let x = 0; x < 15; x++) {
-            const batter = await this.generatePlayerSerivce.generateBatter(leagueId, team._id, (new Date()).getFullYear());
-            this.players.push(batter);
-            if (x < 9) {
-              team.roster.batters.push(new RosterSpot(batter._id, this.staticListsService.fieldingPositions[x], x + 1));
-            } else {
-              team.roster.batters.push(new RosterSpot(batter._id, null, null));
-            }
+        for (let x = 0; x < 13; x++) {
+          const batter = await this.generatePlayerSerivce.generateBatter(leagueId, team._id, (new Date()).getFullYear());
+          this.players.push(batter);
+          team.roster.batters.push(new RosterSpot(batter._id, null, null));
         }
 
-        for (let y = 0; y < 10; y++) {
-            const pitcher = await this.generatePlayerSerivce.generatePitcher(leagueId, team._id, (new Date()).getFullYear());
-            this.players.push(pitcher);
-            if (y < 5) {
-              team.roster.pitchers.push(new RosterSpot(pitcher._id, this.staticListsService.pitcherRoles[y], null));
-            } else {
-              team.roster.pitchers.push(new RosterSpot(pitcher._id, null, null));
-            }
+        for (let y = 0; y < 12; y++) {
+          const pitcher = await this.generatePlayerSerivce.generatePitcher(leagueId, team._id, (new Date()).getFullYear());
+          this.players.push(pitcher);
+          team.roster.pitchers.push(new RosterSpot(pitcher._id, null, null));
         }
         const updatedTeam = await this.leagueDataService.updateTeam(team);
         return updatedTeam as Team

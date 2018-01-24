@@ -126,6 +126,13 @@ export class LeagueDataService  {
         that.socket.on('players:' + leagueId, (data) => {
           observer.next(data);
         });
+        that.socket.on('player:' + leagueId, (data) => {
+          _.each(that.players, function(player){
+            if (player._id === data._id) {
+              player = data
+            }
+          })
+        });
         return () => {
           that.socket.disconnect();
         };
@@ -186,7 +193,7 @@ export class LeagueDataService  {
     })
   }
 
-  updateAllPlayers() {
+  async updateAllPlayers() {
     const that = this
     return new Promise(function(resolve){
       that.socket.emit('update-players', that.players, that.league._id,  function(completed){
@@ -195,7 +202,7 @@ export class LeagueDataService  {
     })
   }
 
-  updatePlayer(player) {
+  async updatePlayer(player) {
     const that = this
     return new Promise(function(resolve){
       that.socket.emit('update-player', player,  function(completed){
@@ -204,7 +211,7 @@ export class LeagueDataService  {
     })
   }
 
-  updateSeason(season) {
+  async updateSeason(season) {
     const that = this
     const socket = io.connect('http://localhost:3000/');
     return new Promise(function(resolve){
@@ -214,7 +221,7 @@ export class LeagueDataService  {
     })
   }
 
-  updateLeague(league = null) {
+  async updateLeague(league = null) {
     const that = this
     return new Promise(function(resolve){
       that.socket.emit('update-league', league ? league : that.league, function(completed){
@@ -223,7 +230,7 @@ export class LeagueDataService  {
     })
   }
 
-  createPlayer(player) {
+  async createPlayer(player) {
     const that = this
     return new Promise(function(resolve){
       that.socket.emit('create-player', player, function(completed){
@@ -232,7 +239,7 @@ export class LeagueDataService  {
     })
   }
 
-  createTeam(team) {
+  async createTeam(team) {
     const that = this
     return new Promise(function(resolve){
       that.socket.emit('create-team', team, function(completed){
@@ -241,7 +248,7 @@ export class LeagueDataService  {
     })
   }
 
-  createSeason(season) {
+  async createSeason(season) {
     const that = this
     return new Promise(function(resolve){
       that.socket.emit('create-season', season, function(completed){
@@ -298,7 +305,7 @@ export class LeagueDataService  {
 
   }
 
-  updateTeam(team) {
+  async updateTeam(team) {
     const that = this
     return new Promise(function(resolve){
       that.socket.emit('update-team', team, function(completed){
@@ -307,7 +314,7 @@ export class LeagueDataService  {
     })
   }
 
-  deleteAllGamesInSeason(seasonId: string) {
+  async deleteAllGamesInSeason(seasonId: string) {
     const that = this
     return new Promise(function(resolve){
       that.socket.emit('delete-all-seasons-games', seasonId, that.league._id, function(completed){

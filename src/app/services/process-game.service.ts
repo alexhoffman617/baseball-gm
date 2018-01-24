@@ -11,23 +11,23 @@ export class ProcessGameService {
     }
 
     processGame(game: Game) {
-      this.processTeam(game.homeTeamStats, game.homeTeamId)
-      this.processTeam(game.awayTeamStats, game.awayTeamId)
+      this.processTeam(game.homeTeamStats, game.homeTeamId, game.awayTeamStats)
+      this.processTeam(game.awayTeamStats, game.awayTeamId, game.homeTeamStats)
     }
 
-    processTeam(teamStats: TeamStats, teamId: string) {
+    processTeam(teamStats: TeamStats, teamId: string, otherTeamStats: TeamStats) {
       const that = this
       const players = this.leagueDataService.getPlayersByTeamId(teamId)
-      _.each(players, function(player){
-        that.updateBatterSeasonStatsFromGameEvents(teamStats.events, player)
-        player.currentStamina = Math.min(player.currentStamina + 10, 100)
-      })
       _.each(teamStats.pitcherAppearances, function(appearance){
         const pitcher = _.find(players, { _id: appearance.pitcherId})
         that.updatePitcherSeasonStatsFromAppearances(appearance, pitcher)
         pitcher.currentStamina -= 50
       })
-
+      _.each(players, function(player){
+        that.updateBatterSeasonStatsFromGameEvents(teamStats.events, player)
+        that.updateFieldingStatsFromGameEvents(otherTeamStats.events, player)
+        player.currentStamina = Math.min(player.currentStamina + 10, 100)
+      })
     }
 
     updateBatterSeasonStatsFromGameEvents(events: Array<GameEvent>, batter: Player) {
@@ -64,6 +64,13 @@ export class ProcessGameService {
           }
           batterSeasonStats.rbis += event.outcome.scoredIds.length
         }
+        if(event.stolenBaseAttempt && event.stolenBaseAttempt.runnerId === batter._id) {
+          if(event.stolenBaseAttempt.successful) {
+            batterSeasonStats.steals++
+          } else {
+            batterSeasonStats.caughtStealing++
+          }
+        }
       })
       if (gamePlayed) {
         batterSeasonStats.gamesPlayed ++
@@ -78,7 +85,7 @@ export class ProcessGameService {
         pitcherSeasonStats.starts++
       }
       pitcherSeasonStats.innings += appearance.innings
-      this.roundInnings(pitcherSeasonStats.innings)
+      pitcherSeasonStats.innings = this.roundInnings(pitcherSeasonStats.innings)
       pitcherSeasonStats.strikeouts += appearance.strikeouts
       pitcherSeasonStats.walks += appearance.walks
       pitcherSeasonStats.hits += appearance.hits
@@ -96,16 +103,30 @@ export class ProcessGameService {
       if (appearance.hold) {
         pitcherSeasonStats.holds++
       }
-      if (appearance.earnedRuns <= 3 && appearance.innings >= 6) {
+      if (appearance.start && appearance.earnedRuns <= 3 && appearance.innings >= 6) {
         pitcherSeasonStats.qs++
       }
+    }
+
+    updateFieldingStatsFromGameEvents(otherTeamEvents: Array<GameEvent>, player: Player) {
+      const fieldingSeasonStats = _.find(player.fieldingSeasonStats,
+        {year: this.leagueDataService.currentSeason.year})
+      _.each(otherTeamEvents, function(event){
+        if(event.outcome && event.outcome.fielderId === player._id) {
+          if(event.outcome.result === 'out') {
+            fieldingSeasonStats.putOuts++
+          } else if (event.outcome.result === 'error') {
+            fieldingSeasonStats.errors++
+          }
+        }
+      })
     }
 
     roundInnings(innings) {
       if (parseFloat((innings % 1).toFixed(1)) >= .3) {
         innings += .7
       }
-      innings = parseFloat((innings).toFixed(1))
+      return parseFloat((innings).toFixed(1))
     }
 
 }

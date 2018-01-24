@@ -1,4 +1,4 @@
 
-  .component-container{
-    margin: .5%
+  app-league * {
+    margin: 10px
   }

@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input } from '@angular/core';
-import { Player, BatterSeasonStats } from '../../models/player';
+import { Player, BatterSeasonStats, FieldingSeasonStats } from '../../models/player';
 import { RosterSpot, Team } from '../../models/team';
 import { HittingProgression } from '../../models/player';
 import { LeagueDataService } from '../../services/league-data.service';
@@ -21,6 +21,7 @@ export class TeamBatterRowComponent implements OnChanges {
   @Input() button: string;
   hittingProgression: HittingProgression
   seasonStats: BatterSeasonStats
+  fieldingSeasonStats: FieldingSeasonStats
   showName = false
   showSeasonYear = false
   showBatterAge = false
@@ -30,6 +31,7 @@ export class TeamBatterRowComponent implements OnChanges {
   showOverall = false
   showSkills = false
   showStats = false
+  showErrors = false
 
   constructor(public leagueDataService: LeagueDataService,
     public sharedFunctionsService: SharedFunctionsService,
@@ -39,6 +41,7 @@ export class TeamBatterRowComponent implements OnChanges {
   ngOnChanges() {
     this.hittingProgression = this.getHittingProgression()
     this.seasonStats = this.getHittingStats()
+    this.fieldingSeasonStats = this.getFieldingStats()
     this.setDisplay()
   }
 
@@ -53,6 +56,7 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showOverall = false
       this.showSkills = false
       this.showStats = true
+      this.showErrors = true
     } else if (this.displaySet === 'fa') {
       this.showName = true
       this.showSeasonYear = false
@@ -63,16 +67,18 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showOverall = true
       this.showSkills = false
       this.showStats = false
+      this.showErrors = false
     } else {
       this.showName = true
       this.showSeasonYear = false
       this.showBatterAge = true
-      this.showPosition = false
+      this.showPosition = true
       this.showRosterPosition = true
       this.showOrderNumber = true
       this.showOverall = true
       this.showSkills = false
       this.showStats = true
+      this.showErrors = true
     }
   }
 
@@ -104,6 +110,16 @@ export class TeamBatterRowComponent implements OnChanges {
     const that = this
     return _.find(this.batter.hittingSeasonStats, function(hss: BatterSeasonStats){
       return hss.year === that.seasonYear
+    })
+  }
+
+  getFieldingStats() {
+    if (!this.batter) {
+      return
+    }
+    const that = this
+    return _.find(this.batter.fieldingSeasonStats, function(fss: FieldingSeasonStats){
+      return fss.year === that.seasonYear
     })
   }
 

@@ -2,7 +2,7 @@
   {{ batter?.name }}
 </td>
 <td *ngIf="showPosition">
-  Bat
+    <ng-container *ngFor="let primaryPosition of batter?.primaryPositions">{{ primaryPosition + ' ' }}</ng-container>
 </td>
 <td *ngIf="showSeasonYear">
   {{ seasonYear }}
@@ -12,14 +12,14 @@
 </td>
 <td *ngIf="showRosterPosition && rosterBatter">
   <mat-select [(ngModel)]="rosterBatter.startingPosition" (change)="onPositionChange(batter, $event)">
-    <mat-option *ngFor="let position of staticListsService.fieldingPositions" [value]="position">
+    <mat-option *ngFor="let position of staticListsService.fieldingPositionsWithDHAndEmpty" [value]="position">
       {{ position }}
     </mat-option>
   </mat-select>
 </td>
 <td *ngIf="showOrderNumber && rosterBatter">
   <mat-select [(ngModel)]="rosterBatter.orderNumber" (change)="onOrderChange(batter, $event)">
-    <mat-option *ngFor="let orderNumber of staticListsService.battingOrderNumbers" [value]="orderNumber">
+    <mat-option *ngFor="let orderNumber of staticListsService.battingOrderNumbersWithNull" [value]="orderNumber">
       {{ orderNumber }}
     </mat-option>
   </mat-select>
@@ -82,6 +82,12 @@
 </td>
 <td *ngIf="showStats">
   {{ seasonStats?.steals }}
+</td>
+<td *ngIf="showStats">
+  {{ seasonStats?.caughtStealing }}
+</td>
+<td *ngIf="showErrors">
+  {{ fieldingSeasonStats?.errors }}
 </td>
 <td *ngIf="button === 'release'">
   <button mat-raised-button color="primary" (click)="release()">Release</button>

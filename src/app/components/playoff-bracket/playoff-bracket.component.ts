@@ -18,4 +18,13 @@ export class PlayoffBracketComponent implements OnInit {
     return this.leagueDataService.currentSeason.playoffSchedule[this.leagueDataService.currentSeason.playoffSchedule.length - 1]
   }
 
+  getLastPlayoffWinner() {
+    if (this.getLastPlayoffMatchup()[0].higherSeedWins > this.getLastPlayoffMatchup()[0].bestOf / 2) {
+      return this.getLastPlayoffMatchup()[0].higherSeedTeamId
+    } else if (this.getLastPlayoffMatchup()[0].lowerSeedWins > this.getLastPlayoffMatchup()[0].bestOf / 2) {
+      return this.getLastPlayoffMatchup()[0].lowerSeedTeamId
+    } else {
+      return null
+    }
+  }
 }

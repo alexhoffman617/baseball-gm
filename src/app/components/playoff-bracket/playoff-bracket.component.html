@@ -2,27 +2,23 @@
 	<ul *ngFor="let round of leagueDataService.currentSeason.playoffSchedule" class="round">
     <ng-container *ngFor="let matchup of round">
         <li class="spacer">&nbsp;</li>
-        <li class="game game-top"
+        <li class="game game-top" [routerLink]="'/' + leagueDataService.currentSeason?.leagueId + '/team/' + matchup.higherSeedTeamId"
             [ngClass]="{ 'winner': matchup.higherSeedWins > matchup.bestOf / 2 }">
           {{leagueDataService.getTeamById(matchup.higherSeedTeamId).location}} {{leagueDataService.getTeamById(matchup.higherSeedTeamId).name}}
            <span>{{matchup.higherSeedWins}}</span>
         </li>
         <li class="game game-spacer">&nbsp;</li>
-        <li class="game game-bottom"
+        <li class="game game-bottom" [routerLink]="'/' + leagueDataService.currentSeason?.leagueId + '/team/' + matchup.lowerSeedTeamId"
           [ngClass]="{ 'winner': matchup.lowerSeedWins > matchup.bestOf / 2 }">
           {{leagueDataService.getTeamById(matchup.lowerSeedTeamId).location}} {{leagueDataService.getTeamById(matchup.lowerSeedTeamId).name}}
           <span>{{matchup.lowerSeedWins}}</span>
         </li>
-        <li class="spacer">&nbsp;</li>
     </ng-container>
+    <li class="spacer">&nbsp;</li>
   </ul>
-  <ul class="round">
-      <li class="game game-top winner">
-        {{ (getLastPlayoffMatchup().length === 1 && (getLastPlayoffMatchup()[0].higherSeedWins > getLastPlayoffMatchup()[0].bestOf / 2 || getLastPlayoffMatchup()[0].lowerSeedWins > getLastPlayoffMatchup()[0].bestOf / 2)) ?
-          (getLastPlayoffMatchup()[0].higherSeedWins > getLastPlayoffMatchup()[0].lowerSeedWins ?
-          leagueDataService.getTeamById(getLastPlayoffMatchup()[0].higherSeedTeamId).location + ' ' +  leagueDataService.getTeamById(getLastPlayoffMatchup()[0].higherSeedTeamId).name :
-          leagueDataService.getTeamById(getLastPlayoffMatchup()[0].lowerSeedTeamId).location + ' ' +  leagueDataService.getTeamById(getLastPlayoffMatchup()[0].lowerSeedTeamId).name) :
-        ''}}
+  <ul class="round" *ngIf="getLastPlayoffMatchup().length === 1 && getLastPlayoffWinner()">
+      <li class="game game-top winner" [routerLink]="'/' + leagueDataService.currentSeason?.leagueId + '/team/' + getLastPlayoffWinner()">
+        {{getLastPlayoffWinner ? leagueDataService.getTeamById(getLastPlayoffWinner()).location + ' ' + leagueDataService.getTeamById(getLastPlayoffWinner()).name : null}}
       </li>
   </ul>
 </main>

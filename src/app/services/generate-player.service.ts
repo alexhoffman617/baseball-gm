@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { Player, HittingSkillset, PitchingSkillset, BatterSeasonStats, PitcherSeasonStats   } from '../models/player';
+import { Player, HittingSkillset, PitchingSkillset, BatterSeasonStats, PitcherSeasonStats, FieldingSeasonStats } from '../models/player';
 import { LeagueDataService } from './league-data.service';
 import { StaticListsService } from './static-lists.service';
 import 'rxjs/add/operator/toPromise';
@@ -41,9 +41,10 @@ export class GeneratePlayerService {
 
         const player = new Player(name, age, this.staticListsService.playerTypes.batter, this.getBattingSide(), this.getThrowingSide(),
                        skills, potential, new PitchingSkillset(0, 0, 0, 'std'),
-                       new PitchingSkillset(0, 0, 0, 'std'), leagueId, teamId, year);
+                       new PitchingSkillset(0, 0, 0, 'std'), leagueId, teamId, year, this.getPrimaryPositions());
         player.hittingSeasonStats = [new BatterSeasonStats(year)]
         player.pitchingSeasonStats = [new PitcherSeasonStats(year)]
+        player.fieldingSeasonStats = [new FieldingSeasonStats(year)]
         const dbPlayer = await this.leagueDataService.createPlayer(player);
         return dbPlayer as Player;
     }
@@ -66,9 +67,10 @@ export class GeneratePlayerService {
 
         const player =  new Player(name, age, this.staticListsService.playerTypes.pitcher, this.getBattingSide(), this.getThrowingSide(),
              new HittingSkillset(0, 0, 0, 0, 0), new HittingSkillset(0, 0, 0, 0, 0), skills,
-            potential, leagueId, teamId, year);
+            potential, leagueId, teamId, year, ['P']);
         player.hittingSeasonStats = [new BatterSeasonStats(year)]
         player.pitchingSeasonStats = [new PitcherSeasonStats(year)]
+        player.fieldingSeasonStats = [new FieldingSeasonStats(year)]
         const dbPlayer = await this.leagueDataService.createPlayer(player);
         return dbPlayer as Player;
     }
@@ -121,6 +123,19 @@ export class GeneratePlayerService {
             return 'fb';
         }
         return 'std';
+    }
+
+    getPrimaryPositions() {
+      const positions = []
+      const index1 = Math.round(Math.random() * (this.staticListsService.fieldingPositions.length - 1))
+      positions.push(this.staticListsService.fieldingPositions[index1])
+      if (Math.random() < .15) {
+         const index2 = Math.round(Math.random() * (this.staticListsService.fieldingPositions.length - 1))
+         if (index1 !== index2) {
+          positions.push(this.staticListsService.fieldingPositions[index2])
+         }
+      }
+      return positions
     }
 }
 

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AtBat, Game, TeamStats, GameEvent, GamePlayer, PitcherAppearance } from '../models/game';
+import { AtBat, StolenBaseAttempt, Game, TeamStats, GameEvent, GamePlayer, PitcherAppearance } from '../models/game';
 import { AtBatService } from '../services/at-bat.service';
+import { StaticListsService } from '../services/static-lists.service';
 import * as _ from 'lodash';
+import { Player } from 'app/models/player';
 
 @Injectable()
 export class PlayGameService {
@@ -36,7 +38,7 @@ export class PlayGameService {
     leagueMaxHitFreq = .285
     leagueMinHitFreq = .17
 
-    constructor(public atBatService: AtBatService) {
+    constructor(public atBatService: AtBatService, private staticListsService: StaticListsService) {
 
     }
 
@@ -101,6 +103,14 @@ export class PlayGameService {
       this.halfInningEvents = new Array<GameEvent>()
       this.battingTeamStats = battingTeamStats
       this.pitchingTeamStats = pitchingTeamStats
+      if (this.currentInning === 8) {
+        const rp = _.find(pitchingTeam, {'position': 'RP'})
+        this.changePitchers(this.pitchingTeamStats, rp)
+      }
+      if (this.currentInning === 9) {
+        const rp = _.find(pitchingTeam, {'position': 'CL'})
+        this.changePitchers(this.pitchingTeamStats, rp)
+      }
       while (this.outs < 3 && (side !== 'Bottom' || this.currentInning < 9 || this.battingTeamStats.runs <= this.pitchingTeamStats.runs)) {
         const batter = _.find(battingTeam, function(player){
           return player.orderNumber === (that.battingTeamStats.events.length % 9 + 1);
@@ -109,11 +119,61 @@ export class PlayGameService {
           return player.position  === 'P';
         }).player;
         this.currentPitcherAppearance = this.pitchingTeamStats.pitcherAppearances[this.pitchingTeamStats.pitcherAppearances.length - 1]
+        if(this.doesRunnerAttemptSteal()){
+          this.stealAttempt(pitcher, pitchingTeam)
+          continue
+        }
         // determine outcome of PA
         this.outcome = this.atBatService.atBat(batter, pitcher, pitchingTeam, side === 'Bottom');
         this.advanceRunners(batter, pitcher);
-        this.halfInningEvents.push({'batterId': batter._id, 'pitcherId': pitcher._id, 'outcome': this.outcome});
-        this.battingTeamStats.events.push({'batterId': batter._id, 'pitcherId': pitcher._id, 'outcome': this.outcome})
+        this.halfInningEvents.push(new GameEvent(batter._id, pitcher._id, this.outcome));
+        this.battingTeamStats.events.push(new GameEvent(batter._id,pitcher._id, this.outcome))
+      }
+    }
+
+    doesRunnerAttemptSteal(){
+      if(this.secondBase && !this.thirdBase){
+        if(Math.random() < (this.secondBase.hittingAbility.speed / 100 - .5) / 3){
+          return true
+        }
+      } else if(this.firstBase && !this.secondBase){
+        if(Math.random() < (this.firstBase.hittingAbility.speed / 100 - .2) / 3){
+          return true
+        }
+      }
+      return false
+    }
+
+    stealAttempt(pitcher: Player, pitchingTeam: Array<GamePlayer>){
+      var that = this
+      const catcher =  _.find(pitchingTeam, {position: that.staticListsService.positions.catcher})
+      if(this.secondBase && !this.thirdBase){
+        if(Math.random() < this.secondBase.hittingAbility.speed / 100 - .1 - (.2 * catcher.player.hittingAbility.fielding - 40) / 100){
+          this.battingTeamStats.events.push(new GameEvent(null, pitcher._id,
+            null, new StolenBaseAttempt(true, this.secondBase._id, catcher.player._id)))
+          this.thirdBase = this.secondBase
+          this.secondBase = this.firstBase
+          this.firstBase = null
+        } else {
+          this.battingTeamStats.events.push(new GameEvent(null, pitcher._id,
+            null, new StolenBaseAttempt(false, this.secondBase._id, catcher.player._id)))
+          this.thirdBase = null
+          this.secondBase = this.firstBase
+          this.firstBase = null
+          this.outs ++
+        }
+      } else if(this.firstBase && !this.secondBase){
+        if(Math.random() < this.firstBase.hittingAbility.speed / 100  - (.2 * catcher.player.hittingAbility.fielding - 40) / 100){
+          this.battingTeamStats.events.push(new GameEvent(null, pitcher._id,
+            null, new StolenBaseAttempt(true, this.firstBase._id, catcher.player._id)))
+          this.secondBase = this.firstBase
+          this.firstBase = null
+        } else {
+          this.battingTeamStats.events.push(new GameEvent(null, pitcher._id,
+            null, new StolenBaseAttempt(false, this.firstBase._id, catcher.player._id)))
+          this.firstBase = null
+          this.outs ++
+        }
       }
     }
 
@@ -405,6 +465,21 @@ export class PlayGameService {
         pitcherAppearance.loss = true
         this.battingTeamStats.pitcherAppearances[this.battingTeamStats.pitcherAppearances.length - 1].win = true
       }
+    }
 
+    changePitchers(teamStats: TeamStats, gamePlayer: GamePlayer) {
+      const pitcherAppearance = new PitcherAppearance(gamePlayer.player._id, false)
+      const replacedPitcherStats = teamStats.pitcherAppearances[teamStats.pitcherAppearances.length - 1]
+      if (replacedPitcherStats.save) {
+        replacedPitcherStats.save = false
+        replacedPitcherStats.hold = true
+        pitcherAppearance.save = true
+      }
+      if (replacedPitcherStats.win) {
+        pitcherAppearance.save = true
+      }
+      teamStats.pitcherAppearances.push(pitcherAppearance)
+
+      gamePlayer.played = true
     }
 }

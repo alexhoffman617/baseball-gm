@@ -12,6 +12,7 @@ import { ProcessGameService } from '../../services/process-game.service';
 import { PlayoffScheduleGenerator } from '../../services/playoff-schedule.generator';
 import * as _ from 'lodash';
 import * as io from 'socket.io-client';
+import { SharedFunctionsService } from 'app/services/shared-functions.service';
 
 @Component({
 selector: 'app-league',
@@ -30,6 +31,7 @@ seasonSnapshot: Season;
               private leagueProgressionService: LeagueProgressionService,
               private playGameService: PlayGameService,
               public leagueDataService: LeagueDataService,
+              public sharedFunctionsService: SharedFunctionsService,
               public playoffScheduleGenerator: PlayoffScheduleGenerator,
               public processGameService: ProcessGameService,
   ) { }
@@ -80,6 +82,7 @@ playOffseason() {
 simDays(days) {
   this.seasonSnapshot = this.leagueDataService.currentSeason
   this.leagueDataService.league.simming = true
+  this.makeSureAllLineupsSet()
   this.leagueDataService.updateLeague()
   this.playDays(days)
 }
@@ -130,6 +133,7 @@ async playDays(daysLeft) {
   simPlayoffDays(days) {
     this.seasonSnapshot = this.leagueDataService.currentSeason
     this.leagueDataService.league.simming = true
+    this.makeSureAllLineupsSet()
     this.leagueDataService.updateLeague()
     this.playPlayoffDay(days)
   }
@@ -201,32 +205,35 @@ async playDays(daysLeft) {
     })
 
     const orderedPitchers = _.sortBy(gameTeam.roster.pitchers, function(p){
-      return p.startingPosition === '' ? null : p.startingPosition
+      return p.startingPosition && p.startingPosition.indexOf('S') === -1 ? null : p.startingPosition
     })
-    let pitcher
-    _.some(orderedPitchers, function(p: RosterSpot){
+    let startingPitcherSet = false
+    _.each(orderedPitchers, function(p: RosterSpot){
       const playerPitcher = _.find(teamPlayers, function(tp: Player){
         return tp._id === p.playerId
       })
-      if (playerPitcher.currentStamina > 90) {
-        pitcher = playerPitcher
-        return true
+      if (playerPitcher.currentStamina > 90 && !startingPitcherSet) {
+        gamePlayers.push(new GamePlayer('P', null, true, playerPitcher));
+        startingPitcherSet = true
       } else {
-        return false
+        gamePlayers.push(new GamePlayer(p.startingPosition, null, false, playerPitcher))
       }
     })
-      gamePlayers.push(new GamePlayer('P', null, true, pitcher));
 
-      for (let x = 1; x <= 9; x++) {
-        const rosterBatter = _.find(gameTeam.roster.batters, function(batter){
-          return batter.orderNumber === x;
-        });
-        const batter = _.find(teamPlayers, function(tp){
-          return tp._id === rosterBatter.playerId
-        })
-        gamePlayers.push(new GamePlayer(rosterBatter.startingPosition, rosterBatter.orderNumber, true, batter))
-      }
-      return gamePlayers
-    }
+    _.each(gameTeam.roster.batters, function(rosterBatter){
+      const playerBatter = _.find(teamPlayers, function(tp: Player){
+        return tp._id === rosterBatter.playerId
+      })
+      gamePlayers.push(new GamePlayer(rosterBatter.startingPosition, rosterBatter.orderNumber, true, playerBatter))
+    })
+    return gamePlayers
+  }
+
+  makeSureAllLineupsSet() {
+    const that = this
+    _.each(that.leagueDataService.teams, function(team){
+      that.sharedFunctionsService.autoSetLineup(team)
+    })
+  }
 }
 

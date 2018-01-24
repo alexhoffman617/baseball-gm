@@ -13,23 +13,52 @@ export class StaticListsService {
   'SP2',
   'SP3',
   'SP4',
-  'SP5'
+  'SP5',
+  'CL',
+  'RP'
   ]
+
+  positions = {
+    catcher: 'C',
+    firstBase: '1B',
+    secondBase: '2B',
+    thirdBase: '3B',
+    shortStop: 'SS',
+    leftField: 'LF',
+    centerField: 'CF',
+    rightField: 'RF',
+    designatedHitter: 'DH',
+    pitcher: 'P'
+  }
 
   fieldingPositions = [
-  'C',
-  '1B',
-  '2B',
-  '3B',
-  'SS',
-  'LF',
-  'CF',
-  'RF',
-  'DH'
+    this.positions.catcher,
+    this.positions.firstBase,
+    this.positions.secondBase,
+    this.positions.thirdBase,
+    this.positions.shortStop,
+    this.positions.leftField,
+    this.positions.centerField,
+    this.positions.rightField
   ]
 
-  battingOrderNumbers= [
-    null,
+  fieldingPositionsWithDH = this.fieldingPositions.concat(this.positions.designatedHitter)
+
+  fieldingPositionsWithDHFieldingSpectrumOrder = [
+    this.positions.catcher,
+    this.positions.shortStop,
+    this.positions.secondBase,
+    this.positions.centerField,
+    this.positions.thirdBase,
+    this.positions.rightField,
+    this.positions.leftField,
+    this.positions.firstBase,
+    this.positions.designatedHitter
+  ]
+
+  fieldingPositionsWithDHAndEmpty = [null].concat(this.fieldingPositionsWithDH)
+
+  battingOrderNumbers = [
     1,
     2,
     3,
@@ -41,6 +70,7 @@ export class StaticListsService {
     9
   ]
 
+  battingOrderNumbersWithNull = [null].concat(this.battingOrderNumbers)
 
   teamLocations = [
  'Akron',

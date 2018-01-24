@@ -27,7 +27,7 @@ export class SeasonGenerator {
     createNewSchedule(teamIds: Array<string>) {
         const schedule = new Array<ScheduledDay>();
         this.shuffleArray(teamIds);
-        while (schedule.length < 162) {
+        while (schedule.length < 54) {
             for (let i = 0; i < (teamIds.length - 1) * 2; i++) {
                 const l1 = teamIds.slice(0, teamIds.length / 2);
                 const l2 = teamIds.slice(teamIds.length / 2);
@@ -50,7 +50,15 @@ export class SeasonGenerator {
                 teamIds.unshift(shift);
             }
         }
-        return schedule;
+        const shuffledSchedule = this.shuffleArray(schedule)
+        let finalSchedule = new Array<ScheduledDay>()
+        for (let x = 0; x < shuffledSchedule.length; x++) {
+          finalSchedule.push(shuffledSchedule[x])
+          finalSchedule.push(shuffledSchedule[x])
+          finalSchedule.push(shuffledSchedule[x])
+        }
+        finalSchedule = finalSchedule.splice(0, 162)
+        return finalSchedule;
     }
 
     shuffleArray(array) {

@@ -43,7 +43,7 @@ export class GenerateLeagueService {
         this.leagueDataService.updateLeague(createdLeague)
       }
       this.sharedFunctionsService.setLoading(85, 'Generating Free Agents')
-      await this.generatePlayerService.generateFreeAgents(createdLeague._id, (new Date()).getFullYear(), 20)
+      await this.generatePlayerService.generateFreeAgents(createdLeague._id, (new Date()).getFullYear(), teamIds.length * 10)
       this.sharedFunctionsService.setLoading(92, 'Generating Season')
       this.seasonGenerator.generateSeason(createdLeague._id, teamIds, null, createdLeague.structure)
     }

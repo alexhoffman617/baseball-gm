@@ -50,11 +50,25 @@ export class GameEvent {
     batterId: string;
     pitcherId: string;
     outcome: AtBat;
+    stolenBaseAttempt: StolenBaseAttempt
 
-    constructor(batterId: string, pitcherId: string, outcome: AtBat) {
+    constructor(batterId: string, pitcherId: string, outcome: AtBat, stolenBaseAttempt: StolenBaseAttempt = null) {
         this.batterId = batterId;
         this.pitcherId = pitcherId;
         this.outcome = outcome;
+        this.stolenBaseAttempt = stolenBaseAttempt
+    }
+}
+
+export class StolenBaseAttempt {
+    successful: boolean
+    runnerId: string
+    catcherId: string
+
+    constructor(successful: boolean, runnerId: string, catcherId: string){
+      this.successful = successful
+      this.runnerId = runnerId
+      this.catcherId = catcherId
     }
 }
 

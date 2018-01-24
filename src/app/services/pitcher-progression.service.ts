@@ -26,17 +26,17 @@ export class PitcherProgressionService {
     const fieldingAgeChange = this.getAgeImprovement(player.hittingAbility.speed, player.hittingPotential.speed, player.age, 24);
 
     const controlPerformanceChange = this.getControlPerformanceImprovement(this.sharedFunctionsService.walksPerNine(seasonStats),
-      player.pitchingAbility.control, player.pitchingPotential.control);
+      player.pitchingAbility.control, player.pitchingPotential.control, seasonStats.appearances);
     const movementPerformanceChange = this.getMovementPerformanceImprovement(this.sharedFunctionsService.era(seasonStats),
-     this.sharedFunctionsService.whip(seasonStats), player.pitchingAbility.movement, player.pitchingPotential.movement);
+     this.sharedFunctionsService.whip(seasonStats), player.pitchingAbility.movement, player.pitchingPotential.movement,
+     seasonStats.appearances);
     const velocityPerformanceChange = this.getVelocityPerformanceImprovement(this.sharedFunctionsService.strikeoutsPerNine(seasonStats),
-      player.pitchingAbility.velocity, player.pitchingPotential.velocity);
+      player.pitchingAbility.velocity, player.pitchingPotential.velocity, seasonStats.appearances);
     const fieldingPerformanceChange = 0
 
-    const controlChange = controlAgeChange + controlPerformanceChange;
-    const movementChange = movementAgeChange + movementPerformanceChange;
-    const velocityChange = velocityAgeChange + velocityPerformanceChange;
-    const fieldingChange = fieldingAgeChange + fieldingPerformanceChange;
+    const controlChange =  Math.max(controlAgeChange + controlPerformanceChange, 1 - player.pitchingAbility.control);
+    const movementChange = Math.max(movementAgeChange + movementPerformanceChange, 1 - player.pitchingAbility.movement);
+    const velocityChange = Math.max(velocityAgeChange + velocityPerformanceChange, 1 - player.pitchingAbility.velocity);
     return new PitchingSkillset(velocityChange, controlChange, movementChange, player.pitchingAbility.type);
   }
 
@@ -48,7 +48,7 @@ export class PitcherProgressionService {
     return Math.round((potential - ability) / 2 * Math.random() * (8 - Math.min(8, Math.abs(x))) / 8);
   }
 
-  getControlPerformanceImprovement(walkRate: number, ability: number, potential: number) {
+  getControlPerformanceImprovement(walkRate: number, ability: number, potential: number, appearances: number) {
     let walkRatePerformance
     if (walkRate > this.bbPerNineAvg) {
       walkRatePerformance = 50 - (walkRate - this.bbPerNineAvg) / (this.bbPerNineMax - this.bbPerNineAvg) * 50;
@@ -59,10 +59,10 @@ export class PitcherProgressionService {
     if (walkRatePatienceImprovement > (potential - ability)) {
     walkRatePatienceImprovement = potential - ability;
     }
-    return walkRatePatienceImprovement ? Math.round((walkRatePatienceImprovement ) / 2) : 0;
+    return walkRatePatienceImprovement ? Math.round((walkRatePatienceImprovement ) / 2 * Math.min(appearances / 20, 1)) : 0;
   }
 
-  getVelocityPerformanceImprovement(strikeoutRate: number, ability: number, potential: number) {
+  getVelocityPerformanceImprovement(strikeoutRate: number, ability: number, potential: number, appearances: number) {
     let strikeoutRatePerformance
     if (strikeoutRate > this.kPerNineAvg) {
       strikeoutRatePerformance = (strikeoutRate - this.kPerNineAvg) / (this.kPerNineMax - this.kPerNineAvg)
@@ -75,10 +75,10 @@ export class PitcherProgressionService {
     if (strikeoutRateImprovement > (potential - ability)) {
       strikeoutRateImprovement = potential - ability;
     }
-    return strikeoutRateImprovement ? Math.round(strikeoutRateImprovement / 2) : 0;
+    return strikeoutRateImprovement ? Math.round(strikeoutRateImprovement / 2 * Math.min(appearances / 20, 1)) : 0;
   }
 
-  getMovementPerformanceImprovement(era: number, whip: number, ability: number, potential: number) {
+  getMovementPerformanceImprovement(era: number, whip: number, ability: number, potential: number, appearances: number) {
     let eraPerformance
     if (era > this.eraAvg) {
       eraPerformance = 50 - (era - this.eraAvg) / (this.eraMax - this.eraAvg) * 50;
@@ -100,7 +100,7 @@ export class PitcherProgressionService {
     if (whipImprovement > (potential - ability)) {
       whipImprovement = potential - ability;
     }
-    return whipImprovement ? Math.round(whipImprovement / 2) : 0;
+    return whipImprovement + eraImprovement ? Math.round(whipImprovement + eraImprovement / 4 * Math.min(appearances / 20, 1)) : 0;
   }
 
   getSpeedPerformanceImprovement(steal: number, ability: number, potential: number) {

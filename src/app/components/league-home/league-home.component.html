@@ -26,38 +26,44 @@
   <div fxFlex="40">
     <div>
       <h3>HR</h3>
-      <div *ngFor="let player of getLeaders('homeruns')">
+      <div *ngFor="let player of getLeaders('homeruns')" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
         {{ !player ? null : player?.name + ": " + getStat(player, 'homeruns')}}
       </div>
     </div>
     <div>
       <h3>AVG</h3>
-      <div *ngFor="let player of getLeaders('average', true)">
+      <div *ngFor="let player of getLeaders('average', true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
         {{ !player ? null : player?.name + ": " + getStat(player, 'average', true)}}
       </div>
     </div>
     <div>
       <h3>RBI</h3>
-      <div *ngFor="let player of getLeaders('rbis')">
+      <div *ngFor="let player of getLeaders('rbis')" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
         {{ !player ? null : player?.name + ": " + getStat(player, 'rbis')}}
+      </div>
+    </div>
+    <div>
+      <h3>SB</h3>
+      <div *ngFor="let player of getLeaders('steals')" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+        {{ !player ? null : player?.name + ": " + getStat(player, 'steals')}}
       </div>
     </div>
 
     <div>
       <h3>ERA</h3>
-      <div *ngFor="let player of getLeaders('era', true, true, true)">
+      <div *ngFor="let player of getLeaders('era', true, true, true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
         {{ !player ? null : player?.name + ": " + getStat(player, 'era', true, true)}}
       </div>
     </div>
     <div>
       <h3>WHIP</h3>
-      <div *ngFor="let player of getLeaders('whip', true, true, true)">
+      <div *ngFor="let player of getLeaders('whip', true, true, true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
         {{ !player ? null : player?.name + ": " + getStat(player, 'whip', true, true)}}
       </div>
     </div>
     <div>
       <h3>W</h3>
-      <div *ngFor="let player of getLeaders('wins', false, true, false)">
+      <div *ngFor="let player of getLeaders('wins', false, true, false)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
         {{ !player ? null : player?.name + ": " + getStat(player, 'wins', false, true)}}
       </div>
     </div>

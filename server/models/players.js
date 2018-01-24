@@ -7,7 +7,7 @@ var _ = require('lodash')
 
 var exports = {
   getPlayers: function(leagueId, callback){
-    Player.find({leagueId: leagueId}, function(err, players){
+    Player.find({leagueId: leagueId, retired: false}, function(err, players){
       callback(200, players)
     })
   },

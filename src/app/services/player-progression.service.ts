@@ -39,22 +39,22 @@ export class PlayerProgressionService {
     const fieldingAgeChange = this.getAgeImprovement(player.hittingAbility.speed, player.hittingPotential.speed, player.age, 24);
 
     const contactPerformanceChange = this.getContactPerformanceImprovement(this.sharedFunctionsService.strikeoutPercentage(seasonStats),
-       this.sharedFunctionsService.average(seasonStats),
-      player.hittingAbility.contact, player.hittingPotential.contact);
+       this.sharedFunctionsService.average(seasonStats), player.hittingAbility.contact,
+       player.hittingPotential.contact, seasonStats.plateAppearences);
     const powerPerformanceChange = this.getPowerPerformanceImprovement(this.sharedFunctionsService.slg(seasonStats), seasonStats.homeruns,
-      player.hittingAbility.power, player.hittingPotential.power);
+      player.hittingAbility.power, player.hittingPotential.power, seasonStats.plateAppearences);
     const patiencePerformanceChange = this.getPatiencePerformanceImprovement(this.sharedFunctionsService.walkPercentage(seasonStats),
-     player.hittingAbility.patience, player.hittingPotential.patience);
+     player.hittingAbility.patience, player.hittingPotential.patience, seasonStats.plateAppearences);
     const speedPerformanceChange = this.getSpeedPerformanceImprovement(seasonStats.steals, player.hittingAbility.speed,
-      player.hittingPotential.speed);
+      player.hittingPotential.speed, seasonStats.plateAppearences);
     const fieldingPerformanceChange = this.getSpeedPerformanceImprovement(seasonStats.steals, player.hittingAbility.speed,
-      player.hittingPotential.speed);
+      player.hittingPotential.speed, seasonStats.plateAppearences);
 
-    const contactChange = contactAgeChange + contactPerformanceChange;
-    const powerChange = powerAgeChange + powerPerformanceChange;
-    const speedChange = speedAgeChange + speedPerformanceChange;
-    const patienceChange = patienceAgeChange + patiencePerformanceChange;
-    const fieldingChange = fieldingAgeChange + fieldingPerformanceChange;
+    const contactChange = Math.max(contactAgeChange + contactPerformanceChange, 1 - player.hittingAbility.contact);
+    const powerChange = Math.max(powerAgeChange + powerPerformanceChange, 1 - player.hittingAbility.power);
+    const speedChange = Math.max(speedAgeChange + speedPerformanceChange, 1 - player.hittingAbility.speed);
+    const patienceChange = Math.max(patienceAgeChange + patiencePerformanceChange, 1 - player.hittingAbility.patience);
+    const fieldingChange = Math.max(fieldingAgeChange + fieldingPerformanceChange, 1 - player.hittingAbility.fielding);
     return new HittingSkillset(contactChange, powerChange, patienceChange, speedChange, fieldingPerformanceChange);
   }
 
@@ -66,7 +66,7 @@ export class PlayerProgressionService {
     return Math.round((potential - ability) / 2 * Math.random() * (8 - Math.min(8, Math.abs(x))) / 8);
   }
 
-  getContactPerformanceImprovement(kRate: number, avg: number, ability: number, potential: number) {
+  getContactPerformanceImprovement(kRate: number, avg: number, ability: number, potential: number, plateAppearances: number) {
     let kRatePerformance
     if (kRate > this.leagueStrikeOutFreq) {
       kRatePerformance = 50 - (kRate - this.leagueStrikeOutFreq) / (this.leagueMaxStrikeOutFreq - this.leagueStrikeOutFreq) * 50;
@@ -87,10 +87,12 @@ export class PlayerProgressionService {
     if (avgContactImprovement > (potential - ability)) {
       avgContactImprovement = potential - ability;
     }
-    return kRateContactImprovement + avgContactImprovement ? Math.round((kRateContactImprovement + avgContactImprovement) / 4) : 0;
+    return kRateContactImprovement + avgContactImprovement
+      ? Math.round((kRateContactImprovement + avgContactImprovement) / 4 * Math.min(plateAppearances / 300, 1))
+      : 0
   }
 
-  getPowerPerformanceImprovement(slg: number, hr: number, ability: number, potential: number) {
+  getPowerPerformanceImprovement(slg: number, hr: number, ability: number, potential: number, plateAppearances: number) {
     let slgPerformance
     if (slg > this.leagueAvgSlg) {
       slgPerformance = (slg - this.leagueAvgSlg) / (this.leagueMaxSlg - this.leagueAvgSlg) * 50 + 50;
@@ -111,10 +113,12 @@ export class PlayerProgressionService {
     if (hrPowerImprovement > (potential - ability)) {
       hrPowerImprovement = potential - ability;
     }
-    return slgPowerImprovement + hrPowerImprovement ? Math.round((slgPowerImprovement + hrPowerImprovement) / 4) : 0;
+    return slgPowerImprovement + hrPowerImprovement
+    ? Math.round((slgPowerImprovement + hrPowerImprovement) / 4 * Math.min(plateAppearances / 300, 1))
+    : 0;
   }
 
-  getPatiencePerformanceImprovement(walkRate: number, ability: number, potential: number) {
+  getPatiencePerformanceImprovement(walkRate: number, ability: number, potential: number, plateAppearances: number) {
     let walkRatePerformance
     if (walkRate > this.leagueWalkFreq) {
       walkRatePerformance = (walkRate - this.leagueWalkFreq) / (this.leagueMaxWalkFreq - this.leagueWalkFreq) * 50 + 50;
@@ -125,14 +129,14 @@ export class PlayerProgressionService {
     if (walkRatePatienceImprovement > (potential - ability)) {
     walkRatePatienceImprovement = potential - ability;
     }
-    return walkRatePatienceImprovement ? Math.round((walkRatePatienceImprovement ) / 2) : 0;
+    return walkRatePatienceImprovement ? Math.round((walkRatePatienceImprovement ) / 2  * Math.min(plateAppearances / 300, 1)) : 0;
   }
 
-  getSpeedPerformanceImprovement(steal: number, ability: number, potential: number) {
+  getSpeedPerformanceImprovement(steal: number, ability: number, potential: number, plateAppearances: number) {
     return 0;
   }
 
-  getFieldingPerformanceImprovement(steal: number, ability: number, potential: number) {
+  getFieldingPerformanceImprovement(steal: number, ability: number, potential: number, plateAppearances: number) {
     return 0;
   }
 }
