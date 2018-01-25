@@ -21,7 +21,6 @@ styleUrls: ['./league.component.css']
 })
 export class LeagueComponent implements OnInit {
 
-restOfSeason = 'ROS'
 restOfPlayoffRound = 'ROPR'
 leagueId;
 teams
@@ -101,7 +100,7 @@ async playDays(daysLeft) {
       const homeGamePlayers = that.constructRoster(rosterGame.homeTeamId)
       const awayGamePlayers = that.constructRoster(rosterGame.awayTeamId)
       const game = that.playGameService.playGame(homeGamePlayers, awayGamePlayers,
-        rosterGame.homeTeamId, rosterGame.awayTeamId, that.seasonSnapshot._id, that.leagueId);
+        rosterGame.homeTeamId, rosterGame.awayTeamId, that.seasonSnapshot._id, that.leagueId)
       const savedGame = await that.leagueDataService.createGame(game) as Game
       rosterGame.homeTeamScore = game.homeTeamStats.runs
       rosterGame.awayTeamScore = game.awayTeamStats.runs
@@ -113,6 +112,10 @@ async playDays(daysLeft) {
         that.completeDaySim(day, daysLeft)
       }
     }
+    if(daysLeft % 6 === 0){
+      that.leagueDataService.updateAllPlayers()
+      that.leagueDataService.updateSeason(this.seasonSnapshot)
+    }
   }
 
   completeDaySim(day, daysLeft) {
@@ -120,8 +123,6 @@ async playDays(daysLeft) {
     this.leagueDataService.updateLocalSeason(this.seasonSnapshot)
     if (!this.areDaysLeftInSeason()) {
       this.stopSimming()
-    } else if (daysLeft === this.restOfSeason) {
-      this.playDays(daysLeft)
     } else if (daysLeft > 1) {
       daysLeft--
       this.playDays(daysLeft)

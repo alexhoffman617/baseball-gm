@@ -158,7 +158,7 @@ export class StaticListsService {
 'Houston',
 'Huntington Beach',
 'Huntsville',
-'Indianapolis[11]',
+'Indianapolis',
 'Irvine',
 'Irving',
 'Jackson',

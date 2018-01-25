@@ -170,6 +170,7 @@ export class LeagueDataService  {
 
   async getData(leagueId: string) {
     const that = this
+    that.leagueId = leagueId
     const leaguePromise = this.getLeague(leagueId)
     const seasonsPromise = this.getSeasons(leagueId)
     const teamsPromise = this.getTeams(leagueId)
@@ -196,7 +197,7 @@ export class LeagueDataService  {
   async updateAllPlayers() {
     const that = this
     return new Promise(function(resolve){
-      that.socket.emit('update-players', that.players, that.league._id,  function(completed){
+      that.socket.emit('update-players', that.players, that.leagueId,  function(completed){
         resolve(completed)
       });
     })
@@ -209,6 +210,10 @@ export class LeagueDataService  {
         resolve(completed)
       });
     })
+  }
+
+  updatePlayers(players: Array<Player>){
+
   }
 
   async updateSeason(season) {
@@ -317,7 +322,7 @@ export class LeagueDataService  {
   async deleteAllGamesInSeason(seasonId: string) {
     const that = this
     return new Promise(function(resolve){
-      that.socket.emit('delete-all-seasons-games', seasonId, that.league._id, function(completed){
+      that.socket.emit('delete-all-seasons-games', seasonId, that.leagueId, function(completed){
         resolve(completed)
       })
     })

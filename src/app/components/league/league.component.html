@@ -6,7 +6,7 @@
       <ng-container *ngIf="areDaysLeftInSeason()">
           <button mat-menu-item (click)="simDays(1)">Sim Day</button>
           <button mat-menu-item (click)="simDays(6)">Sim Week</button>
-          <button mat-menu-item (click)="simDays(restOfSeason)">Sim Rest Of Season</button>
+          <button mat-menu-item (click)="simDays(162)">Sim Rest Of Season</button>
       </ng-container>
       <ng-container *ngIf="!areDaysLeftInSeason() && !leagueDataService.currentSeason.playoffSchedule">
         <button mat-menu-item  (click)="generatePlayoffs()">Generate Playoffs</button>

@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
-//mongoose.connect("mongodb://website:password@ds129344.mlab.com:29344/baseball-gm");
-mongoose.connect("mongodb://127.0.0.1:27017");
+mongoose.connect("mongodb://website:password@ds129344.mlab.com:29344/baseball-gm");
+//mongoose.connect("mongodb://127.0.0.1:27017");
 
 var Schema = mongoose.Schema
 var messageSchema = new Schema({}, {strict: false})
