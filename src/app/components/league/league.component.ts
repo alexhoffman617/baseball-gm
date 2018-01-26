@@ -36,7 +36,7 @@ seasonSnapshot: Season;
   ) { }
 
   async ngOnInit() {
-    const socket = io.connect('http://localhost:3000/');
+    const socket = io.connect(window.location.protocol + '//' + window.location.host);
     const that = this
     this.route.params.subscribe(params => {
       this.leagueId = params['leagueId'];

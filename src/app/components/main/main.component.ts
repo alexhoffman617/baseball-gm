@@ -19,7 +19,7 @@ export class MainComponent implements OnInit {
               private http: Http) { }
 
   ngOnInit() {
-    this.socket = io.connect('http://localhost:3000/');
+    this.socket = io.connect(window.location.protocol + '//' + window.location.host);
     new Observable(observer => {
       this.http.get('/api/leagues', {params: {}}).subscribe(data => {
         observer.next(data.json());

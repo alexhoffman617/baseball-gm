@@ -27,7 +27,7 @@ export class LeagueDataService  {
   seasonsObservable: Observable<Array<Season>>;
   games: Array<Game>;
   gamesObservable: Observable<Array<Game>>;
-  socket = io.connect('http://localhost:3000/');
+  socket = io.connect(window.location.protocol + '//' + window.location.host);
   messages: any;
   constructor(private http: Http, private route: ActivatedRoute) {
   }
@@ -218,7 +218,6 @@ export class LeagueDataService  {
 
   async updateSeason(season) {
     const that = this
-    const socket = io.connect('http://localhost:3000/');
     return new Promise(function(resolve){
       that.socket.emit('update-season', season, function(completed){
         resolve(completed)

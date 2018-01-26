@@ -49,7 +49,7 @@ export class GenerateLeagueService {
     }
 
     createLeague(league) {
-      const socket = io.connect('http://localhost:3000/');
+      const socket = io.connect(window.location.protocol + '//' + window.location.host);
       return new Promise(function(resolve){
         socket.emit('create-league', league, function(savedLeague){
           resolve(savedLeague)
