@@ -105,11 +105,11 @@ export class PlayGameService {
       this.pitchingTeamStats = pitchingTeamStats
       if (this.currentInning === 8) {
         const rp = _.find(pitchingTeam, {'position': 'RP'})
-        this.changePitchers(this.pitchingTeamStats, rp)
+        this.changePitchers(this.pitchingTeamStats, rp, pitchingTeam)
       }
       if (this.currentInning === 9) {
         const rp = _.find(pitchingTeam, {'position': 'CL'})
-        this.changePitchers(this.pitchingTeamStats, rp)
+        this.changePitchers(this.pitchingTeamStats, rp, pitchingTeam)
       }
       while (this.outs < 3 && (side !== 'Bottom' || this.currentInning < 9 || this.battingTeamStats.runs <= this.pitchingTeamStats.runs)) {
         const batter = _.find(battingTeam, function(player){
@@ -431,7 +431,6 @@ export class PlayGameService {
         runScoringEvent.outcome.batterScored = true
       }
       this.outcome.scoredIds.push(scoredPlayer._id)
-      this.currentPitcherAppearance.runs++
       this.scoreRunsAsEarned(scoredPlayer, isHomerun)
     }
 
@@ -467,8 +466,14 @@ export class PlayGameService {
       }
     }
 
-    changePitchers(teamStats: TeamStats, gamePlayer: GamePlayer) {
+    changePitchers(teamStats: TeamStats, gamePlayer: GamePlayer, pitchingTeam: Array<GamePlayer>) {
       const pitcherAppearance = new PitcherAppearance(gamePlayer.player._id, false)
+      const currentPitcher = _.find(pitchingTeam, function(player){
+        return player.position  === 'P';
+      });
+      currentPitcher.position = null
+      gamePlayer.played = true
+      gamePlayer.position = 'P'
       const replacedPitcherStats = teamStats.pitcherAppearances[teamStats.pitcherAppearances.length - 1]
       if (replacedPitcherStats.save) {
         replacedPitcherStats.save = false
@@ -479,7 +484,5 @@ export class PlayGameService {
         pitcherAppearance.save = true
       }
       teamStats.pitcherAppearances.push(pitcherAppearance)
-
-      gamePlayer.played = true
     }
 }
