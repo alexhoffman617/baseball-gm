@@ -48,7 +48,7 @@ export class SharedFunctionsService {
       const game = _.find(scheduledDay.scheduledGames, function(g){
         return g.homeTeamId === teamId || g.awayTeamId === teamId;
       });
-      if ((game.homeTeamId === teamId && game.homeTeamScore > game.awayTeamScore)
+      if ((game && game.homeTeamId === teamId && game.homeTeamScore > game.awayTeamScore)
           || (game.awayTeamId === teamId && game.awayTeamScore > game.homeTeamScore) ) {
         wins++;
       }
@@ -194,14 +194,14 @@ export class SharedFunctionsService {
 
     // remove order number from batters without a starting position
     _.each(team.roster.batters, function(rosterBatter){
-      if(rosterBatter.orderNumber && !rosterBatter.startingPosition){
+      if (rosterBatter.orderNumber && !rosterBatter.startingPosition) {
         rosterBatter.orderNumber = null
       }
     })
 
     // set batting order
     _.each(that.staticListsService.battingOrderNumbers, function(orderNumber){
-      if(!_.find(team.roster.batters, {orderNumber: orderNumber})){
+      if (!_.find(team.roster.batters, {orderNumber: orderNumber})) {
         let overall = 0
         let rosterPlayer = null
         _.each(team.roster.batters, function(rosterBatter) {

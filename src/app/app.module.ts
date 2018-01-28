@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from './material.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpModule } from '@angular/http';
 import { FlexLayoutModule } from '@angular/flex-layout'
@@ -36,6 +36,7 @@ import { LeagueDataService } from './services/league-data.service';
 import { StaticListsService } from './services/static-lists.service';
 import { ProcessGameService } from './services/process-game.service';
 import { SharedFunctionsService } from './services/shared-functions.service';
+import { AuthService } from './services/auth.service';
 
 import { TeamBatterRowComponent } from './components/team-batter-row/team-batter-row.component';
 import { TeamPitcherRowComponent } from './components/team-pitcher-row/team-pitcher-row.component';
@@ -45,14 +46,18 @@ import { FreeAgentsComponent } from './components/free-agents/free-agents.compon
 import { NegotiateContractComponent } from './components/negotiate-contract/negotiate-contract.component';
 import { GenerateScheduleTestComponent } from './components/generate-schedule-test/generate-schedule-test.component';
 import { PlayoffBracketComponent } from './components/playoff-bracket/playoff-bracket.component';
+import { LoginComponent } from './components/login/login.component';
+import { LeagueAdminComponent } from './components/league-admin/league-admin.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
+  {path: 'login', component: LoginComponent},
   {path: 'test', component: TestComponent},
   {path: ':leagueId',
   component: LeagueComponent,
   children: [
     {path: '', redirectTo: 'league-home', pathMatch: 'full'},
+    {path: 'admin', component: LeagueAdminComponent},
     {path: 'league-home', component: LeagueHomeComponent},
     {path: 'team/:teamId', component: TeamComponent},
     {path: 'player/:playerId', component: PlayerComponent},
@@ -82,13 +87,16 @@ const routes: Routes = [
     FreeAgentsComponent,
     NegotiateContractComponent,
     GenerateScheduleTestComponent,
-    PlayoffBracketComponent
+    PlayoffBracketComponent,
+    LoginComponent,
+    LeagueAdminComponent
   ],
   imports: [
     BrowserModule,
     MaterialModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(routes),
     HttpModule,
     FlexLayoutModule
@@ -108,7 +116,8 @@ const routes: Routes = [
     LeagueDataService,
     StaticListsService,
     ProcessGameService,
-    SharedFunctionsService
+    SharedFunctionsService,
+    AuthService
   ],
   entryComponents: [CreateLeagueDialogComponent],
   bootstrap: [AppComponent]

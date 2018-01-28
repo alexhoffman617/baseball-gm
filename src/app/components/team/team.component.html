@@ -1,64 +1,66 @@
-<div>
-  <h3> {{ team?.location }} {{ team?.name }}</h3>
+<div class="view-container">
+  <div>
+    <h3> {{ team?.location }} {{ team?.name }}</h3>
+  </div>
+  <div>
+    <h5>Batters</h5>
+  </div>
+  <table>
+    <thead>
+      <tr class="header">
+        <th>Name</th>
+        <th>Primary Position</th>
+        <th>Age</th>
+        <th>Position</th>
+        <th>Order #</th>
+        <th>Overall</th>
+        <th>AB</th>
+        <th>R</th>
+        <th>RBI</th>
+        <th>AVG</th>
+        <th>OBP</th>
+        <th>SLG</th>
+        <th>HR</th>
+        <th>SB</th>
+        <th>CS</th>
+        <th>PO</th>
+        <th>E</th>
+        <th *ngIf="isOwner()">Release</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let batter of getOrderedBatters()">
+        <tr app-team-batter-row [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team" [button]="isOwner() ? 'release' : ''"></tr>
+      </ng-container>
+    </tbody>
+  </table>
+  <div>
+    <h5>Pitchers</h5>
+  </div>
+  <table>
+    <thead>
+      <tr class="header">
+        <th>Name</th>
+        <th>Age</th>
+        <th>Role</th>
+        <th>Overall</th>
+        <th>W</th>
+        <th>L</th>
+        <th>SV</th>
+        <th>G</th>
+        <th>GS</th>
+        <th>IP</th>
+        <th>ERA</th>
+        <th>WHIP</th>
+        <th>K</th>
+        <th>BB</th>
+        <th *ngIf="isOwner()">Release</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let pitcher of getOrderedPitchers()">
+        <tr app-team-pitcher-row [pitcher]="getPlayerById(pitcher.playerId)" [rosterPitcher]="pitcher" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team" [button]="isOwner() ? 'release' : ''"></tr>
+      </ng-container>
+    </tbody>
+  </table>
 </div>
-<div>
-  <h5>Batters</h5>
-</div>
-<table>
-  <thead>
-    <tr class="header">
-      <th>Name</th>
-      <th>Primary Position</th>
-      <th>Age</th>
-      <th>Position</th>
-      <th>Order #</th>
-      <th>Overall</th>
-      <th>AB</th>
-      <th>R</th>
-      <th>RBI</th>
-      <th>AVG</th>
-      <th>OBP</th>
-      <th>SLG</th>
-      <th>HR</th>
-      <th>SB</th>
-      <th>CS</th>
-      <th>E</th>
-      <th>Release</th>
-    </tr>
-  </thead>
-  <tbody>
-    <ng-container *ngFor="let batter of getOrderedBatters()">
-      <tr app-team-batter-row [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team" button='release'></tr>
-    </ng-container>
-   </tbody>
- </table>
-<div>
-  <h5>Pitchers</h5>
-</div>
-<table>
-  <thead>
-    <tr class="header">
-      <th>Name</th>
-      <th>Age</th>
-      <th>Role</th>
-      <th>Overall</th>
-      <th>W</th>
-      <th>L</th>
-      <th>SV</th>
-      <th>G</th>
-      <th>GS</th>
-      <th>IP</th>
-      <th>ERA</th>
-      <th>WHIP</th>
-      <th>K</th>
-      <th>BB</th>
-      <th>Release</th>
-    </tr>
-  </thead>
-  <tbody>
-    <ng-container *ngFor="let pitcher of getOrderedPitchers()">
-      <tr app-team-pitcher-row [pitcher]="getPlayerById(pitcher.playerId)" [rosterPitcher]="pitcher" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team" button="release"></tr>
-    </ng-container>
-   </tbody>
- </table>
-

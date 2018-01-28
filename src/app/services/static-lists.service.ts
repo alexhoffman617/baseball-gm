@@ -8,6 +8,13 @@ export class StaticListsService {
     pitcher: 'pitcher',
     batter: 'batter'
   }
+
+  pitcherTypes = {
+    groundBall: 'groundBall',
+    flyBall: 'flyBall',
+    standard: 'standard'
+  }
+
   pitcherRoles = [
   'SP1',
   'SP2',

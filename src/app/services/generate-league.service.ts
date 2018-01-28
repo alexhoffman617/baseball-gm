@@ -22,14 +22,15 @@ export class GenerateLeagueService {
 
     async generateLeague(leagueName: string, numberOfTeams: number, useMlbTeams = false) {
       this.sharedFunctionsService.setLoading(2, 'Generating League')
-      const league = new League(numberOfTeams, 'test', leagueName);
-      const createdLeague = await this.createLeague(league) as League;
+      const league = new League(numberOfTeams, localStorage.getItem('baseballgm-username'), leagueName)
+      const createdLeague = await this.createLeague(league) as League
       this.sharedFunctionsService.setLoading(10, 'Generating Teams')
       const teamIds = []
       for (let x = 0; x < league.numberOfTeams; x++) {
+        const ownerAccountId = x === 0 ? localStorage.getItem('baseballgm-username') : null
         const team = useMlbTeams ?
-                      await this.generateTeamService.generateMlbTeam(createdLeague._id, x) :
-                      await this.generateTeamService.generateRandomTeam(createdLeague._id)
+                      await this.generateTeamService.generateMlbTeam(createdLeague._id, x, ownerAccountId) :
+                      await this.generateTeamService.generateRandomTeam(createdLeague._id, ownerAccountId)
         teamIds.push(team._id)
         this.sharedFunctionsService.setLoading(10 + (70 * x / numberOfTeams),
           'Generated Team ' + (x + 1) + ': ' + team.location + ' ' + team.name)
@@ -46,6 +47,7 @@ export class GenerateLeagueService {
       await this.generatePlayerService.generateFreeAgents(createdLeague._id, (new Date()).getFullYear(), teamIds.length * 10)
       this.sharedFunctionsService.setLoading(92, 'Generating Season')
       this.seasonGenerator.generateSeason(createdLeague._id, teamIds, null, createdLeague.structure)
+      return createdLeague._id
     }
 
     createLeague(league) {

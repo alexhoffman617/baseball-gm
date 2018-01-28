@@ -13,6 +13,7 @@ import { PlayoffScheduleGenerator } from '../../services/playoff-schedule.genera
 import * as _ from 'lodash';
 import * as io from 'socket.io-client';
 import { SharedFunctionsService } from 'app/services/shared-functions.service';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
 selector: 'app-league',
@@ -25,6 +26,7 @@ restOfPlayoffRound = 'ROPR'
 leagueId;
 teams
 seasonSnapshot: Season;
+accountId: string
 
   constructor(private route: ActivatedRoute,
               private leagueProgressionService: LeagueProgressionService,
@@ -33,6 +35,7 @@ seasonSnapshot: Season;
               public sharedFunctionsService: SharedFunctionsService,
               public playoffScheduleGenerator: PlayoffScheduleGenerator,
               public processGameService: ProcessGameService,
+              public authService: AuthService,
   ) { }
 
   async ngOnInit() {
@@ -44,6 +47,7 @@ seasonSnapshot: Season;
         await this.leagueDataService.getData(this.leagueId)
       })();
     });
+    this.accountId = localStorage.getItem('baseballgm-username')
   }
 
 async stopSimming() {
@@ -112,7 +116,7 @@ async playDays(daysLeft) {
         that.completeDaySim(day, daysLeft)
       }
     }
-    if(daysLeft % 6 === 0){
+    if (daysLeft % 6 === 0) {
       that.leagueDataService.updateAllPlayers()
       that.leagueDataService.updateSeason(this.seasonSnapshot)
     }
@@ -235,6 +239,11 @@ async playDays(daysLeft) {
     _.each(that.leagueDataService.teams, function(team){
       that.sharedFunctionsService.autoSetLineup(team)
     })
+  }
+
+  getUsersTeam() {
+    const team = _.find(this.leagueDataService.teams, {ownerAccountId: localStorage.getItem('baseballgm-id')})
+    return team ? team._id : false
   }
 }
 

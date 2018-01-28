@@ -6,6 +6,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable'
 import * as io from 'socket.io-client';
 import { SharedFunctionsService } from 'app/services/shared-functions.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -21,11 +22,11 @@ export class MainComponent implements OnInit {
   ngOnInit() {
     this.socket = io.connect(window.location.protocol + '//' + window.location.host);
     new Observable(observer => {
-      this.http.get('/api/leagues', {params: {}}).subscribe(data => {
+      this.http.get('/api/leagues/' + localStorage.getItem('baseballgm-username'), {params: {}}).subscribe(data => {
         observer.next(data.json());
       });
     this.socket.on('leagues', (data) => {
-      observer.next(data);
+      // observer.next(data);
     });
     return () => {
       this.socket.disconnect();
@@ -57,6 +58,7 @@ export class CreateLeagueDialogComponent {
     public dialogRef: MatDialogRef<CreateLeagueDialogComponent>,
     private generateLeagueService: GenerateLeagueService,
     public sharedFunctionsService: SharedFunctionsService,
+    public router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   onNoClick(): void {
@@ -65,9 +67,10 @@ export class CreateLeagueDialogComponent {
 
   async generateLeague() {
     this.isGenerating = true
-    await this.generateLeagueService.generateLeague(this.leagueName, this.numberOfTeams, this.useMlbTeams)
+    const newLeagueId = await this.generateLeagueService.generateLeague(this.leagueName, this.numberOfTeams, this.useMlbTeams)
     this.isGenerating = false
     this.dialogRef.close();
+    this.router.navigate([newLeagueId])
   }
 
 }

@@ -105,4 +105,8 @@ export class TeamComponent implements OnInit {
      }) :
     []
   }
+
+  isOwner() {
+    return this.team ? this.team.ownerAccountId === localStorage.getItem('baseballgm-id') : false
+  }
 }

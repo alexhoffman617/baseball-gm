@@ -1,0 +1,39 @@
+<div fxLayout="row">
+  <div fxFlex="40"></div>
+  <mat-card>
+    <div *ngIf="state==='login'">
+      <h4>Login</h4>
+      <div>
+          <mat-input-container>
+              <input matInput [(ngModel)]="username" placeholder="Username">
+          </mat-input-container>
+      </div>
+      <div>
+        <mat-input-container>
+            <input matInput [(ngModel)]="password" placeholder="Password">
+        </mat-input-container>
+      </div>
+      <div>
+        <button mat-button mat-raised-button (click)="login()" color="primary">Ok</button>
+        <button mat-button mat-raised-button (click)="switchState('register')" color="primary">Register</button>
+      </div>
+    </div>
+    <div *ngIf="state==='register'">
+      <h4>Register</h4>
+      <div>
+          <mat-input-container>
+              <input matInput [(ngModel)]="username" placeholder="Username">
+          </mat-input-container>
+      </div>
+      <div>
+        <mat-input-container>
+            <input matInput [(ngModel)]="password" placeholder="Password">
+        </mat-input-container>
+      </div>
+      <div>
+        <button mat-button mat-raised-button (click)="register()" color="primary">Ok</button>
+        <button mat-button mat-raised-button (click)="switchState('login')" color="primary">Login</button>
+      </div>
+    </div>
+   </mat-card>
+</div>

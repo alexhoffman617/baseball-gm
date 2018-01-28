@@ -1,0 +1,23 @@
+<div class="view-container">
+  <div fxLayout="row" *ngFor="let team of leagueDataService.teams">
+    <mat-card fxFlex="45" style="margin: 10px">
+      <mat-input-container>
+          <input matInput [(ngModel)]="team.location" placeholder="Location">
+      </mat-input-container>
+      <span class="spacer"></span>
+      <mat-input-container>
+          <input matInput [(ngModel)]="team.name" placeholder="Name">
+      </mat-input-container>
+      <span class="spacer"></span>
+      <mat-select fxFlex="20"  style="margin-top: 20px" [(ngModel)]="team.ownerAccountId" placeholder="Owner">
+        <mat-option *ngFor="let account of leagueDataService.accounts" [value]="account._id">
+          {{ account.username }}
+        </mat-option>
+      </mat-select>
+      <span class="spacer"></span>
+      <button mat-button mat-raised-button (click)="leagueDataService.updateTeam(team)" color="primary" style="height:40px; margin-top:1%">Save Changes</button>
+    </mat-card>
+    <div></div>
+  </div>
+</div>
+

@@ -1,4 +1,5 @@
-<table>
+<div class="view-container">
+  <table>
     <thead>
       <tr class="header">
         <th>Name</th>
@@ -13,5 +14,6 @@
         <tr *ngIf="player.pitchingPotential.velocity === 0" app-team-batter-row [batter]="player" displaySet="fa" button="negotiate"></tr>
         <tr *ngIf="player.pitchingPotential.velocity > 0" app-team-pitcher-row [pitcher]="player" displaySet="fa" button="negotiate"></tr>
       </ng-container>
-     </tbody>
-   </table>
+    </tbody>
+  </table>
+</div>

@@ -1,5 +1,6 @@
 <mat-toolbar color="primary">
   <button mat-button [routerLink]="'/'+ leagueId + '/league-home'">Home</button>
+  <button mat-button *ngIf="getUsersTeam()" [routerLink]="'/'+ leagueId + '/team/' + getUsersTeam()">My Team</button>
   <button mat-button [matMenuTriggerFor]="sim">{{leagueDataService.league?.simming ? 'Simming...' : 'Sim'}}</button>
   <mat-menu #sim="matMenu">
     <ng-container *ngIf="!leagueDataService.league?.simming">
@@ -24,5 +25,8 @@
     </ng-container>
   </mat-menu>
   <button mat-button [routerLink]="'/'+ leagueId + '/free-agents'">Free Agents</button>
+  <span class="spacer"></span>
+  <button mat-button *ngIf="leagueDataService.league?.creatorAccountId === accountId" [routerLink]="'/'+ leagueId + '/admin'">Admin</button>
+  <button mat-button (click)="authService.logout()">Logout</button>
 </mat-toolbar>
 <router-outlet class="league-page-container"></router-outlet>

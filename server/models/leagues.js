@@ -1,9 +1,10 @@
 var mongoose = require('mongoose');
-//mongoose.connect("mongodb://website:password@ds255797.mlab.com:55797/baseballgm");
-mongoose.connect("mongodb://127.0.0.1:27017");
+mongoose.connect("mongodb://website:password@ds255797.mlab.com:55797/baseballgm");
+//mongoose.connect("mongodb://127.0.0.1:27017");
 var Schema = mongoose.Schema
 var leagueSchema = new Schema({}, {strict: false})
 var League = mongoose.model('leagues', leagueSchema);
+var Team = require('./teams').model
 
 var exports = {
   getLeague: function(id, callback){
@@ -14,6 +15,27 @@ var exports = {
   getLeagues: function(callback){
     League.find({}, function(err, leagues){
       callback(200, leagues)
+    })
+  },
+  getLeaguesForAccount: function(accountId, callback){
+    Team.find({ownerAccountId: accountId}, function(err, teams){
+      if(err){
+        callback(400, err)
+      } else {
+        var leagues = []
+        for(var x = 0; x < teams.length; x++){
+          League.findById(teams[x]._doc.leagueId, function(err, league){
+            if(err){
+              callback(400, err)
+            } else {
+              leagues.push(league)
+              if(leagues.length >= teams.length){
+                callback(200, leagues)
+              }
+            }
+          })
+        }
+      }
     })
   },
   createLeague: function(league, callback){

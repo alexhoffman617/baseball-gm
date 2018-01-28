@@ -15,16 +15,18 @@ export class GenerateTeamService {
                 private sharedFunctionsService: SharedFunctionsService,
                 private leagueDataService: LeagueDataService) { }
 
-    async generateRandomTeam(leagueId: string) {
+    async generateRandomTeam(leagueId: string,  ownerAccountId: string = null) {
       const team = await this.leagueDataService.createTeam(new Team(this.getTeamName(), this.getTeamLocation(),
         new Roster(new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId)) as Team;
+      team.ownerAccountId = ownerAccountId
       return await this.generateTeam(leagueId, team)
     }
 
-    async generateMlbTeam(leagueId: string, mlbTeamIndex: number) {
+    async generateMlbTeam(leagueId: string, mlbTeamIndex: number, ownerAccountId: string = null) {
       const team = await this.leagueDataService.createTeam(new Team(this.staticListsService.mlbTeamNames[mlbTeamIndex],
          this.staticListsService.mlbLocations[mlbTeamIndex],
          new Roster(new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId)) as Team;
+      team.ownerAccountId = ownerAccountId
       return await this.generateTeam(leagueId, team)
     }
 

@@ -116,13 +116,13 @@ export class GeneratePlayerService {
     }
 
     getPitcherType() {
-        const rand = Math.random();
-        if (rand < .33) {
-            return 'gb';
-        } else if (rand < .66) {
-            return 'fb';
-        }
-        return 'std';
+      const rand = Math.random();
+      if (rand < .33) {
+          return this.staticListsService.pitcherTypes.groundBall;
+      } else if (rand < .66) {
+          return this.staticListsService.pitcherTypes.flyBall;
+      }
+      return this.staticListsService.pitcherTypes.standard;
     }
 
     getPrimaryPositions() {

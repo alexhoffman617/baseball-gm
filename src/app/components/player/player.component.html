@@ -1,99 +1,180 @@
-<div>
-  <h3> {{ player?.name }}</h3>
-</div>
-<div>
-    Age: {{player?.age}}
-</div>
-<div>
-    Bats: {{player?.bats}}
-</div>
-<div>
-    Throws: {{player?.throws}}
-</div>
-<div>
-  Overall: {{overallHitting(player?.hittingAbility)}} ({{overallHitting(player?.hittingPotential)}})
-</div>
-<div>
-  Contact: {{player?.hittingAbility.contact}} ({{player?.hittingPotential.contact}})
-</div>
-<div>
-  Power: {{player?.hittingAbility.power}} ({{player?.hittingPotential.power}})
-</div>
-<div>
-  Patience: {{player?.hittingAbility.patience}} ({{player?.hittingPotential.patience}})
-</div>
-<div>
-  Speed: {{player?.hittingAbility.speed}} ({{player?.hittingPotential.speed}})
-</div>
-<div>
-  Fielding: {{player?.hittingAbility.fielding}} ({{player?.hittingPotential.fielding}})
-</div>
-<mat-tab-group>
-  <mat-tab label="Stats">
+<div class="view-container">
+  <div>
+    <h3> {{ player?.name }}</h3>
+  </div>
+  <div>
+      Age: {{player?.age}}
+  </div>
+  <div>
+      Bats: {{player?.bats}}
+  </div>
+  <div>
+      Throws: {{player?.throws}}
+  </div>
+  <div fxLayout="row">
+    <div fxFlex="20">
+      <div>
+        Overall Hitting: {{sharedFunctionsService.overallHitting(player?.hittingAbility)}} ({{sharedFunctionsService.overallHitting(player?.hittingPotential)}})
+      </div>
+      <div>
+        Contact: {{player?.hittingAbility.contact}} ({{player?.hittingPotential.contact}})
+      </div>
+      <div>
+        Power: {{player?.hittingAbility.power}} ({{player?.hittingPotential.power}})
+      </div>
+      <div>
+        Patience: {{player?.hittingAbility.patience}} ({{player?.hittingPotential.patience}})
+      </div>
+      <div>
+        Speed: {{player?.hittingAbility.speed}} ({{player?.hittingPotential.speed}})
+      </div>
+      <div>
+        Fielding: {{player?.hittingAbility.fielding}} ({{player?.hittingPotential.fielding}})
+      </div>
+    </div>
+    <div fxFlex="20">
+      <div>
+        Overall Pitching: {{sharedFunctionsService.overallPitching(player?.pitchingAbility)}} ({{sharedFunctionsService.overallPitching(player?.pitchingPotential)}})
+      </div>
+      <div>
+        Velocity: {{player?.pitchingAbility.velocity}} ({{player?.pitchingPotential.velocity}})
+      </div>
+      <div>
+        Movement: {{player?.pitchingAbility.movement}} ({{player?.pitchingPotential.movement}})
+      </div>
+      <div>
+        Control: {{player?.pitchingAbility.control}} ({{player?.pitchingPotential.control}})
+      </div>
+      <div>
+        Type: {{player?.pitchingAbility.type}}
+      </div>
+    </div>
+  </div>
+  <mat-tab-group>
+    <mat-tab *ngIf="player?.playerType === staticListsService.playerTypes.batter" label="Batting Stats">
+        <table>
+            <thead>
+              <tr class="header">
+                <th>Year</th>
+                <th>AB</th>
+                <th>R</th>
+                <th>RBI</th>
+                <th>AVG</th>
+                <th>OBP</th>
+                <th>SLG</th>
+                <th>HR</th>
+                <th>SB</th>
+                <th>CS</th>
+                <th>PO</th>
+                <th>E</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let year of years">
+                  <tr app-team-batter-row [displaySet]="'stats'" [batter]="player" [rosterBatter]="null" [seasonYear]="year" [teamInstance]="null"></tr>
+              </ng-container>
+            </tbody>
+          </table>
+    </mat-tab>
+    <mat-tab *ngIf="player?.playerType === staticListsService.playerTypes.batter" label="Batting Progression">
+      <table>
+        <thead>
+          <tr class="header">
+            <th>Year</th>
+            <th>Overall</th>
+            <th>Contact</th>
+            <th>Power</th>
+            <th>Patience</th>
+            <th>Speed</th>
+            <th>Fielding</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let hittingProgression of player?.hittingProgressions">
+            <tr>
+              <td>
+                {{ hittingProgression.year }}
+              </td>
+              <td [ngClass]="{ 'positive': sharedFunctionsService.overallHitting(hittingProgression.hittingSkillset) > 0, 'negative': sharedFunctionsService.overallHitting(hittingProgression.hittingSkillset) < 0 }" >
+                {{ sharedFunctionsService.overallHitting(hittingProgression.hittingSkillset) }}
+              </td>
+              <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.contact > 0, 'negative': hittingProgression.hittingSkillset.contact < 0 }" >
+                {{ hittingProgression.hittingSkillset.contact }}
+              </td>
+              <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.power > 0, 'negative': hittingProgression.hittingSkillset.power < 0 }" >
+                {{ hittingProgression.hittingSkillset.power }}
+              </td>
+              <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.patience > 0, 'negative': hittingProgression.hittingSkillset.patience < 0 }" >
+                {{ hittingProgression.hittingSkillset.patience }}
+              </td>
+              <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.speed > 0, 'negative': hittingProgression.hittingSkillset.speed < 0 }" >
+                {{ hittingProgression.hittingSkillset.speed }}
+              </td>
+              <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.fielding > 0, 'negative': hittingProgression.hittingSkillset.fielding < 0 }" >
+                {{ hittingProgression.hittingSkillset.fielding }}
+              </td>
+            </tr>
+          </ng-container>
+          </tbody>
+        </table>
+    </mat-tab>
+    <mat-tab *ngIf="player?.playerType === staticListsService.playerTypes.pitcher" label="Pitching Stats">
       <table>
           <thead>
             <tr class="header">
               <th>Year</th>
-              <th>AB</th>
-              <th>R</th>
-              <th>RBI</th>
-              <th>AVG</th>
-              <th>OBP</th>
-              <th>SLG</th>
-              <th>HR</th>
-              <th>SB</th>
-              <th>CS</th>
-              <th>E</th>
+              <th>W</th>
+              <th>L</th>
+              <th>SV</th>
+              <th>G</th>
+              <th>GS</th>
+              <th>IP</th>
+              <th>ERA</th>
+              <th>WHIP</th>
+              <th>K</th>
+              <th>BB</th>
             </tr>
           </thead>
           <tbody>
             <ng-container *ngFor="let year of years">
-                <tr app-team-batter-row [displaySet]="'stats'" [batter]="player" [rosterBatter]="null" [seasonYear]="year" [teamInstance]="null"></tr>
+                <tr app-team-pitcher-row [displaySet]="'stats'" [pitcher]="player" [rosterPitcher]="null" [seasonYear]="year" [teamInstance]="null"></tr>
             </ng-container>
-           </tbody>
-         </table>
+          </tbody>
+        </table>
   </mat-tab>
-  <mat-tab label="Progression">
+  <mat-tab *ngIf="player?.playerType === staticListsService.playerTypes.pitcher" label="Pitching Progression">
     <table>
       <thead>
         <tr class="header">
           <th>Year</th>
           <th>Overall</th>
-          <th>Contact</th>
-          <th>Power</th>
-          <th>Patience</th>
-          <th>Speed</th>
-          <th>Fielding</th>
+          <th>Velocity</th>
+          <th>Movement</th>
+          <th>Control</th>
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let hittingProgression of player?.hittingProgressions">
+        <ng-container *ngFor="let pitchingProgression of player?.pitchingProgressions">
           <tr>
             <td>
-              {{ hittingProgression.year }}
+              {{ pitchingProgression.year }}
             </td>
-            <td [ngClass]="{ 'positive': overallHitting(hittingProgression.hittingSkillset) > 0, 'negative': overallHitting(hittingProgression.hittingSkillset) < 0 }" >
-              {{ overallHitting(hittingProgression.hittingSkillset) }}
+            <td [ngClass]="{ 'positive': sharedFunctionsService.overallPitching(pitchingProgression.pitchingSkillset) > 0, 'negative': sharedFunctionsService.overallPitching(pitchingProgression.pitchingSkillset) < 0 }" >
+              {{ sharedFunctionsService.overallPitching(pitchingProgression.pitchingSkillset) }}
             </td>
-            <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.contact > 0, 'negative': hittingProgression.hittingSkillset.contact < 0 }" >
-              {{ hittingProgression.hittingSkillset.contact }}
+            <td [ngClass]="{ 'positive': pitchingProgression.pitchingSkillset.velocity > 0, 'negative': pitchingProgression.pitchingSkillset.velocity < 0 }" >
+              {{ pitchingProgression.pitchingSkillset.velocity }}
             </td>
-            <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.power > 0, 'negative': hittingProgression.hittingSkillset.power < 0 }" >
-              {{ hittingProgression.hittingSkillset.power }}
+            <td [ngClass]="{ 'positive': pitchingProgression.pitchingSkillset.movement > 0, 'negative': pitchingProgression.pitchingSkillset.movement < 0 }" >
+              {{ pitchingProgression.pitchingSkillset.movement }}
             </td>
-            <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.patience > 0, 'negative': hittingProgression.hittingSkillset.patience < 0 }" >
-              {{ hittingProgression.hittingSkillset.patience }}
-            </td>
-            <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.speed > 0, 'negative': hittingProgression.hittingSkillset.speed < 0 }" >
-              {{ hittingProgression.hittingSkillset.speed }}
-            </td>
-            <td [ngClass]="{ 'positive': hittingProgression.hittingSkillset.fielding > 0, 'negative': hittingProgression.hittingSkillset.fielding < 0 }" >
-              {{ hittingProgression.hittingSkillset.fielding }}
+            <td [ngClass]="{ 'positive': pitchingProgression.pitchingSkillset.control > 0, 'negative': pitchingProgression.pitchingSkillset.control < 0 }" >
+              {{ pitchingProgression.pitchingSkillset.control }}
             </td>
           </tr>
         </ng-container>
         </tbody>
       </table>
   </mat-tab>
-</mat-tab-group>
-
+  </mat-tab-group>
+</div>

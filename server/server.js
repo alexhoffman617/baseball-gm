@@ -1,4 +1,5 @@
 const express = require('express');
+var bodyParser = require('body-parser')
 const app = express();
 
 const port = process.env.PORT || '3000';
@@ -14,19 +15,22 @@ var Players = require('./models/players')
 var Teams = require('./models/teams')
 var Seasons = require('./models/seasons')
 var Games = require('./models/games')
+var Accounts = require('./models/accounts');
 
-var io       = require('socket.io')(server);
+var io = require('socket.io')(server);
 
 const api = require('../server/routes/api.js');
 const path = require('path');
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded())
 app.use(express.static(path.join(__dirname, '../dist')));
-
 app.use('/api', api);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
+
 
 
 io.on('connection', function(socket){

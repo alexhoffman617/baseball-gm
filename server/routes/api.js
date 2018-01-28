@@ -12,7 +12,7 @@ var seasons = require('../models/seasons')
 var teams = require('../models/teams')
 var players = require('../models/players')
 var games = require('../models/games')
-
+var accounts = require('../models/accounts')
 
 router.get('/', (req, res) => {
   res.send('api works');
@@ -32,6 +32,12 @@ router.get('/send-message', (req, res) => {
 
 router.get('/leagues', (req, res) => {
   leagues.getLeagues(function(status, value){
+    res.status(status).send(value)
+  })
+})
+
+router.get('/leagues/:accountUsername', (req, res) => {
+  leagues.getLeaguesForAccount(req.params.accountUsername, function(status, value){
     res.status(status).send(value)
   })
 })
@@ -74,6 +80,21 @@ router.get('/games/:leagueId', (req, res) => {
 
 router.get('/removeSeasonGames/:seasonId', (req, res) => {
   games.deleteAllSeasonsGames(req.params.seasonId, function(status, value){
+    res.status(status).send(value)
+  })
+})
+
+
+router.post('/register', function(req, res) {
+  accounts.register(req.body.username, req.body.password, req, res)
+});
+
+router.post('/login', function(req, res) {
+  accounts.login(req.body.username, req.body.password, req, res)
+});
+
+router.get('/accounts', function(req, res){
+  accounts.getAccounts(function(status, value){
     res.status(status).send(value)
   })
 })

@@ -19,6 +19,7 @@ export class TeamPitcherRowComponent implements OnChanges {
   @Input() rosterPitcher: RosterSpot
   @Input() displaySet: string
   @Input() button: string
+  @Input() owner: boolean
   pitchingProgression: PitchingProgression
   seasonStats: PitcherSeasonStats
   showName = false

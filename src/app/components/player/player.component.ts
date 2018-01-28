@@ -5,6 +5,8 @@ import { Player, HittingProgression } from '../../models/player';
 import { Game, AtBat } from '../../models/game';
 import { BatterSeasonStats } from '../../models/season-stats';
 import * as _ from 'lodash';
+import { StaticListsService } from 'app/services/static-lists.service';
+import { SharedFunctionsService } from 'app/services/shared-functions.service';
 
 @Component({
   selector: 'app-player',
@@ -18,7 +20,9 @@ export class PlayerComponent implements OnInit {
   years = [];
 
   constructor(private route: ActivatedRoute,
-    public leagueDataService: LeagueDataService
+    public leagueDataService: LeagueDataService,
+    public staticListsService: StaticListsService,
+    public sharedFunctionsService: SharedFunctionsService
   ) { }
 
   ngOnInit() {
@@ -32,6 +36,7 @@ export class PlayerComponent implements OnInit {
             return player._id === that.playerId
           });
           that.leagueDataService.seasonsObservable.subscribe(seasons => {
+            that.years = []
             const lastYear = !!that.player.lastYear ? that.player.lastYear :  that.leagueDataService.currentSeason.year
             for (let year = that.player.firstYear; year <= lastYear; year++) {
               that.years.push(year)
@@ -41,13 +46,5 @@ export class PlayerComponent implements OnInit {
         })
       })
     })
-  }
-
-  overallHitting(hittingSkillset) {
-    if (!hittingSkillset) {
-      return null
-    }
-    return Math.round((hittingSkillset.contact + hittingSkillset.power
-      + hittingSkillset.patience + hittingSkillset.speed + hittingSkillset.fielding) * .2);
   }
 }

@@ -3,6 +3,7 @@ export class Team {
   location: string;
   roster: Roster;
   leagueId: string;
+  ownerAccountId: string;
   _id: string;
 
   constructor(name: string, location: string, roster: Roster, leagueId: string) {

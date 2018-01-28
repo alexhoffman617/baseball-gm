@@ -35,25 +35,25 @@ export class AtBatService {
 
   getTrajectoryPercentage(pitcher, trajectoryType) {
     if (trajectoryType === 'gb') {
-      if (pitcher.pitchingAbility.type === 'gb') {
+      if (pitcher.pitchingAbility.type === this.staticListsService.pitcherTypes.groundBall) {
         return this.gbpct + ((pitcher.pitchingAbility.movement - 25) / 75 * .1)
-      } else if (pitcher.pitchingAbility.type === 'fb') {
+      } else if (pitcher.pitchingAbility.type === this.staticListsService.pitcherTypes.flyBall) {
         return this.gbpct - ((pitcher.pitchingAbility.movement - 25) / 75 * .075)
       } else {
         return this.gbpct
       }
     } else if (trajectoryType === 'ld') {
-      if (pitcher.pitchingAbility.type === 'gb') {
+      if (pitcher.pitchingAbility.type === this.staticListsService.pitcherTypes.groundBall) {
         return this.ldpct - ((pitcher.pitchingAbility.movement - 25) / 75 * .05)
-      } else if (pitcher.pitchingAbility.type === 'fb') {
+      } else if (pitcher.pitchingAbility.type === this.staticListsService.pitcherTypes.flyBall) {
         return this.ldpct - ((pitcher.pitchingAbility.movement - 25) / 75 * .05)
       } else {
         return this.ldpct
       }
     } else if (trajectoryType === 'fb') {
-      if (pitcher.pitchingAbility.type === 'gb') {
+      if (pitcher.pitchingAbility.type === this.staticListsService.pitcherTypes.groundBall) {
         return this.fbpct - ((pitcher.pitchingAbility.movement - 25) / 75 * .05)
-      } else if (pitcher.pitchingAbility.type === 'fb') {
+      } else if (pitcher.pitchingAbility.type === this.staticListsService.pitcherTypes.flyBall) {
         return this.fbpct + ((pitcher.pitchingAbility.movement - 25) / 75 * .1)
       } else {
         return this.fbpct

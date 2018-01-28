@@ -7,6 +7,7 @@ import { League } from '../models/league';
 import { Season } from '../models/season';
 import { Game, AtBat, PitcherAppearance } from '../models/game';
 import { BatterSeasonStats, PitcherSeasonStats } from '../models/season-stats';
+import { Account } from '../models/account';
 
 import * as _ from 'lodash';
 import * as io from 'socket.io-client';
@@ -27,6 +28,8 @@ export class LeagueDataService  {
   seasonsObservable: Observable<Array<Season>>;
   games: Array<Game>;
   gamesObservable: Observable<Array<Game>>;
+  accounts: Array<Account>;
+  accountsObservable: Observable<Array<Account>>;
   socket = io.connect(window.location.protocol + '//' + window.location.host);
   messages: any;
   constructor(private http: Http, private route: ActivatedRoute) {
@@ -164,6 +167,27 @@ export class LeagueDataService  {
     })
   }
 
+  async getAccounts() {
+    const that = this
+    return new Promise(function(resolve){
+      that.accountsObservable = new Observable(observer => {
+        that.http.get('/api/accounts').subscribe(data => {
+          observer.next(data.json());
+          resolve(true)
+        });
+        that.socket.on('accounts', (data) => {
+          observer.next(data);
+        });
+        return () => {
+          that.socket.disconnect();
+        };
+      })
+      that.accountsObservable.subscribe(accounts => {
+        that.accounts = accounts as Array<Account>
+      })
+    })
+  }
+
   updateLocalSeason(season: Season) {
     this.currentSeason = season
   }
@@ -176,8 +200,9 @@ export class LeagueDataService  {
     const teamsPromise = this.getTeams(leagueId)
     const playersPromise = this.getPlayers(leagueId)
     const gamesPromise = this.getGames(leagueId)
+    const accountsPromise = this.getAccounts()
 
-    return Promise.all([leaguePromise, seasonsPromise, teamsPromise, playersPromise, gamesPromise])
+    return Promise.all([leaguePromise, seasonsPromise, teamsPromise, playersPromise, gamesPromise, accountsPromise])
   }
 
   getPlayersByTeamId(teamId: string) {
@@ -210,10 +235,6 @@ export class LeagueDataService  {
         resolve(completed)
       });
     })
-  }
-
-  updatePlayers(players: Array<Player>){
-
   }
 
   async updateSeason(season) {
