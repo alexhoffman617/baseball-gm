@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LeagueDataService } from 'app/services/league-data.service';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/Operators';
 
 @Component({
   selector: 'app-league-admin',
