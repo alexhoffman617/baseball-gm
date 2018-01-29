@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Player, PitchingSkillset, BatterSeasonStats, PitcherSeasonStats } from '../models/player';
+import { Player, PitchingSkillset, BatterSeasonStats, PitcherSeasonStats, FieldingSeasonStats } from '../models/player';
 import { Team } from '../models/team';
 import { LeagueDataService } from './league-data.service'
 import { StaticListsService } from './static-lists.service'
@@ -21,7 +21,20 @@ export class SharedFunctionsService {
   pitchbabip(pss: PitcherSeasonStats) { return !pss ? 0 : 0 }
   walksPerNine(pss: PitcherSeasonStats) { return !pss || !pss.innings ? 0 : 9 * pss.walks / pss.innings }
   strikeoutsPerNine(pss: PitcherSeasonStats) { return !pss || !pss.innings ? 0 : 9 * pss.strikeouts / pss.innings }
-
+  fip(pss: PitcherSeasonStats) { return !pss || !pss.innings ? 0 :
+    Math.round(((13 * pss.homeruns + 3 * pss.walks - 2 * (pss.strikeouts + pss.iffb)) / pss.innings * 3.1) * 100) / 100 }
+  pitcherSpecificRunsPerWin(pss: PitcherSeasonStats) {
+    return !pss || !pss.innings ? 0 :
+    (((((18 - pss.innings / pss.appearances) * this.getGamesPlayed(pss.year) / 162)
+      + pss.innings / pss.appearances * this.fip(pss)) / 18) + 2) * 1.5
+  }
+  pitcherReplacementLevel(pss: PitcherSeasonStats) {
+    return !pss || !pss.innings ? 0 : (0.03 * (1 - pss.starts / pss.appearances) + 0.12 * pss.starts / pss.appearances)
+  }
+  pitWar(pss: PitcherSeasonStats) { return !pss || !pss.innings ? 0 :
+    Math.round(((4.2 * this.getGamesPlayed(pss.year) / 162 - this.fip(pss)) / this.pitcherSpecificRunsPerWin(pss) +
+     this.pitcherReplacementLevel(pss) * pss.innings / 9
+    + pss.innings * -.001) * 100) / 100}
 
   walkPercentage(bss: BatterSeasonStats) { return !bss  || bss.plateAppearences === 0 ? 0 : bss.walks / bss.plateAppearences }
   strikeoutPercentage(bss: BatterSeasonStats) { return !bss || bss.plateAppearences === 0 ? 0 : bss.strikeouts / bss.plateAppearences }
@@ -37,10 +50,27 @@ export class SharedFunctionsService {
     Math.round((this.hits(bss) - bss.homeruns) / (this.atBats(bss) - bss.strikeouts - bss.homeruns + bss.sacrificeFlies) * 1000) / 1000 }
   woba(bss: BatterSeasonStats) { return !bss || bss.plateAppearences === 0 ? 0 :
     Math.round((.7 * bss.walks + .9 * bss.singles + 1.25 * bss.doubles + 1.6 * bss.triples + 2 * bss.homeruns)
-     / bss.plateAppearences * 1000) / 1000 }
+     / (bss.plateAppearences + bss.sacrificeFlies) * 1000) / 1000 }
+  raa(bss: BatterSeasonStats) { return bss && bss.plateAppearences ? (this.woba(bss) - .320) / 1.25
+     * (bss.plateAppearences + bss.sacrificeFlies) : 0 }
+  batWar(bss: BatterSeasonStats, fss: FieldingSeasonStats) { return fss && bss ? Math.round(((this.raa(bss) + 0
+    + this.positionWar(fss) + 20 / 600 * bss.plateAppearences) / 10) * 100) / 100 : 0 }
+  positionWar(fss: FieldingSeasonStats) {
+    let result = 0
+    result += fss.appearances[this.staticListsService.positions.catcher] / 162 * 12.5
+    result += fss.appearances[this.staticListsService.positions.firstBase] / 162 * -12.5
+    result += fss.appearances[this.staticListsService.positions.secondBase] / 162 * 2.5
+    result += fss.appearances[this.staticListsService.positions.shortStop] / 162 * 7.5
+    result += fss.appearances[this.staticListsService.positions.thirdBase] / 162 * 2.5
+    result += fss.appearances[this.staticListsService.positions.leftField] / 162 * -7.5
+    result += fss.appearances[this.staticListsService.positions.centerField] / 162 * 2.5
+    result += fss.appearances[this.staticListsService.positions.rightField] / 162 * -7.5
+    result += fss.appearances[this.staticListsService.positions.catcher] / 162 * -17.5
+    return result
+  }
 
-    getWins(teamId) {
-    let wins = 0;
+  getWins(teamId) {
+  let wins = 0;
     if (!this.leagueDataService.currentSeason) {
       return wins
     }
@@ -71,6 +101,13 @@ export class SharedFunctionsService {
       }
     })
     return losses;
+  }
+
+  getGamesPlayed(year: number) {
+    const season = _.find(this.leagueDataService.seasons, {year: year})
+    return _.filter(season.schedule, function(scheduledDay){
+        return scheduledDay.complete
+      }).length;
   }
 
 
@@ -107,7 +144,8 @@ export class SharedFunctionsService {
     }
     return Math.round((player.hittingAbility.contact + player.hittingAbility.power
       + player.hittingAbility.patience + player.hittingAbility.speed
-      + (actualPosition === this.staticListsService.positions.designatedHitter ? 50 : this.getBestFieldingAtPostion(player, actualPosition)) * 4) / 8);
+      + (actualPosition === this.staticListsService.positions.designatedHitter ? 50
+        : this.getBestFieldingAtPostion(player, actualPosition)) * 4) / 8);
   }
 
   overallHittingFieldingIndependent(hittingSkillset) {
@@ -133,7 +171,7 @@ export class SharedFunctionsService {
     this.leagueDataService.updateTeam(team)
   }
 
-  autoSetPitchers(team: Team, players: Array<Player>){
+  autoSetPitchers(team: Team, players: Array<Player>) {
     const that = this
     const orderedPitchers = _.orderBy(team.roster.pitchers, function(pitcher) {
       return that.overallPitching(_.find(players, {_id: pitcher.playerId}).pitchingAbility)
@@ -148,15 +186,15 @@ export class SharedFunctionsService {
     team.roster.pitchers = orderedPitchers
   }
 
-  autoSetHitters(team: Team, players: Array<Player>){
-    var that = this
+  autoSetHitters(team: Team, players: Array<Player>) {
+    const that = this
     const orderedBatters = _.orderBy(team.roster.batters, function(batter) {
       return that.overallHitting(_.find(players, {_id: batter.playerId}).hittingAbility)
     }, 'desc')
 
-    //Fill best players at positions they play
+    // Fill best players at positions they play
     _.each(that.staticListsService.fieldingPositions, function(position){
-      if(!_.find(team.roster.batters, {startingPosition: position})) {
+      if (!_.find(team.roster.batters, {startingPosition: position})) {
         let overall = 0
         let rosterPlayer = null
         _.each(team.roster.batters, function(rosterBatter) {
@@ -168,15 +206,15 @@ export class SharedFunctionsService {
             }
           }
         })
-        if(rosterPlayer){
+        if (rosterPlayer) {
           rosterPlayer.startingPosition = position
         }
       }
     })
 
-    //Fill best players out of position
+    // Fill best players out of position
     _.each(that.staticListsService.fieldingPositionsWithDHFieldingSpectrumOrder, function(position){
-      if(!_.find(team.roster.batters, {startingPosition: position})) {
+      if (!_.find(team.roster.batters, {startingPosition: position})) {
         let overall = 0
         let rosterPlayer = null
         _.each(team.roster.batters, function(rosterBatter) {

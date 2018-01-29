@@ -81,28 +81,28 @@ export class PlayGameTestComponent implements OnInit {
     this.awayWins = 0;
     this.games = 0;
     const a = [
-      new GamePlayer('C', 1, true, this.teamA.batters[0]),
-      new GamePlayer('1B', 2, true, this.teamA.batters[1]),
-      new GamePlayer('2B', 3, true, this.teamA.batters[2]),
-      new GamePlayer('3B', 4, true, this.teamA.batters[3]),
-      new GamePlayer('SS', 5, true, this.teamA.batters[4]),
-      new GamePlayer('LF', 6, true, this.teamA.batters[5]),
-      new GamePlayer('CF', 7, true, this.teamA.batters[6]),
-      new GamePlayer('RF', 8, true, this.teamA.batters[7]),
-      new GamePlayer('DH', 9, true, this.teamA.batters[8]),
-      new GamePlayer('P', null, true, this.teamA.pitcher)
+      new GamePlayer('C', 1, null, this.teamA.batters[0]),
+      new GamePlayer('1B', 2, null, this.teamA.batters[1]),
+      new GamePlayer('2B', 3, null, this.teamA.batters[2]),
+      new GamePlayer('3B', 4, null, this.teamA.batters[3]),
+      new GamePlayer('SS', 5, null, this.teamA.batters[4]),
+      new GamePlayer('LF', 6, null, this.teamA.batters[5]),
+      new GamePlayer('CF', 7, null, this.teamA.batters[6]),
+      new GamePlayer('RF', 8, null, this.teamA.batters[7]),
+      new GamePlayer('DH', 9, null, this.teamA.batters[8]),
+      new GamePlayer('P', null, null, this.teamA.pitcher)
     ];
     const b = [
-      new GamePlayer('C', 1, true, this.teamB.batters[0]),
-      new GamePlayer('1B', 2, true, this.teamB.batters[1]),
-      new GamePlayer('2B', 3, true, this.teamB.batters[2]),
-      new GamePlayer('3B', 4, true, this.teamB.batters[3]),
-      new GamePlayer('SS', 5, true, this.teamB.batters[4]),
-      new GamePlayer('LF', 6, true, this.teamB.batters[5]),
-      new GamePlayer('CF', 7, true, this.teamB.batters[6]),
-      new GamePlayer('RF', 8, true, this.teamB.batters[7]),
-      new GamePlayer('DH', 9, true, this.teamB.batters[8]),
-      new GamePlayer('P', null, true, this.teamB.pitcher)
+      new GamePlayer('C', 1, null, this.teamB.batters[0]),
+      new GamePlayer('1B', 2, null, this.teamB.batters[1]),
+      new GamePlayer('2B', 3, null, this.teamB.batters[2]),
+      new GamePlayer('3B', 4, null, this.teamB.batters[3]),
+      new GamePlayer('SS', 5, null, this.teamB.batters[4]),
+      new GamePlayer('LF', 6, null, this.teamB.batters[5]),
+      new GamePlayer('CF', 7, null, this.teamB.batters[6]),
+      new GamePlayer('RF', 8, null, this.teamB.batters[7]),
+      new GamePlayer('DH', 9, null, this.teamB.batters[8]),
+      new GamePlayer('P', null, null, this.teamB.pitcher)
     ];
     for (let i = 0; i < times; i++) {
       if (!(i % 2)) {

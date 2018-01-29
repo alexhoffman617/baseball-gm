@@ -119,15 +119,25 @@ export class PlayGameService {
           return player.position  === 'P';
         }).player;
         this.currentPitcherAppearance = this.pitchingTeamStats.pitcherAppearances[this.pitchingTeamStats.pitcherAppearances.length - 1]
-        if(this.doesRunnerAttemptSteal()){
+        if (this.doesRunnerAttemptSteal()) {
           this.stealAttempt(pitcher, pitchingTeam)
           continue
         }
         // determine outcome of PA
         this.outcome = this.atBatService.atBat(batter, pitcher, pitchingTeam, side === 'Bottom');
         this.advanceRunners(batter, pitcher);
+        this.addDetailsToPitcherAppearance(this.outcome, this.currentPitcherAppearance)
         this.halfInningEvents.push(new GameEvent(batter._id, pitcher._id, this.outcome));
-        this.battingTeamStats.events.push(new GameEvent(batter._id,pitcher._id, this.outcome))
+        this.battingTeamStats.events.push(new GameEvent(batter._id, pitcher._id, this.outcome))
+      }
+    }
+
+    addDetailsToPitcherAppearance(outcome: AtBat, pitcherAppearance: PitcherAppearance) {
+      if (outcome.trajectory === 'iffb') {
+        pitcherAppearance.iffb++
+      }
+      if (outcome.result === 'homerun') {
+        pitcherAppearance.homeruns++
       }
     }
 
@@ -472,7 +482,7 @@ export class PlayGameService {
         return player.position  === 'P';
       });
       currentPitcher.position = null
-      gamePlayer.played = true
+      gamePlayer.played = 'P'
       gamePlayer.position = 'P'
       const replacedPitcherStats = teamStats.pitcherAppearances[teamStats.pitcherAppearances.length - 1]
       if (replacedPitcherStats.save) {

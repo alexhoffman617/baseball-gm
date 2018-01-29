@@ -23,10 +23,10 @@ export class Game {
 export class GamePlayer {
     position: string;
     orderNumber: number;
-    played: boolean;
+    played: string;
     player: Player;
 
-    constructor(position: string, orderNumber: number, played: boolean, player: Player) {
+    constructor(position: string, orderNumber: number, played: string, player: Player) {
         this.position = position;
         this.orderNumber = orderNumber;
         this.played = played;
@@ -97,6 +97,8 @@ export class PitcherAppearance {
   hits: number;
   walks: number;
   strikeouts: number;
+  homeruns: number;
+  iffb: number;
   runs: number;
   earnedRuns: number;
   start: boolean;
@@ -113,6 +115,8 @@ export class PitcherAppearance {
     this.hits = 0;
     this.walks = 0;
     this.strikeouts = 0;
+    this.homeruns = 0;
+    this.iffb = 0;
     this.runs = 0;
     this.earnedRuns = 0;
     this.start = isStart;

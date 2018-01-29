@@ -10,12 +10,12 @@ export class ProcessGameService {
 
     }
 
-    processGame(game: Game) {
-      this.processTeam(game.homeTeamStats, game.homeTeamId, game.awayTeamStats)
-      this.processTeam(game.awayTeamStats, game.awayTeamId, game.homeTeamStats)
+    processGame(game: Game, homeGamePlayers: Array<GamePlayer>, awayGamePlayers: Array<GamePlayer>) {
+      this.processTeam(game.homeTeamStats, game.homeTeamId, game.awayTeamStats, homeGamePlayers)
+      this.processTeam(game.awayTeamStats, game.awayTeamId, game.homeTeamStats, awayGamePlayers)
     }
 
-    processTeam(teamStats: TeamStats, teamId: string, otherTeamStats: TeamStats) {
+    processTeam(teamStats: TeamStats, teamId: string, otherTeamStats: TeamStats, gamePlayers: Array<GamePlayer>) {
       const that = this
       const players = this.leagueDataService.getPlayersByTeamId(teamId)
       _.each(teamStats.pitcherAppearances, function(appearance){
@@ -25,7 +25,7 @@ export class ProcessGameService {
       })
       _.each(players, function(player){
         that.updateBatterSeasonStatsFromGameEvents(teamStats.events, player)
-        that.updateFieldingStatsFromGameEvents(otherTeamStats.events, player)
+        that.updateFieldingStatsFromGameEvents(otherTeamStats.events, player, gamePlayers)
         player.currentStamina = Math.min(player.currentStamina + 10, 100)
       })
     }
@@ -37,35 +37,36 @@ export class ProcessGameService {
       _.each(events, function(event){
         if (event.batterId === batter._id) {
           gamePlayed = true
-          batterSeasonStats.plateAppearences++
-          if (event.outcome.result === 'single') {
-            batterSeasonStats.singles++
-          }
-          if (event.outcome.result === 'double') {
-            batterSeasonStats.doubles++
-          }
-          if (event.outcome.result === 'triple') {
-            batterSeasonStats.triples++
-          }
-          if (event.outcome.result === 'homerun') {
-            batterSeasonStats.homeruns++
-          }
-          if (event.outcome.result === 'strikeout') {
-            batterSeasonStats.strikeouts++
-          }
-          if (event.outcome.result === 'walk') {
-            batterSeasonStats.walks++
-          }
           if (event.outcome.result === 'sacrifice fly') {
             batterSeasonStats.sacrificeFlies++
-          }
-          if (event.outcome.batterScored) {
-            batterSeasonStats.runs++
+          } else {
+            batterSeasonStats.plateAppearences++
+            if (event.outcome.result === 'single') {
+              batterSeasonStats.singles++
+            }
+            if (event.outcome.result === 'double') {
+              batterSeasonStats.doubles++
+            }
+            if (event.outcome.result === 'triple') {
+              batterSeasonStats.triples++
+            }
+            if (event.outcome.result === 'homerun') {
+              batterSeasonStats.homeruns++
+            }
+            if (event.outcome.result === 'strikeout') {
+              batterSeasonStats.strikeouts++
+            }
+            if (event.outcome.result === 'walk') {
+              batterSeasonStats.walks++
+            }
+            if (event.outcome.batterScored) {
+              batterSeasonStats.runs++
+            }
           }
           batterSeasonStats.rbis += event.outcome.scoredIds.length
         }
-        if(event.stolenBaseAttempt && event.stolenBaseAttempt.runnerId === batter._id) {
-          if(event.stolenBaseAttempt.successful) {
+        if (event.stolenBaseAttempt && event.stolenBaseAttempt.runnerId === batter._id) {
+          if (event.stolenBaseAttempt.successful) {
             batterSeasonStats.steals++
           } else {
             batterSeasonStats.caughtStealing++
@@ -108,18 +109,24 @@ export class ProcessGameService {
       }
     }
 
-    updateFieldingStatsFromGameEvents(otherTeamEvents: Array<GameEvent>, player: Player) {
+    updateFieldingStatsFromGameEvents(otherTeamEvents: Array<GameEvent>, player: Player, gamePlayers: Array<GamePlayer>) {
       const fieldingSeasonStats = _.find(player.fieldingSeasonStats,
         {year: this.leagueDataService.currentSeason.year})
       _.each(otherTeamEvents, function(event){
-        if(event.outcome && event.outcome.fielderId === player._id) {
-          if(event.outcome.result === 'out') {
+        if (event.outcome && event.outcome.fielderId === player._id) {
+          if (event.outcome.result === 'out') {
             fieldingSeasonStats.putOuts++
           } else if (event.outcome.result === 'error') {
             fieldingSeasonStats.errors++
           }
         }
       })
+      const gamePlayer = _.find(gamePlayers, function(gp){
+        return gp.player._id === player._id
+      })
+      if (gamePlayer.played) {
+        fieldingSeasonStats.appearances[gamePlayer.played]++
+      }
     }
 
     roundInnings(innings) {

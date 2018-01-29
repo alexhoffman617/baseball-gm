@@ -92,6 +92,9 @@
 <td *ngIf="showErrors">
   {{ fieldingSeasonStats?.errors }}
 </td>
+<td *ngIf="showStats">
+  {{ sharedFunctionsService.batWar(seasonStats, fieldingSeasonStats) }}
+</td>
 <td *ngIf="button === 'release'">
   <button mat-raised-button color="primary" (click)="release()">Release</button>
 </td>

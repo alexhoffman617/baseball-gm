@@ -110,24 +110,25 @@ async playDays(daysLeft) {
       rosterGame.awayTeamScore = game.awayTeamStats.runs
       rosterGame.gameId = savedGame._id
       rosterGame.innings = game.inning
-      that.processGameService.processGame(savedGame)
+      that.processGameService.processGame(savedGame, homeGamePlayers, awayGamePlayers)
       completedGames++
       if (completedGames === day.scheduledGames.length) {
         that.completeDaySim(day, daysLeft)
       }
     }
-    if (daysLeft % 6 === 0) {
-      that.leagueDataService.updateAllPlayers()
-      that.leagueDataService.updateSeason(this.seasonSnapshot)
-    }
   }
 
-  completeDaySim(day, daysLeft) {
+  async completeDaySim(day, daysLeft) {
+    const that = this
     day.complete = true
     this.leagueDataService.updateLocalSeason(this.seasonSnapshot)
     if (!this.areDaysLeftInSeason()) {
       this.stopSimming()
     } else if (daysLeft > 1) {
+      if (daysLeft % 6 === 0) {
+        await that.leagueDataService.updateAllPlayers()
+        that.leagueDataService.updateSeason(this.seasonSnapshot)
+      }
       daysLeft--
       this.playDays(daysLeft)
     } else {
@@ -218,10 +219,10 @@ async playDays(daysLeft) {
         return tp._id === p.playerId
       })
       if (playerPitcher.currentStamina > 90 && !startingPitcherSet) {
-        gamePlayers.push(new GamePlayer('P', null, true, playerPitcher));
+        gamePlayers.push(new GamePlayer('P', null, 'P', playerPitcher));
         startingPitcherSet = true
       } else {
-        gamePlayers.push(new GamePlayer(p.startingPosition, null, false, playerPitcher))
+        gamePlayers.push(new GamePlayer(p.startingPosition, null, null, playerPitcher))
       }
     })
 
@@ -229,7 +230,7 @@ async playDays(daysLeft) {
       const playerBatter = _.find(teamPlayers, function(tp: Player){
         return tp._id === rosterBatter.playerId
       })
-      gamePlayers.push(new GamePlayer(rosterBatter.startingPosition, rosterBatter.orderNumber, true, playerBatter))
+      gamePlayers.push(new GamePlayer(rosterBatter.startingPosition, rosterBatter.orderNumber, rosterBatter.startingPosition, playerBatter))
     })
     return gamePlayers
   }

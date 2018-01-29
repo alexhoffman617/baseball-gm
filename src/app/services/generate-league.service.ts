@@ -32,7 +32,7 @@ export class GenerateLeagueService {
                       await this.generateTeamService.generateMlbTeam(createdLeague._id, x, ownerAccountId) :
                       await this.generateTeamService.generateRandomTeam(createdLeague._id, ownerAccountId)
         teamIds.push(team._id)
-        this.sharedFunctionsService.setLoading(10 + (70 * x / numberOfTeams),
+        this.sharedFunctionsService.setLoading(10 + (70 * x + 1 / numberOfTeams),
           'Generated Team ' + (x + 1) + ': ' + team.location + ' ' + team.name)
       }
       if (numberOfTeams === 30) {

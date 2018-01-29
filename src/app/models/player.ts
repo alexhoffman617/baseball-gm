@@ -1,5 +1,6 @@
 import { GameEvent, AtBat, PitcherAppearance } from '../models/game';
 import * as _ from 'lodash';
+import { StaticListsService } from 'app/services/static-lists.service';
 
 export class Player {
   name: string;
@@ -160,6 +161,8 @@ export class PitcherSeasonStats {
     strikeouts: number;
     walks: number;
     hits: number;
+    homeruns: number;
+    iffb: number;
     earnedRuns: number;
     runs: number;
     wins: number;
@@ -176,6 +179,8 @@ export class PitcherSeasonStats {
       this.strikeouts = 0
       this.walks = 0
       this.hits = 0;
+      this.homeruns = 0;
+      this.iffb = 0;
       this.earnedRuns = 0
       this.runs = 0
       this.wins = 0
@@ -193,15 +198,28 @@ export class PitcherSeasonStats {
     }
 }
 
+
 export class FieldingSeasonStats {
   year: number
   putOuts: number
   errors: number
-
+  appearances: any
   constructor(year: number) {
     this.year = year
     this.putOuts = 0
     this.errors = 0
+     this.appearances = {
+      'P': 0,
+      'C': 0,
+      '1B': 0,
+      '2B': 0,
+      '3B': 0,
+      'SS': 0,
+      'LF': 0,
+      'CF': 0,
+      'RF': 0,
+      'DH': 0,
+     }
   }
 }
 

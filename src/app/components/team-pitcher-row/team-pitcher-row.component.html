@@ -78,6 +78,9 @@
 <td *ngIf="showStats">
   {{ seasonStats?.walks }}
 </td>
+<td *ngIf="showStats">
+  {{ sharedFunctionsService.pitWar(seasonStats) }}
+</td>
 <td *ngIf="button === 'release'">
   <button mat-raised-button color="primary" (click)="release()">Release</button>
 </td>

@@ -36,15 +36,15 @@ export class PlayerProgressionTestComponent implements OnInit {
     this.pitcher.hittingAbility.fielding = 50;
     this.seasonStats = new BatterSeasonStats('');
     this.fieldingTeam = [
-        new GamePlayer('C', null, true, this.pitcher),
-        new GamePlayer('1B', null, true, this.pitcher),
-        new GamePlayer('2B', null, true, this.pitcher),
-        new GamePlayer('3B', null, true, this.pitcher),
-        new GamePlayer('SS', null, true, this.pitcher),
-        new GamePlayer('LF', null, true, this.pitcher),
-        new GamePlayer('CF', null, true, this.pitcher),
-        new GamePlayer('RF', null, true, this.pitcher),
-        new GamePlayer('P', null, true, this.pitcher)
+        new GamePlayer('C', null, null, this.pitcher),
+        new GamePlayer('1B', null, null, this.pitcher),
+        new GamePlayer('2B', null, null, this.pitcher),
+        new GamePlayer('3B', null, null, this.pitcher),
+        new GamePlayer('SS', null, null, this.pitcher),
+        new GamePlayer('LF', null, null, this.pitcher),
+        new GamePlayer('CF', null, null, this.pitcher),
+        new GamePlayer('RF', null, null, this.pitcher),
+        new GamePlayer('P', null, null, this.pitcher)
       ]
   }
 
