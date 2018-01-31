@@ -47,7 +47,7 @@ accountId: string
         await this.leagueDataService.getData(this.leagueId)
       })();
     });
-    this.accountId = localStorage.getItem('baseballgm-username')
+    this.accountId = localStorage.getItem('baseballgm-id')
   }
 
 async stopSimming() {

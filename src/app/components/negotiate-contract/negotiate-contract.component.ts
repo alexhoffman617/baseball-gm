@@ -5,6 +5,9 @@ import { Player } from '../../models/player';
 import { LeagueDataService } from '../../services/league-data.service';
 import { StaticListsService } from '../../services/static-lists.service';
 import { MatSnackBar } from '@angular/material';
+import { ContractExpectationService } from 'app/services/contract-expectation.service';
+import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Contract } from 'app/models/contract';
 
 @Component({
   selector: 'app-negotiate-contract',
@@ -15,16 +18,22 @@ export class NegotiateContractComponent implements OnInit {
   selectedTeam: Team
   playerId: string
   player: Player
+  expectedContract: Contract
   constructor(public leagueDataService: LeagueDataService,
     private staticListsService: StaticListsService,
     private route: ActivatedRoute,
+    public contractExpectationService: ContractExpectationService,
     public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     const that = this
     that.route.params.subscribe(params => {
-      that.playerId = params['playerId']
-      that.player = that.leagueDataService.getPlayer(that.playerId)
+      that.playerId = params['playerId'];
+      (async () => {
+        that.player = await that.leagueDataService.getPlayer(that.playerId)
+        that.expectedContract = that.contractExpectationService.getContractExpectations(that.player)
+      })()
+
     })
   }
 
@@ -41,6 +50,13 @@ export class NegotiateContractComponent implements OnInit {
       this.player.teamId = this.selectedTeam._id
       this.leagueDataService.updatePlayer(this.player)
     }
+  }
+
+  salaryWithCommas(x) {
+    if (!x) { return '$0' }
+    const parts = x.toString().split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return '$' + parts.join('.');
   }
 
 }

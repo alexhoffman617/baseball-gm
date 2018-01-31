@@ -124,7 +124,7 @@ export class ProcessGameService {
       const gamePlayer = _.find(gamePlayers, function(gp){
         return gp.player._id === player._id
       })
-      if (gamePlayer.played) {
+      if (gamePlayer && gamePlayer.played) {
         fieldingSeasonStats.appearances[gamePlayer.played]++
       }
     }

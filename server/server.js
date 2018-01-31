@@ -82,28 +82,22 @@ io.on('connection', function(socket){
 
   socket.on('create-team', (team, callback) => {
     Teams.createTeam(team, function(status, savedTeam){
-      Teams.getTeams(team.leagueId, function(status, teams){
-        io.emit('teams:' + team.leagueId, teams)
-        callback(savedTeam)
-      })
+      io.emit('team:' + team.leagueId, savedTeam)
+      callback(savedTeam)
     })
   })
 
   socket.on('update-team', (team, callback) => {
     Teams.updateTeam(team, function(status, savedTeam){
-      Teams.getTeams(team.leagueId, function(status, teams){
-        io.emit('teams:' + team.leagueId, teams)
-        callback(savedTeam)
-      })
+      io.emit('team:' + team.leagueId, savedTeam)
+      callback(savedTeam)
     })
   })
 
   socket.on('create-player', (player, callback) => {
     Players.createPlayer(player, function(status, savedPlayer){
-      Players.getPlayers(player.leagueId, function(status, players){
-        io.emit('players:' + player.leagueId, players)
-        callback(savedPlayer)
-      })
+      io.emit('player:' + player.leagueId, savedPlayer)
+      callback(savedPlayer)
     })
   })
 
@@ -128,9 +122,7 @@ io.on('connection', function(socket){
 
   socket.on('update-game', (game, callback) => {
     Games.updateGame(game, function(status, savedGame){
-      Games.getGames(game.leagueId, function(status, games){
-       io.emit('games:' + game.leagueId, games)
-      })
+      io.emit('game:' + game.leagueId, savedGame)
     })
   })
 

@@ -5,6 +5,8 @@ import { HittingProgression } from '../../models/player';
 import { LeagueDataService } from '../../services/league-data.service';
 import { SharedFunctionsService } from '../../services/shared-functions.service';
 import { StaticListsService } from '../../services/static-lists.service';
+import { MatDialog } from '@angular/material';
+import { ActivatePlayerPopupComponent } from '../activate-player-popup/activate-player-popup.component'
 import * as _ from 'lodash';
 
 @Component({
@@ -19,6 +21,7 @@ export class TeamBatterRowComponent implements OnChanges {
   @Input() rosterBatter: RosterSpot;
   @Input() displaySet: string;
   @Input() button: string;
+  @Input() reserve: boolean;
   hittingProgression: HittingProgression
   seasonStats: BatterSeasonStats
   fieldingSeasonStats: FieldingSeasonStats
@@ -36,6 +39,7 @@ export class TeamBatterRowComponent implements OnChanges {
   constructor(public leagueDataService: LeagueDataService,
     public sharedFunctionsService: SharedFunctionsService,
     public staticListsService: StaticListsService,
+    public dialog: MatDialog
   ) { }
 
   ngOnChanges() {
@@ -172,5 +176,12 @@ export class TeamBatterRowComponent implements OnChanges {
     this.leagueDataService.updateTeam(this.teamInstance)
     this.batter.teamId = null
     this.leagueDataService.updatePlayer(this.batter)
+  }
+
+  activate() {
+    const dialogRef = this.dialog.open(ActivatePlayerPopupComponent, {
+      height: '300px',
+      width: '300px'
+    });
   }
 }

@@ -17,7 +17,7 @@ export class GenerateTeamService {
 
     async generateRandomTeam(leagueId: string,  ownerAccountId: string = null) {
       const team = await this.leagueDataService.createTeam(new Team(this.getTeamName(), this.getTeamLocation(),
-        new Roster(new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId)) as Team;
+        new Roster(new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId)) as Team;
       team.ownerAccountId = ownerAccountId
       return await this.generateTeam(leagueId, team)
     }
@@ -25,25 +25,31 @@ export class GenerateTeamService {
     async generateMlbTeam(leagueId: string, mlbTeamIndex: number, ownerAccountId: string = null) {
       const team = await this.leagueDataService.createTeam(new Team(this.staticListsService.mlbTeamNames[mlbTeamIndex],
          this.staticListsService.mlbLocations[mlbTeamIndex],
-         new Roster(new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId)) as Team;
+         new Roster(new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId)) as Team;
       team.ownerAccountId = ownerAccountId
       return await this.generateTeam(leagueId, team)
     }
 
     async generateTeam(leagueId: string, team: Team) {
-        for (let x = 0; x < 13; x++) {
+        for (let x = 0; x < 22; x++) {
           const batter = await this.generatePlayerSerivce.generateBatter(leagueId, team._id, (new Date()).getFullYear());
-          this.players.push(batter);
-          team.roster.batters.push(new RosterSpot(batter._id, null, null));
+          if (x < 13) {
+            team.roster.batters.push(new RosterSpot(batter._id, null, null));
+          } else {
+            team.roster.batterReserves.push(new RosterSpot(batter._id, null, null));
+          }
         }
 
-        for (let y = 0; y < 12; y++) {
+        for (let y = 0; y < 18; y++) {
           const pitcher = await this.generatePlayerSerivce.generatePitcher(leagueId, team._id, (new Date()).getFullYear());
-          this.players.push(pitcher);
-          team.roster.pitchers.push(new RosterSpot(pitcher._id, null, null));
+          if (y < 12) {
+            team.roster.pitchers.push(new RosterSpot(pitcher._id, null, null));
+          } else {
+            team.roster.pitcherReserves.push(new RosterSpot(pitcher._id, null, null));
+          }
         }
-        const updatedTeam = await this.leagueDataService.updateTeam(team);
-        return updatedTeam as Team
+        this.leagueDataService.updateTeam(team);
+        return team as Team
     }
 
     getTeamName() {

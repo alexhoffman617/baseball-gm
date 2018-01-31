@@ -15,12 +15,16 @@ export class Team {
 }
 
 export class Roster {
-  batters: Array<RosterSpot>;
-  pitchers: Array<RosterSpot>;
-
-  constructor(batters: Array<RosterSpot>, pitchers: Array<RosterSpot>) {
-    this.batters = batters;
-    this.pitchers = pitchers;
+  batters: Array<RosterSpot>
+  pitchers: Array<RosterSpot>
+  pitcherReserves: Array<RosterSpot>
+  batterReserves: Array<RosterSpot>
+  constructor(batters: Array<RosterSpot>, pitchers: Array<RosterSpot>,
+    batterReserves: Array<RosterSpot>, pitcherReserves: Array<RosterSpot>) {
+    this.batters = batters
+    this.pitchers = pitchers
+    this.pitcherReserves = pitcherReserves
+    this.batterReserves = batterReserves
   }
 }
 

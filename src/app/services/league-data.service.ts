@@ -108,6 +108,16 @@ export class LeagueDataService  {
         that.socket.on('teams:' + leagueId, (data) => {
           observer.next(data);
         });
+        that.socket.on('team:' + leagueId, (data) => {
+          let currentTeam = _.find(that.teams, function(team){
+            return team._id === data._id
+          })
+          if (currentTeam) {
+            currentTeam = data
+          } else {
+            that.teams.push(data)
+          }
+        });
         return () => {
           that.socket.disconnect();
         };
@@ -130,11 +140,14 @@ export class LeagueDataService  {
           observer.next(data);
         });
         that.socket.on('player:' + leagueId, (data) => {
-          _.each(that.players, function(player){
-            if (player._id === data._id) {
-              player = data
-            }
+          let currentPlayer = _.find(that.players, function(player){
+            return player._id === data._id
           })
+          if (currentPlayer) {
+            currentPlayer = data
+          } else {
+            that.players.push(data)
+          }
         });
         return () => {
           that.socket.disconnect();
@@ -156,6 +169,16 @@ export class LeagueDataService  {
         });
         that.socket.on('games:' + leagueId, (data) => {
           observer.next(data);
+        });
+        that.socket.on('game:' + leagueId, (data) => {
+          let currentGame = _.find(that.games, function(game){
+            return game._id === data._id
+          })
+          if (currentGame) {
+            currentGame = data
+          } else {
+            that.games.push(data)
+          }
         });
         return () => {
           that.socket.disconnect();

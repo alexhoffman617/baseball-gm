@@ -26,13 +26,17 @@
         <th>PO</th>
         <th>E</th>
         <th>WAR</th>
-        <th *ngIf="isOwner()">Release</th>
+        <th *ngIf="isOwner()" style="width: 205px">Release</th>
       </tr>
     </thead>
     <tbody>
       <ng-container *ngFor="let batter of getOrderedBatters()">
         <tr app-team-batter-row [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team" [button]="isOwner() ? 'release' : ''"></tr>
       </ng-container>
+      <ng-container *ngFor="let batter of team?.roster.batterReserves">
+        <tr app-team-batter-row class="reserve" [batter]="getPlayerById(batter.playerId)" [rosterBatter]="batter" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team" [button]="isOwner() ? 'release' : ''" [reserve]="true"></tr>
+      </ng-container>
+
     </tbody>
   </table>
   <div>
@@ -56,12 +60,15 @@
         <th>K</th>
         <th>BB</th>
         <th>WAR</th>
-        <th *ngIf="isOwner()">Release</th>
+        <th *ngIf="isOwner()" style="width: 205px">Release</th>
       </tr>
     </thead>
     <tbody>
       <ng-container *ngFor="let pitcher of getOrderedPitchers()">
         <tr app-team-pitcher-row [pitcher]="getPlayerById(pitcher.playerId)" [rosterPitcher]="pitcher" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team" [button]="isOwner() ? 'release' : ''"></tr>
+      </ng-container>
+      <ng-container *ngFor="let pitcher of team?.roster.pitcherReserves">
+        <tr app-team-pitcher-row class="reserve" [pitcher]="getPlayerById(pitcher.playerId)" [rosterPitcher]="pitcher" [seasonYear]="leagueDataService.currentSeason?.year" [teamInstance]="team" [button]="isOwner() ? 'release' : ''"  [reserve]="true"></tr>
       </ng-container>
     </tbody>
   </table>

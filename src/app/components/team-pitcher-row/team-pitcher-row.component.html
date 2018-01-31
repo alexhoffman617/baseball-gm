@@ -11,7 +11,7 @@
   {{ pitcher?.age }}
 </td>
 <td *ngIf="showRosterPosition && rosterPitcher">
-  <mat-select [(ngModel)]="rosterPitcher.startingPosition" (change)="onPitcherRoleChange(rosterPitcher, $event)">
+  <mat-select *ngIf="!reserve" [(ngModel)]="rosterPitcher.startingPosition" (change)="onPitcherRoleChange(rosterPitcher, $event)">
     <mat-option *ngFor="let role of staticListsService.pitcherRoles" [value]="role">
       {{ role }}
     </mat-option>
@@ -83,6 +83,7 @@
 </td>
 <td *ngIf="button === 'release'">
   <button mat-raised-button color="primary" (click)="release()">Release</button>
+  <button *ngIf="reserve" mat-raised-button color="secondary" (click)="activate()">Activate</button>
 </td>
 <td *ngIf="button === 'negotiate'">
   <button mat-raised-button color="primary" [routerLink]="'/' + pitcher?.leagueId + '/negotiate-contract/' + pitcher?._id">Negotiate</button>

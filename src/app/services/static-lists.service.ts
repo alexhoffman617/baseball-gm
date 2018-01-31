@@ -4,6 +4,15 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class StaticListsService {
 
+  leagueStages = [
+    {name: 'Fantasy Draft', order: -1},
+    {name: 'Regular Season', order: 0},
+    {name: 'Playoffs', order: 1},
+    {name: 'Offseason', order: 2},
+    {name: 'Draft', order: 3},
+    {name: 'Free Agency', order: 4}
+  ]
+
   playerTypes = {
     pitcher: 'pitcher',
     batter: 'batter'

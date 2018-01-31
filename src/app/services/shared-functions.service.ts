@@ -106,8 +106,8 @@ export class SharedFunctionsService {
   getGamesPlayed(year: number) {
     const season = _.find(this.leagueDataService.seasons, {year: year})
     return _.filter(season.schedule, function(scheduledDay){
-        return scheduledDay.complete
-      }).length;
+      return scheduledDay.complete
+    }).length;
   }
 
 

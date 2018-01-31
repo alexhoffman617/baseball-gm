@@ -1,4 +1,5 @@
 <mat-toolbar color="primary">
+  <h3>{{leagueDataService.league?.name + ':'}} {{ leagueDataService.currentSeason?.year }}</h3>
   <button mat-button [routerLink]="'/'+ leagueId + '/league-home'">Home</button>
   <button mat-button *ngIf="getUsersTeam()" [routerLink]="'/'+ leagueId + '/team/' + getUsersTeam()">My Team</button>
   <button mat-button [matMenuTriggerFor]="sim">{{leagueDataService.league?.simming ? 'Simming...' : 'Sim'}}</button>

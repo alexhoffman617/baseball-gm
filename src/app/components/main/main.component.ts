@@ -22,7 +22,7 @@ export class MainComponent implements OnInit {
   ngOnInit() {
     this.socket = io.connect(window.location.protocol + '//' + window.location.host);
     new Observable(observer => {
-      this.http.get('/api/leagues/' + localStorage.getItem('baseballgm-username'), {params: {}}).subscribe(data => {
+      this.http.get('/api/leagues/' + localStorage.getItem('baseballgm-id'), {params: {}}).subscribe(data => {
         observer.next(data.json());
       });
     this.socket.on('leagues', (data) => {
@@ -38,8 +38,8 @@ export class MainComponent implements OnInit {
 
   generateNewLeague() {
     const dialogRef = this.dialog.open(CreateLeagueDialogComponent, {
-      height: '300px',
-      width: '300px'
+      height: '400px',
+      width: '400px'
     });
   }
 

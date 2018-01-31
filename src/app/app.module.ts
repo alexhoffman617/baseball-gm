@@ -48,6 +48,8 @@ import { GenerateScheduleTestComponent } from './components/generate-schedule-te
 import { PlayoffBracketComponent } from './components/playoff-bracket/playoff-bracket.component';
 import { LoginComponent } from './components/login/login.component';
 import { LeagueAdminComponent } from './components/league-admin/league-admin.component';
+import { ContractExpectationService } from './services/contract-expectation.service';
+import { ActivatePlayerPopupComponent } from './components/activate-player-popup/activate-player-popup.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -89,7 +91,8 @@ const routes: Routes = [
     GenerateScheduleTestComponent,
     PlayoffBracketComponent,
     LoginComponent,
-    LeagueAdminComponent
+    LeagueAdminComponent,
+    ActivatePlayerPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -117,9 +120,10 @@ const routes: Routes = [
     StaticListsService,
     ProcessGameService,
     SharedFunctionsService,
-    AuthService
+    AuthService,
+    ContractExpectationService
   ],
-  entryComponents: [CreateLeagueDialogComponent],
+  entryComponents: [CreateLeagueDialogComponent, ActivatePlayerPopupComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

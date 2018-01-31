@@ -32,6 +32,10 @@ tr:nth-child(even){
  background: #e9e9e9;
 }
 
+tr.reserve{
+  background: darkgray !important
+}
+
 tr.header{
     font-weight: 900;
     color: #ffffff;

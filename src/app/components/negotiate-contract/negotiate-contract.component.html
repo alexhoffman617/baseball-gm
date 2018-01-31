@@ -1,4 +1,5 @@
 <div class="view-container">
+  <div>Expected Contract: {{ salaryWithCommas(expectedContract?.salary) }} through {{ expectedContract?.lastYear }}</div>
   <mat-select [(ngModel)]="selectedTeam">
     <mat-option *ngFor="let team of leagueDataService.teams" [value]="team">{{ team?.location }} {{ team?.name }}</mat-option>
   </mat-select>

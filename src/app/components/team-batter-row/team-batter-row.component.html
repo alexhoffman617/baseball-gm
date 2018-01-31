@@ -11,14 +11,14 @@
   {{ batter?.age }}
 </td>
 <td *ngIf="showRosterPosition && rosterBatter">
-  <mat-select [(ngModel)]="rosterBatter.startingPosition" (change)="onPositionChange(batter, $event)">
+  <mat-select *ngIf="!reserve" [(ngModel)]="rosterBatter.startingPosition" (change)="onPositionChange(batter, $event)">
     <mat-option *ngFor="let position of staticListsService.fieldingPositionsWithDHAndEmpty" [value]="position">
       {{ position }}
     </mat-option>
   </mat-select>
 </td>
 <td *ngIf="showOrderNumber && rosterBatter">
-  <mat-select [(ngModel)]="rosterBatter.orderNumber" (change)="onOrderChange(batter, $event)">
+  <mat-select *ngIf="!reserve" [(ngModel)]="rosterBatter.orderNumber" (change)="onOrderChange(batter, $event)">
     <mat-option *ngFor="let orderNumber of staticListsService.battingOrderNumbersWithNull" [value]="orderNumber">
       {{ orderNumber }}
     </mat-option>
@@ -97,6 +97,7 @@
 </td>
 <td *ngIf="button === 'release'">
   <button mat-raised-button color="primary" (click)="release()">Release</button>
+  <button *ngIf="reserve" mat-raised-button color="secondary" (click)="activate()">Activate</button>
 </td>
 <td *ngIf="button === 'negotiate'">
   <button mat-raised-button color="primary" [routerLink]="'/' + batter?.leagueId + '/negotiate-contract/' + batter?._id">Negotiate</button>
