@@ -88,10 +88,13 @@ playOffseason() {
     this.leagueDataService.teams, this.leagueDataService.league.structure)
 }
 
-simPreseasonDays() {
+simPreseasonDays(days) {
   this.contractExpectationService.processAllContractOffers()
   this.leagueDataService.currentSeason.preseasonDay++
   this.leagueDataService.updateSeason(this.leagueDataService.currentSeason)
+  if (this.leagueDataService.currentSeason.preseasonDay < this.staticListsService.preseasonDays) {
+    this.simPreseasonDays(days - 1)
+  }
 }
 
 simDays(days) {

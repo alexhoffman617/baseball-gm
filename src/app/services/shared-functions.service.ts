@@ -192,15 +192,16 @@ export class SharedFunctionsService {
 
   autoFillActiveRoster(team: Team, players: Array<Player>) {
     const that = this
-    while (team.roster.batters.length + team.roster.pitchers.length < 25) {
-      if (team.roster.batters.length < 13 && team.roster.batterReserves.length > 0) {
+    while (team.roster.batters.length + team.roster.pitchers.length < 25
+      && team.roster.batterReserves.length + team.roster.pitcherReserves.length !== 0) {
+      if ((team.roster.batters.length < 13 || team.roster.pitcherReserves.length === 0) && team.roster.batterReserves.length > 0) {
         const orderedReserveBatters = _.orderBy(team.roster.batterReserves, function(batter){
           return that.overallAbility(_.find(players, {_id: batter.playerId}))
         })
         const batter = _.remove(team.roster.batterReserves, orderedReserveBatters[0])
         team.roster.batters.push(batter[0])
       } else {
-        if (team.roster.pitchers.length < 12 && team.roster.pitcherReserves.length > 0) {
+        if ((team.roster.pitchers.length < 12 || team.roster.batterReserves.length === 0) && team.roster.pitcherReserves.length > 0) {
           const orderedReservePitchers = _.orderBy(team.roster.pitcherReserves, function(pitcher){
             return that.overallAbility(_.find(players, {_id: pitcher.playerId}))
           })
@@ -402,6 +403,7 @@ export class SharedFunctionsService {
     if (newPhase) {
       that.leagueDataService.currentSeason.phase = newPhase.name
     }
+    this.leagueDataService.updateSeason(that.leagueDataService.currentSeason)
   }
 
   getUsersTeam() {
