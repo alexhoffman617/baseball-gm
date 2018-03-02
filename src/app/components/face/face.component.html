@@ -1,0 +1,18 @@
+<button (click)="randomFace()">Random</button>
+<svg width="256" height="400">
+  <path class="hair" [attr.d]="hair?.hairBackD" stroke="none" [attr.fill]="hair?.color" />
+  <ellipse class="face" [attr.cx]="face?.cx" [attr.cy]="face?.cy" [attr.rx]="face?.rx" [attr.ry]="face?.ry" stroke-width="4" [attr.fill]="face?.fill" />
+  <circle class="eye-left" [attr.cx]="eyes?.leftCx" [attr.cy]="eyes?.cy" [attr.r]="eyes?.eyeR" stroke-width="4" [attr.fill]="eyes?.eyeFill" />
+  <circle class="pupil-left" [attr.cx]="eyes?.leftCx" [attr.cy]="eyes?.cy" [attr.r]="eyes?.pupilR" stroke-width="4" [attr.fill]="eyes?.pupilFill" />
+  <circle class="eye-right" [attr.cx]="eyes?.rightCx" [attr.cy]="eyes?.cy" [attr.r]="eyes?.eyeR" stroke-width="4" [attr.fill]="eyes?.eyeFill" />
+  <circle class="pupil-right" [attr.cx]="eyes?.rightCx" [attr.cy]="eyes?.cy" [attr.r]="eyes?.pupilR" stroke-width="2" [attr.fill]="eyes?.pupilFill" />
+ <path class="mouth" [attr.d]="mouth?.d" stroke="black" [attr.stroke-width]="mouth?.width" fill="none" />
+ <path class="eyebrow-left" [attr.d]="hair?.eyebrowLeftD" [attr.stroke]="hair?.color" [attr.stroke-width]="hair?.eyebrowWidth" fill="none" />
+ <path class="eyebrow-right" [attr.d]="hair?.eyebrowRightD" [attr.stroke]="hair?.color" [attr.stroke-width]="hair?.eyebrowWidth" fill="none" />
+ <path class="nose" [attr.d]="face?.noseD" stroke="black" stroke-width="3" fill="none" />
+ <path class="hair-front" [attr.d]="hair?.hairFrontD" stroke="none" [attr.fill]="hair?.color" />
+ <path clas="cap-main" [attr.d]="cap?.mainD" stroke="black" [attr.fill]="cap?.mainColor" stroke-width="2" />
+<path clas="cap-bill" [attr.d]="cap?.billD" stroke="black" [attr.fill]="cap?.secondaryColor" stroke-width="2" />
+<text x="120" y="72" [attr.fill]="cap?.secondaryColor" style="font-family: 'Playball'; font-size: 25px">{{cap?.teamAbv}}</text>
+
+</svg>

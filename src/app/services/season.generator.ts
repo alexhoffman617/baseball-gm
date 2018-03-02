@@ -2,15 +2,18 @@ import { Injectable } from '@angular/core';
 import { Season, ScheduledDay, ScheduledGame } from '../models/season';
 import { RealMlbScheduleGenerator } from '../services/real-mlb-schedule.generator';
 import { LeagueDataService } from './league-data.service';
+import { GeneratePlayerService } from 'app/services/generate-player.service';
 
 @Injectable()
 export class SeasonGenerator {
 
-    constructor(private leagueDataService: LeagueDataService, private realMlbScheduleGenerator: RealMlbScheduleGenerator) {
+    constructor(private leagueDataService: LeagueDataService,
+      private realMlbScheduleGenerator: RealMlbScheduleGenerator,
+      private generatePlayerService: GeneratePlayerService) {
 
      }
 
-    async generateSeason(leagueId: string, teamIds: any, year: number, structure = null) {
+    async generateSeason(leagueId: string, teamIds: any, year: number, phase: string, structure = null) {
         let schedule
         if (!!structure) {
           schedule = this.realMlbScheduleGenerator.generateRealMlbSchedule(structure)
@@ -20,7 +23,8 @@ export class SeasonGenerator {
         if (!year) {
           year = (new Date()).getFullYear()
         }
-        const season = new Season(year, schedule, leagueId);
+        const season = new Season(year, schedule, leagueId, phase);
+        await this.generateDraftPlayers(season, teamIds.length)
         return await this.leagueDataService.createSeason(season);
     }
 
@@ -69,5 +73,12 @@ export class SeasonGenerator {
           array[j] = temp;
       }
       return array;
+    }
+
+    async generateDraftPlayers(season: Season, teams: number) {
+      for (let x = 0; x < teams * 8; x++) {
+      const savedPlayer = await this.generatePlayerService.generateProspect(season.leagueId, season.year + 1)
+       season.draft.draftPlayerIds.push(savedPlayer._id)
+      }
     }
 }

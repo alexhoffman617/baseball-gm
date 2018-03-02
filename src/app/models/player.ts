@@ -1,6 +1,8 @@
 import { GameEvent, AtBat, PitcherAppearance } from '../models/game';
 import * as _ from 'lodash';
 import { StaticListsService } from 'app/services/static-lists.service';
+import { Contract } from 'app/models/contract';
+import { Face } from './face';
 
 export class Player {
   name: string;
@@ -25,6 +27,9 @@ export class Player {
   fieldingSeasonStats: Array<FieldingSeasonStats>
   leagueId: string;
   teamId: string;
+  contracts: Array<Contract>
+  contractOffers: Array<Contract>
+  face: Face
 
   overallHittingAbility() {
     return Math.round((this.hittingAbility.contact + this.hittingAbility.power + this.hittingAbility.patience
@@ -47,7 +52,7 @@ export class Player {
   constructor(name: string, age: number, playerType: string, bats: string, throws: string,
     hittingAbility: HittingSkillset, hittingPotential: HittingSkillset,
     pitchingAbility: PitchingSkillset, pitchingPotential: PitchingSkillset,
-    leagueId: string, teamId: string, firstYear: number, primaryPositions: Array<string>) {
+    leagueId: string, teamId: string, firstYear: number, primaryPositions: Array<string>, face: Face) {
     this.name = name;
     this.age = age;
     this.playerType = playerType
@@ -66,6 +71,9 @@ export class Player {
     this.hittingProgressions = new Array<HittingProgression>()
     this.pitchingProgressions = new Array<PitchingProgression>()
     this.fieldingSeasonStats = new Array<FieldingSeasonStats>()
+    this.contracts = new Array<Contract>()
+    this.contractOffers =  new Array<Contract>()
+    this.face = face
   }
 }
 

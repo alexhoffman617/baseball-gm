@@ -173,6 +173,9 @@ export class TeamBatterRowComponent implements OnChanges {
     _.remove(this.teamInstance.roster.batters, function(batter){
       return batter.playerId === that.batter._id
     })
+    _.remove(this.teamInstance.roster.batterReserves, function(batter){
+      return batter.playerId === that.batter._id
+    })
     this.leagueDataService.updateTeam(this.teamInstance)
     this.batter.teamId = null
     this.leagueDataService.updatePlayer(this.batter)
@@ -183,5 +186,7 @@ export class TeamBatterRowComponent implements OnChanges {
       height: '300px',
       width: '300px'
     });
+    dialogRef.componentInstance.teamInstance = this.teamInstance
+    dialogRef.componentInstance.player = this.batter
   }
 }

@@ -8,6 +8,9 @@ import { MatSnackBar } from '@angular/material';
 import { ContractExpectationService } from 'app/services/contract-expectation.service';
 import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Contract } from 'app/models/contract';
+import { SharedFunctionsService } from 'app/services/shared-functions.service';
+import * as _ from 'lodash';
+import { timeout } from 'q';
 
 @Component({
   selector: 'app-negotiate-contract',
@@ -15,12 +18,16 @@ import { Contract } from 'app/models/contract';
   styleUrls: ['./negotiate-contract.component.css']
 })
 export class NegotiateContractComponent implements OnInit {
-  selectedTeam: Team
+  usersTeam: Team
   playerId: string
   player: Player
   expectedContract: Contract
+  currentOffer: Contract
+  salary: number
+  years: number
   constructor(public leagueDataService: LeagueDataService,
     private staticListsService: StaticListsService,
+    public sharedFunctionsService: SharedFunctionsService,
     private route: ActivatedRoute,
     public contractExpectationService: ContractExpectationService,
     public snackBar: MatSnackBar) { }
@@ -31,32 +38,73 @@ export class NegotiateContractComponent implements OnInit {
       that.playerId = params['playerId'];
       (async () => {
         that.player = await that.leagueDataService.getPlayer(that.playerId)
+        that.usersTeam = that.sharedFunctionsService.getUsersTeam()
+        that.currentOffer = _.find(that.player.contractOffers, function(co){
+          return that.usersTeam._id === co.teamId
+        })
         that.expectedContract = that.contractExpectationService.getContractExpectations(that.player)
       })()
-
     })
   }
 
   add() {
-    if (this.selectedTeam.roster.batters.length + this.selectedTeam.roster.pitchers.length >= 25) {
-      this.snackBar.open('Team already has 25 players', 'Ok', {duration: 2000})
+    if (this.usersTeam.roster.batters.length + this.usersTeam.roster.pitchers.length +
+      this.usersTeam.roster.batterReserves.length + this.usersTeam.roster.pitcherReserves.length >= 40) {
+      this.snackBar.open('Team already has a full 40 man roster players', 'Ok', {duration: 2000})
     } else {
       if (this.player.playerType === this.staticListsService.playerTypes.batter) {
-        this.selectedTeam.roster.batters.push(new RosterSpot(this.playerId, null, null))
+        this.usersTeam.roster.batters.push(new RosterSpot(this.playerId, null, null))
       } else {
-        this.selectedTeam.roster.pitchers.push(new RosterSpot(this.playerId, null, null))
+        this.usersTeam.roster.pitchers.push(new RosterSpot(this.playerId, null, null))
       }
-      this.leagueDataService.updateTeam(this.selectedTeam)
-      this.player.teamId = this.selectedTeam._id
+      this.leagueDataService.updateTeam(this.usersTeam)
+      this.player.teamId = this.usersTeam._id
+      this.player.contracts.push(new Contract(this.playerId, this.usersTeam._id, this.expectedContract.salary,
+        this.leagueDataService.currentSeason.year, this.expectedContract.years, this.staticListsService.contractStates.accepted, 0))
       this.leagueDataService.updatePlayer(this.player)
     }
   }
 
-  salaryWithCommas(x) {
-    if (!x) { return '$0' }
-    const parts = x.toString().split('.');
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return '$' + parts.join('.');
+  offerContract() {
+    const that = this
+    const rosterCount = this.usersTeam.roster.batters.length + this.usersTeam.roster.pitchers.length +
+    this.usersTeam.roster.batterReserves.length + this.usersTeam.roster.pitcherReserves.length
+    if (!this.years || !this.salary) {
+      this.snackBar.open('Years and Value are required', 'Ok', {duration: 2000})
+    } else if (!this.sharedFunctionsService.canOfferContract(this.usersTeam, this.salary)) {
+      this.snackBar.open(this.sharedFunctionsService.canOfferContract(this.usersTeam, this.salary).reason,  'Ok', {duration: 2000})
+    } else {
+      const index = _.findIndex(this.player.contractOffers, {teamId: that.usersTeam._id})
+      if (index > -1) {
+        this.player.contractOffers.splice(index, 1)
+      }
+      that.currentOffer = new Contract(this.playerId, this.usersTeam._id, this.salary, this.leagueDataService.currentSeason.year,
+        this.years, this.staticListsService.contractStates.offered, this.leagueDataService.currentSeason.preseasonDay)
+      this.player.contractOffers.push(that.currentOffer)
+        this.leagueDataService.updatePlayer(this.player)
+    }
+  }
+
+  processContractOffers() {
+    this.contractExpectationService.processContractOffers(this.player)
+  }
+
+  valueRound() {
+    if (this.salary < 500000) {
+      this.salary = 500000
+    }
+    if (this.salary > 100000000) {
+      this.salary = 100000000
+    }
+    this.salary = Math.round(this.salary / 100000) * 100000
+  }
+
+  playerIsFreeAgent() {
+    if (this.player && !this.player.teamId) {
+      return true
+    } else {
+      return false
+    }
   }
 
 }

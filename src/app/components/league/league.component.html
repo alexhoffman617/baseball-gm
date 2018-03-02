@@ -1,24 +1,36 @@
 <mat-toolbar color="primary">
-  <h3>{{leagueDataService.league?.name + ':'}} {{ leagueDataService.currentSeason?.year }}</h3>
+  <h3>{{leagueDataService.league?.name + ': ' + leagueDataService.currentSeason?.year + ' - ' + leagueDataService.currentSeason?.phase}}</h3>
   <button mat-button [routerLink]="'/'+ leagueId + '/league-home'">Home</button>
-  <button mat-button *ngIf="getUsersTeam()" [routerLink]="'/'+ leagueId + '/team/' + getUsersTeam()">My Team</button>
+  <button mat-button *ngIf="sharedFunctionsService.getUsersTeam()" [routerLink]="'/'+ leagueId + '/team/' + sharedFunctionsService.getUsersTeam()._id">My Team</button>
   <button mat-button [matMenuTriggerFor]="sim">{{leagueDataService.league?.simming ? 'Simming...' : 'Sim'}}</button>
   <mat-menu #sim="matMenu">
     <ng-container *ngIf="!leagueDataService.league?.simming">
-      <ng-container *ngIf="areDaysLeftInSeason()">
+      <ng-container *ngIf="leagueDataService.currentSeason?.phase === staticListsService.leaguePhases.freeAgency.name">
+        <ng-container *ngIf="leagueDataService.currentSeason?.preseasonDay === staticListsService.preseasonDays">
+          <button mat-menu-item (click)="sharedFunctionsService.updateSeasonToNextPhase()">Start Season</button>
+        </ng-container>
+        <ng-container *ngIf="leagueDataService.currentSeason?.preseasonDay !== staticListsService.preseasonDays">
+          <button mat-menu-item (click)="simPreseasonDays()">Sim Day</button>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="leagueDataService.currentSeason?.phase === staticListsService.leaguePhases.regularSeason.name">
+        <ng-container *ngIf="areDaysLeftInSeason()">
           <button mat-menu-item (click)="simDays(1)">Sim Day</button>
           <button mat-menu-item (click)="simDays(6)">Sim Week</button>
           <button mat-menu-item (click)="simDays(162)">Sim Rest Of Season</button>
+        </ng-container>
+        <ng-container *ngIf="!areDaysLeftInSeason() && !leagueDataService.currentSeason.playoffSchedule">
+          <button mat-menu-item  (click)="generatePlayoffs()">Generate Playoffs</button>
+        </ng-container>
       </ng-container>
-      <ng-container *ngIf="!areDaysLeftInSeason() && !leagueDataService.currentSeason.playoffSchedule">
-        <button mat-menu-item  (click)="generatePlayoffs()">Generate Playoffs</button>
-      </ng-container>
-      <ng-container *ngIf="!areDaysLeftInSeason() && leagueDataService.currentSeason.playoffSchedule && !playoffsCompleted()">
-        <button mat-menu-item (click)="simPlayoffDays(1)">Sim Day</button>
-        <button mat-menu-item (click)="simPlayoffDays(restOfPlayoffRound)">Sim Matchup</button>
-      </ng-container>
-      <ng-container *ngIf="playoffsCompleted()">
-        <button mat-menu-item (click)="playOffseason()">Sim Offseason </button>
+      <ng-container *ngIf="leagueDataService.currentSeason?.phase === staticListsService.leaguePhases.playoffs.name">
+        <ng-container *ngIf="!playoffsCompleted()">
+          <button mat-menu-item (click)="simPlayoffDays(1)">Sim Day</button>
+          <button mat-menu-item (click)="simPlayoffDays(restOfPlayoffRound)">Sim Matchup</button>
+        </ng-container>
+        <ng-container *ngIf="playoffsCompleted()">
+          <button mat-menu-item (click)="playOffseason()">Sim Offseason </button>
+        </ng-container>
       </ng-container>
     </ng-container>
     <ng-container *ngIf="leagueDataService.league?.simming && (areDaysLeftInSeason() || ! playoffsCompleted())">
@@ -26,6 +38,7 @@
     </ng-container>
   </mat-menu>
   <button mat-button [routerLink]="'/'+ leagueId + '/free-agents'">Free Agents</button>
+  <button mat-button [routerLink]="'/'+ leagueId + '/draft'">Draft</button>
   <span class="spacer"></span>
   <button mat-button *ngIf="leagueDataService.league?.creatorAccountId === accountId" [routerLink]="'/'+ leagueId + '/admin'">Admin</button>
   <button mat-button (click)="authService.logout()">Logout</button>

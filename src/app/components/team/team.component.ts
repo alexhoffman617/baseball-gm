@@ -10,6 +10,7 @@ import { StaticListsService } from '../../services/static-lists.service';
 
 import * as _ from 'lodash';
 import 'rxjs/add/operator/first'
+import { SharedFunctionsService } from 'app/services/shared-functions.service';
 
 @Component({
   selector: 'app-team',
@@ -23,6 +24,7 @@ export class TeamComponent implements OnInit {
   players: Array<Player>;
   constructor(private route: ActivatedRoute,
               public staticListsService: StaticListsService,
+              public sharedFunctionsService: SharedFunctionsService,
               public leagueDataService: LeagueDataService) { }
 
   async ngOnInit() {

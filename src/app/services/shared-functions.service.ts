@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Player, PitchingSkillset, BatterSeasonStats, PitcherSeasonStats, FieldingSeasonStats } from '../models/player';
-import { Team } from '../models/team';
+import { Team, RosterSpot } from '../models/team';
 import { LeagueDataService } from './league-data.service'
 import { StaticListsService } from './static-lists.service'
 import * as _ from 'lodash';
+import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
+import { Contract } from '../models/contract';
 
 @Injectable()
 export class SharedFunctionsService {
@@ -130,6 +132,22 @@ export class SharedFunctionsService {
     return resultArray
   }
 
+  overallAbility(player: Player) {
+    if (player.playerType === this.staticListsService.playerTypes.batter) {
+      return this.overallHitting(player.hittingAbility)
+    } else {
+      return this.overallPitching(player.pitchingAbility)
+    }
+  }
+
+  overallPotential(player: Player) {
+    if (player.playerType === this.staticListsService.playerTypes.batter) {
+      return this.overallHitting(player.hittingPotential)
+    } else {
+      return this.overallPitching(player.pitchingPotential)
+    }
+  }
+
   overallHitting(hittingSkillset) {
     if (!hittingSkillset) {
       return null
@@ -166,9 +184,31 @@ export class SharedFunctionsService {
 
   autoSetLineup(team: Team) {
     const players = this.leagueDataService.getPlayersByTeamId(team._id)
+    this.autoFillActiveRoster(team, players)
     this.autoSetPitchers(team, players)
     this.autoSetHitters(team, players)
     this.leagueDataService.updateTeam(team)
+  }
+
+  autoFillActiveRoster(team: Team, players: Array<Player>) {
+    const that = this
+    while (team.roster.batters.length + team.roster.pitchers.length < 25) {
+      if (team.roster.batters.length < 13 && team.roster.batterReserves.length > 0) {
+        const orderedReserveBatters = _.orderBy(team.roster.batterReserves, function(batter){
+          return that.overallAbility(_.find(players, {_id: batter.playerId}))
+        })
+        const batter = _.remove(team.roster.batterReserves, orderedReserveBatters[0])
+        team.roster.batters.push(batter[0])
+      } else {
+        if (team.roster.pitchers.length < 12 && team.roster.pitcherReserves.length > 0) {
+          const orderedReservePitchers = _.orderBy(team.roster.pitcherReserves, function(pitcher){
+            return that.overallAbility(_.find(players, {_id: pitcher.playerId}))
+          })
+          const pitcher = _.remove(team.roster.pitcherReserves, orderedReservePitchers[0])
+          team.roster.pitchers.push(pitcher[0])
+        }
+      }
+    }
   }
 
   autoSetPitchers(team: Team, players: Array<Player>) {
@@ -352,6 +392,98 @@ export class SharedFunctionsService {
       } else {
         return fielding * .95
       }
+    }
+  }
+
+  updateSeasonToNextPhase() {
+    const that = this
+    const currentPhase = _.find(this.staticListsService.leaguePhases, {name: that.leagueDataService.currentSeason.phase})
+    const newPhase = _.find(this.staticListsService.leaguePhases, {order: currentPhase.order + 1})
+    if (newPhase) {
+      that.leagueDataService.currentSeason.phase = newPhase.name
+    }
+  }
+
+  getUsersTeam() {
+    const team = _.find(this.leagueDataService.teams, {ownerAccountId: localStorage.getItem('baseballgm-id')})
+    return team ? team : null
+  }
+
+  getTeamSalary(team: Team) {
+    if (!team) { return 0 }
+    const that = this
+    let teamSalary = 0
+    _.each(that.leagueDataService.players, function(player) {
+      const teamContract = _.find(player.contracts, function(contract) {
+        return contract.teamId === team._id && contract.firstYear <= that.leagueDataService.currentSeason.year
+        && contract.firstYear + contract.years > that.leagueDataService.currentSeason.year
+      })
+      teamSalary += teamContract ? teamContract.salary : 0
+    })
+    return teamSalary
+  }
+
+  salaryWithCommas(x) {
+    if (!x) { return '$0' }
+    const parts = x.toString().split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return '$' + parts.join('.');
+  }
+
+  acceptFaContract(player: Player, bestContract: Contract) {
+    const team = this.leagueDataService.getTeamById(bestContract.teamId)
+    this.acceptContract(player, bestContract, team)
+    this.removeNoLongerValidOffers(team)
+    this.leagueDataService.updatePlayer(player)
+    this.leagueDataService.updateTeam(team)
+  }
+
+  acceptDraftContract(player: Player, bestContract: Contract) {
+    const team = this.leagueDataService.getTeamById(bestContract.teamId)
+    this.acceptContract(player, bestContract, team)
+    this.leagueDataService.updatePlayer(player)
+    this.leagueDataService.updateTeam(team)
+  }
+
+  acceptContract(player: Player, bestContract: Contract, team: Team) {
+    if (bestContract) {
+      bestContract.state = this.staticListsService.contractStates.accepted
+      player.contracts.push(bestContract)
+      player.teamId = bestContract.teamId
+      player.playerType === this.staticListsService.playerTypes.batter ?
+      team.roster.batterReserves.push(new RosterSpot(player._id, null, null)) :
+      team.roster.pitcherReserves.push(new RosterSpot(player._id, null, null))
+      player.contractOffers = new Array<Contract>()
+    }
+  }
+
+  removeNoLongerValidOffers(team: Team) {
+    const that = this
+    const rosterLength = team.roster.batterReserves.length + team.roster.pitcherReserves.length
+                      + team.roster.batters.length + team.roster.pitchers.length
+    _.each(this.leagueDataService.players, function(player){
+      const contractIndex = _.findIndex(player.contractOffers, function(offer){
+        return offer.teamId === team._id
+      })
+      if (contractIndex > -1 && (rosterLength >= 40 || that.getTeamSalary(team)
+        + player.contractOffers[contractIndex].salary + (39 - rosterLength) *  500000 > that.staticListsService.leagueSalary)) {
+          player.contractOffers.splice(contractIndex, 1)
+      }
+    })
+  }
+
+  canOfferContract(team: Team, salary: number) {
+    const rosterCount = team.roster.batters.length + team.roster.pitchers.length +
+    team.roster.batterReserves.length + team.roster.pitcherReserves.length
+    if (rosterCount >= 40) {
+      return { canOffer: false, reason: 'Team already has a full 40 man roster players' }
+    } else if (this.getTeamSalary(team) + (39 - rosterCount) * 500000
+    + salary > this.staticListsService.leagueSalary) {
+      return { canOffer: false, reason: 'Contract is above maximum allowed contract of ' + this.salaryWithCommas(
+        this.staticListsService.leagueSalary - this.getTeamSalary(team)
+        - (39 - rosterCount) * 500000) }
+    } else {
+      return { canOffer: true, reason: null}
     }
   }
 }

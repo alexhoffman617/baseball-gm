@@ -1,13 +1,22 @@
+import { Draft } from './draft'
+
 export class Season {
   year: number;
+  preseasonDay: number
   playoffSchedule: Array<Array<PlayoffMatchup>>
   schedule: Array<ScheduledDay>;
   leagueId: string;
   _id: string;
-  constructor(year: number, schedule: Array<ScheduledDay>, leagueId: string) {
+  phase: string
+  draft: Draft
+  constructor(year: number, schedule: Array<ScheduledDay>, leagueId: string, phase: string) {
     this.year = year;
-    this.schedule = schedule;
-    this.leagueId = leagueId;
+    this.schedule = schedule
+    this.leagueId = leagueId
+    this.leagueId = leagueId
+    this.phase = phase
+    this.preseasonDay = 1
+    this.draft = new Draft()
   }
 }
 

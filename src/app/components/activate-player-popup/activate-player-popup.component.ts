@@ -54,7 +54,7 @@ export class ActivatePlayerPopupComponent implements OnInit {
     const that = this
     let player: RosterSpot
     if (that.playerToDeactivate.playerType === that.staticListsService.playerTypes.batter) {
-      const index = _.findIndex(that.teamInstance.roster.batterReserves, function(batter){
+      const index = _.findIndex(that.teamInstance.roster.batters, function(batter){
         return that.playerToDeactivate._id === batter.playerId
       })
       player = this.teamInstance.roster.batters.splice(index, 1)[0]
@@ -62,8 +62,8 @@ export class ActivatePlayerPopupComponent implements OnInit {
       player.orderNumber = null
       that.teamInstance.roster.batterReserves.push(player)
     } else {
-      const index = _.findIndex(that.teamInstance.roster.pitcherReserves, function(batter){
-        return that.playerToDeactivate._id === batter.playerId
+      const index = _.findIndex(that.teamInstance.roster.pitchers, function(pitcher){
+        return that.playerToDeactivate._id === pitcher.playerId
       })
       player = that.teamInstance.roster.pitchers.splice(index, 1)[0]
       player.startingPosition = null

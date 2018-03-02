@@ -1,4 +1,5 @@
 <div class="view-container">
+  <app-team-free-agent *ngIf="leagueDataService.currentSeason?.phase === staticListsService.leaguePhases.freeAgency.name"></app-team-free-agent>
   <table>
     <thead>
       <tr class="header">
@@ -11,8 +12,8 @@
     </thead>
     <tbody>
       <ng-container *ngFor="let player of freeAgents">
-        <tr *ngIf="player.pitchingPotential.velocity === 0" app-team-batter-row [batter]="player" displaySet="fa" button="negotiate"></tr>
-        <tr *ngIf="player.pitchingPotential.velocity > 0" app-team-pitcher-row [pitcher]="player" displaySet="fa" button="negotiate"></tr>
+        <tr *ngIf="player.playerType === staticListsService.playerTypes.batter" app-team-batter-row [batter]="player" displaySet="fa" button="negotiate"></tr>
+        <tr *ngIf="player.playerType === staticListsService.playerTypes.pitcher" app-team-pitcher-row [pitcher]="player" displaySet="fa" button="negotiate"></tr>
       </ng-container>
     </tbody>
   </table>

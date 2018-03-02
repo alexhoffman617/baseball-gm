@@ -6,6 +6,7 @@ import { LeagueDataService } from './league-data.service';
 import { StaticListsService } from './static-lists.service';
 import 'rxjs/add/operator/toPromise';
 import { SharedFunctionsService } from 'app/services/shared-functions.service';
+import * as _ from 'lodash';
 
 @Injectable()
 export class GenerateTeamService {
@@ -16,7 +17,7 @@ export class GenerateTeamService {
                 private leagueDataService: LeagueDataService) { }
 
     async generateRandomTeam(leagueId: string,  ownerAccountId: string = null) {
-      const team = await this.leagueDataService.createTeam(new Team(this.getTeamName(), this.getTeamLocation(),
+      const team = await this.leagueDataService.createTeam(new Team(this.getTeamName(), this.getTeamLocation(), this.getRandomColor(), '#adadad',
         new Roster(new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId)) as Team;
       team.ownerAccountId = ownerAccountId
       return await this.generateTeam(leagueId, team)
@@ -24,7 +25,7 @@ export class GenerateTeamService {
 
     async generateMlbTeam(leagueId: string, mlbTeamIndex: number, ownerAccountId: string = null) {
       const team = await this.leagueDataService.createTeam(new Team(this.staticListsService.mlbTeamNames[mlbTeamIndex],
-         this.staticListsService.mlbLocations[mlbTeamIndex],
+         this.staticListsService.mlbLocations[mlbTeamIndex], this.getRandomColor(), '#adadad',
          new Roster(new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId)) as Team;
       team.ownerAccountId = ownerAccountId
       return await this.generateTeam(leagueId, team)
@@ -58,5 +59,25 @@ export class GenerateTeamService {
 
     getTeamLocation() {
         return this.staticListsService.teamLocations[Math.round(Math.random() * (this.staticListsService.teamLocations.length - 1))];
+    }
+
+    getRandomColor() {
+      const colors = [
+        '#6d8572',
+        '#343a83',
+        '#fae705',
+        '#b32735',
+        '#ffb400',
+        '#0c5b09',
+        '#131d24',
+        '#a20b20',
+        '#000080',
+        '#008000',
+        '#7c519f',
+        '#36127f',
+        '#a95e00'
+      ]
+
+      return colors[_.random(colors.length - 1)]
     }
   }

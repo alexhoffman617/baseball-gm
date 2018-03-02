@@ -1,14 +1,18 @@
 export class Team {
   name: string;
   location: string;
+  mainColor: string;
+  secondaryColor: string;
   roster: Roster;
   leagueId: string;
   ownerAccountId: string;
   _id: string;
 
-  constructor(name: string, location: string, roster: Roster, leagueId: string) {
+  constructor(name: string, location: string, mainColor: string, secondaryColor: string, roster: Roster, leagueId: string) {
     this.name = name;
     this.location = location;
+    this.mainColor = mainColor;
+    this.secondaryColor = secondaryColor;
     this.roster = roster;
     this.leagueId = leagueId;
   }

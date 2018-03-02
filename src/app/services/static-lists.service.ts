@@ -4,14 +4,31 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class StaticListsService {
 
-  leagueStages = [
-    {name: 'Fantasy Draft', order: -1},
-    {name: 'Regular Season', order: 0},
-    {name: 'Playoffs', order: 1},
-    {name: 'Offseason', order: 2},
-    {name: 'Draft', order: 3},
-    {name: 'Free Agency', order: 4}
-  ]
+  leaguePhases = {
+    fantasyDraft: {name: 'Fantasy Draft', order: -1},
+    draft: {name: 'Draft', order: 0},
+    freeAgency: {name: 'Free Agency', order: 1},
+    regularSeason: {name: 'Regular Season', order: 2},
+    playoffs: {name: 'Playoffs', order: 3},
+    offseason: {name: 'Offseason', order: 4}
+  }
+
+  preseasonDays = 15
+  leagueSalary = 150000000
+
+  draftStates = {
+    preDraft: 'Pre Draft',
+    inProgress: 'In Progress',
+    completed: 'Completed'
+  }
+
+  contractStates = {
+    offered: 'Offered',
+    accepted: 'Accepted',
+    countered: 'Countered',
+    rejected: 'Rejected',
+    considering: 'Considering'
+  }
 
   playerTypes = {
     pitcher: 'pitcher',

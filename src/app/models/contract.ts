@@ -3,13 +3,18 @@ export class Contract {
   playerId: string
   teamId: string
   firstYear: number
-  lastYear: number
+  years: number
   salary: number
-  constructor(playerId: string, teamId: string, salary: number, firstYear: number, lastYear: number) {
+  state: string
+  offeredDay: number
+
+  constructor(playerId: string, teamId: string, salary: number, firstYear: number, years: number, state: string, offeredDay: number) {
     this.playerId = playerId
     this.teamId = teamId
     this.salary = salary
     this.firstYear = firstYear
-    this.lastYear = lastYear
+    this.years = years
+    this.state = state
+    this.offeredDay = offeredDay
   }
 }

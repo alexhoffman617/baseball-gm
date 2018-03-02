@@ -3,6 +3,9 @@
     <h3> {{ team?.location }} {{ team?.name }}</h3>
   </div>
   <div>
+    <h4> Salary: {{ sharedFunctionsService.salaryWithCommas(sharedFunctionsService.getTeamSalary(team)) }} </h4>
+  </div>
+  <div>
     <h5>Batters</h5>
   </div>
   <table>

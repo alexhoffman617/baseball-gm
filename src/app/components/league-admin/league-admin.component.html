@@ -10,6 +10,7 @@
       </mat-input-container>
       <span class="spacer"></span>
       <mat-select fxFlex="20"  style="margin-top: 20px" [(ngModel)]="team.ownerAccountId" placeholder="Owner">
+        <mat-option [value]="null"></mat-option>
         <mat-option *ngFor="let account of leagueDataService.accounts" [value]="account._id">
           {{ account.username }}
         </mat-option>

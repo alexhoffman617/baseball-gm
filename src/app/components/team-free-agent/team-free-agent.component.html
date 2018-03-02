@@ -1,0 +1,35 @@
+<div>
+    Team Free Agent Component
+</div>
+<table>
+  <thead>
+    <tr class="header">
+      <th>Name</th>
+      <th>Pos</th>
+      <th>Age</th>
+      <th>Overall</th>
+      <th>Contract Status</th>
+      <th>Contract Offer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let player of getPlayersWithOfferedContracts()">
+      <tr>
+        <td>{{player.name}}</td>
+        <td>
+          <ng-container *ngFor="let primaryPosition of player?.primaryPositions">{{ primaryPosition + ' ' }}</ng-container>
+        </td>
+        <td>{{ player.age }}</td>
+        <td>
+          {{ sharedFunctionsService.overallAbility(player) + '(' + sharedFunctionsService.overallPotential(player) + ')' }}
+        </td>
+        <td>
+          {{ getContract(player).state }}
+        </td>
+        <td>
+          {{ getContract(player).salary }} for {{ getContract(player).years }} years
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>

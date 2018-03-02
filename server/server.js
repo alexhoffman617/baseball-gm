@@ -31,8 +31,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-
-
 io.on('connection', function(socket){
   console.log('a user connected');
 
@@ -76,6 +74,7 @@ io.on('connection', function(socket){
     Seasons.updateSeason(season, function(status, savedSeason){
       Seasons.getSeasons(season.leagueId, function(status, seasons){
         io.emit('seasons:' + season.leagueId, seasons)
+        callback(savedSeason)
       })
     })
   })

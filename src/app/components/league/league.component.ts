@@ -14,6 +14,8 @@ import * as _ from 'lodash';
 import * as io from 'socket.io-client';
 import { SharedFunctionsService } from 'app/services/shared-functions.service';
 import { AuthService } from 'app/services/auth.service';
+import { ContractExpectationService } from 'app/services/contract-expectation.service';
+import { StaticListsService } from 'app/services/static-lists.service';
 
 @Component({
 selector: 'app-league',
@@ -33,8 +35,10 @@ accountId: string
               private playGameService: PlayGameService,
               public leagueDataService: LeagueDataService,
               public sharedFunctionsService: SharedFunctionsService,
+              public staticListsService: StaticListsService,
               public playoffScheduleGenerator: PlayoffScheduleGenerator,
               public processGameService: ProcessGameService,
+              public contractExpectationService: ContractExpectationService,
               public authService: AuthService,
   ) { }
 
@@ -67,6 +71,7 @@ areDaysLeftInSeason() {
 }
 
 async generatePlayoffs() {
+  this.sharedFunctionsService.updateSeasonToNextPhase()
   await this.playoffScheduleGenerator.generatePlayoffSchedule()
 }
 
@@ -78,8 +83,15 @@ playoffsCompleted() {
 }
 
 playOffseason() {
+  this.sharedFunctionsService.updateSeasonToNextPhase()
   this.leagueProgressionService.progressLeague(this.leagueId, this.leagueDataService.currentSeason,
     this.leagueDataService.teams, this.leagueDataService.league.structure)
+}
+
+simPreseasonDays() {
+  this.contractExpectationService.processAllContractOffers()
+  this.leagueDataService.currentSeason.preseasonDay++
+  this.leagueDataService.updateSeason(this.leagueDataService.currentSeason)
 }
 
 simDays(days) {
@@ -240,11 +252,6 @@ async playDays(daysLeft) {
     _.each(that.leagueDataService.teams, function(team){
       that.sharedFunctionsService.autoSetLineup(team)
     })
-  }
-
-  getUsersTeam() {
-    const team = _.find(this.leagueDataService.teams, {ownerAccountId: localStorage.getItem('baseballgm-id')})
-    return team ? team._id : false
   }
 }
 

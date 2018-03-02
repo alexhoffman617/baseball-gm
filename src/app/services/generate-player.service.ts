@@ -4,12 +4,19 @@ import { Player, HittingSkillset, PitchingSkillset, BatterSeasonStats, PitcherSe
 import { LeagueDataService } from './league-data.service';
 import { StaticListsService } from './static-lists.service';
 import 'rxjs/add/operator/toPromise';
+import { Contract } from 'app/models/contract';
+import { SharedFunctionsService } from 'app/services/shared-functions.service';
+import { ContractExpectationService } from 'app/services/contract-expectation.service';
+import { RandomFaceService } from './random-face.service';
 
 @Injectable()
 export class GeneratePlayerService {
 
     constructor(private http: Http,
                 private staticListsService: StaticListsService,
+                private sharedFunctionsService: SharedFunctionsService,
+                private contractExpectationService: ContractExpectationService,
+                private randomFaceService: RandomFaceService,
                 private leagueDataService: LeagueDataService) { }
 
     async generateFreeAgents(leagueId: string, year: number, numberNeeded: number) {
@@ -21,16 +28,26 @@ export class GeneratePlayerService {
       }
      }
     }
-    async generateBatter(leagueId: string, teamId: string, year: number) {
+
+    async generateProspect(leagueId: string, year: number) {
+      const age = Math.round(18 + Math.random() * 5)
+      if (Math.random() > .5) {
+        return await this.generateBatter(leagueId, null, year, age, true)
+      } else {
+        return await this.generatePitcher(leagueId, null, year, age, true)
+      }
+    }
+
+    async generateBatter(leagueId: string, teamId: string, year: number, age: number = null, isProspect: boolean = false) {
       const name = this.staticListsService.firstNames[Math.round(Math.random() * this.staticListsService.firstNames.length)] + ' '
       + this.staticListsService.lastNames[Math.round(Math.random() * this.staticListsService.lastNames.length)]
-        const age = Math.round(18 + Math.random() * 22);
+        if (!age) { age = Math.round(18 + Math.random() * 22) };
         const potential = new HittingSkillset(
-            this.generatePotentialValue(age),
-            this.generatePotentialValue(age),
-            this.generatePotentialValue(age),
-            this.generatePotentialValue(age),
-            this.generatePotentialValue(age));
+            this.generatePotentialValue(age, isProspect),
+            this.generatePotentialValue(age, isProspect),
+            this.generatePotentialValue(age, isProspect),
+            this.generatePotentialValue(age, isProspect),
+            this.generatePotentialValue(age, isProspect));
 
         const skills = new HittingSkillset(
             this.generateSkillValue('contact', age, potential),
@@ -41,22 +58,27 @@ export class GeneratePlayerService {
 
         const player = new Player(name, age, this.staticListsService.playerTypes.batter, this.getBattingSide(), this.getThrowingSide(),
                        skills, potential, new PitchingSkillset(0, 0, 0, 'std'),
-                       new PitchingSkillset(0, 0, 0, 'std'), leagueId, teamId, year, this.getPrimaryPositions());
+                       new PitchingSkillset(0, 0, 0, 'std'), leagueId, teamId, year, this.getPrimaryPositions(), this.randomFaceService.generateRandomFace());
         player.hittingSeasonStats = [new BatterSeasonStats(year)]
         player.pitchingSeasonStats = [new PitcherSeasonStats(year)]
         player.fieldingSeasonStats = [new FieldingSeasonStats(year)]
+        if (player.teamId) {
+          player.contracts.push(new Contract(player._id, teamId, Math.max(500000,
+            Math.round(this.contractExpectationService.getContractExpectations(player).salary * .6 / 100000) * 100000),
+          year, 1 + Math.round(Math.random() * 3), this.staticListsService.contractStates.accepted, 0))
+        }
         const dbPlayer = await this.leagueDataService.createPlayer(player);
         return dbPlayer as Player;
     }
 
-    async generatePitcher(leagueId: string, teamId: string, year: number) {
+    async generatePitcher(leagueId: string, teamId: string, year: number, age: number = null, isProspect: boolean = false) {
         const name = this.staticListsService.firstNames[Math.round(Math.random() * this.staticListsService.firstNames.length)] + ' '
             + this.staticListsService.lastNames[Math.round(Math.random() * this.staticListsService.lastNames.length)]
-        const age = Math.round(18 + Math.random() * 22);
+        if (!age) { age = Math.round(18 + Math.random() * 22) }
         const potential = new PitchingSkillset(
-            this.generatePotentialValue(age),
-            this.generatePotentialValue(age),
-            this.generatePotentialValue(age),
+            this.generatePotentialValue(age, isProspect),
+            this.generatePotentialValue(age, isProspect),
+            this.generatePotentialValue(age, isProspect),
             this.getPitcherType());
 
         const skills = new PitchingSkillset(
@@ -67,23 +89,28 @@ export class GeneratePlayerService {
 
         const player =  new Player(name, age, this.staticListsService.playerTypes.pitcher, this.getBattingSide(), this.getThrowingSide(),
              new HittingSkillset(0, 0, 0, 0, 0), new HittingSkillset(0, 0, 0, 0, 0), skills,
-            potential, leagueId, teamId, year, ['P']);
+            potential, leagueId, teamId, year, ['P'], this.randomFaceService.generateRandomFace());
         player.hittingSeasonStats = [new BatterSeasonStats(year)]
         player.pitchingSeasonStats = [new PitcherSeasonStats(year)]
         player.fieldingSeasonStats = [new FieldingSeasonStats(year)]
+        if (player.teamId) {
+          player.contracts.push(new Contract(player._id, teamId,
+            Math.max(500000, Math.round(this.contractExpectationService.getContractExpectations(player).salary * .6 / 100000) * 100000),
+             year, 1 + Math.round(Math.random() * 4), this.staticListsService.contractStates.accepted, 0))
+        }
         const dbPlayer = await this.leagueDataService.createPlayer(player);
         return dbPlayer as Player;
     }
 
     getBattingSide() {
-        const rand = Math.random();
-        if (rand < .125) {
-            return 'B';
-        } else if (rand < .4) {
-            return 'L';
-        } else {
-            return 'R';
-        }
+      const rand = Math.random();
+      if (rand < .125) {
+          return 'B';
+      } else if (rand < .4) {
+          return 'L';
+      } else {
+          return 'R';
+      }
     }
 
     getThrowingSide() {
@@ -95,18 +122,23 @@ export class GeneratePlayerService {
         }
     }
 
-    generatePotentialValue(age) {
-    let value = 20 + Math.round(Math.random() * 40) + Math.round(Math.random() * 40);
-        if (value > 90 && Math.random() < .66) {
-            value -= 10;
-        } else if (value > 80 && Math.random() < .5) {
-          value -= 10;
-        }
-        if (age > 30) {
+    generatePotentialValue(age, prospect: boolean = false) {
+      let value
+      if (prospect) {
+        value = 25 + Math.round(Math.random() * 75)
+      } else {
+        value = 20 + Math.round(Math.random() * 40) + Math.round(Math.random() * 40);
+      }
+        // if (value > 90 && Math.random() < .66) {
+        //     value -= 10;
+        // } else if (value > 80 && Math.random() < .5) {
+        //   value -= 10;
+        // }
+      if (age > 30) {
         const garunteedValue = .8 - Math.abs(30 - age) / 10 * .3
-        value = Math.round(value * (garunteedValue + Math.random() * 1 - garunteedValue))
-        }
-        return value;
+       value = Math.round(value * (garunteedValue + Math.random() * 1 - garunteedValue))
+      }
+      return value;
     }
 
     generateSkillValue(skill, age, potential) {

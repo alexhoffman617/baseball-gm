@@ -45,7 +45,7 @@ var exports = {
     })
   },
   updateLeague: function(league, callback){
-    League.update({_id: league._id}, league, function(err, league){
+    League.update({_id: league._id}, league, function(err, updatedLeague){
       callback(200, league)
     })
   }

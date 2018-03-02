@@ -8,6 +8,8 @@ import { SharedFunctionsService } from './shared-functions.service';
 import { LeagueDataService } from './league-data.service'
 import 'rxjs/add/operator/toPromise';
 import * as io from 'socket.io-client';
+import { StaticListsService } from 'app/services/static-lists.service';
+import * as _ from 'lodash';
 
 @Injectable()
 export class GenerateLeagueService {
@@ -16,6 +18,7 @@ export class GenerateLeagueService {
                 private generateTeamService: GenerateTeamService,
                 private generatePlayerService: GeneratePlayerService,
                 private sharedFunctionsService: SharedFunctionsService,
+                private staticListsService: StaticListsService,
                 private seasonGenerator: SeasonGenerator) {
 
      }
@@ -46,7 +49,8 @@ export class GenerateLeagueService {
       this.sharedFunctionsService.setLoading(85, 'Generating Free Agents')
       await this.generatePlayerService.generateFreeAgents(createdLeague._id, (new Date()).getFullYear(), teamIds.length * 10)
       this.sharedFunctionsService.setLoading(92, 'Generating Season')
-      this.seasonGenerator.generateSeason(createdLeague._id, teamIds, null, createdLeague.structure)
+      this.seasonGenerator.generateSeason(createdLeague._id, teamIds, null,
+        this.staticListsService.leaguePhases.regularSeason.name, createdLeague.structure)
       return createdLeague._id
     }
 

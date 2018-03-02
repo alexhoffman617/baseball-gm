@@ -1,9 +1,68 @@
 <div class="view-container">
-  <div>Expected Contract: {{ salaryWithCommas(expectedContract?.salary) }} through {{ expectedContract?.lastYear }}</div>
-  <mat-select [(ngModel)]="selectedTeam">
-    <mat-option *ngFor="let team of leagueDataService.teams" [value]="team">{{ team?.location }} {{ team?.name }}</mat-option>
-  </mat-select>
-  <div>
-    <button mat-raised-button color="primary" (click)="add()">Add</button>
+  <div *ngIf="playerIsFreeAgent()">
+    <mat-card>
+      <h3>{{player?.name}}</h3>
+      <div>Expected Contract: {{ sharedFunctionsService.salaryWithCommas(expectedContract?.salary) }} for {{expectedContract?.years}} years (through {{ expectedContract?.firstYear + expectedContract?.years - 1 }})</div>
+    </mat-card>
+    <ng-container *ngIf="leagueDataService.currentSeason.phase === staticListsService.leaguePhases.freeAgency.name">
+      <mat-card *ngIf="currentOffer">
+        <div>
+          State: {{currentOffer.state}}
+        </div>
+        <div>
+          Years: {{currentOffer.years}}
+        </div>
+        <div>
+          Salary: {{sharedFunctionsService.salaryWithCommas(currentOffer.salary)}}
+        </div>
+      </mat-card>
+      <mat-card fxLayout="row">
+        <mat-select fxFlex="20" placeholder="Years" [(ngModel)]="years">
+          <mat-option value="1">
+            1
+          </mat-option>
+          <mat-option value="2">
+            2
+          </mat-option>
+          <mat-option value="3">
+            3
+          </mat-option>
+          <mat-option value="4">
+            4
+          </mat-option>
+          <mat-option value="5">
+            5
+          </mat-option>
+          <mat-option value="6">
+            6
+          </mat-option>
+          <mat-option value="7">
+            7
+          </mat-option>
+          <mat-option value="8">
+            8
+          </mat-option>
+          <mat-option value="9">
+            9
+          </mat-option>
+          <mat-option value="10">
+            10
+          </mat-option>
+        </mat-select>
+        <mat-input-container fxFlex="20">
+          <input matInput [(ngModel)]="salary" placeholder="Value" (change)="valueRound(salary)">
+          <span matPrefix>$&nbsp;</span>
+        </mat-input-container>
+      </mat-card>
+    </ng-container>
+    <mat-card>
+      <button mat-raised-button *ngIf="leagueDataService.currentSeason.phase === staticListsService.leaguePhases.freeAgency.name" color="primary" (click)="offerContract()">Offer Contract</button>
+      <button mat-raised-button *ngIf="leagueDataService.currentSeason.phase === staticListsService.leaguePhases.regularSeason.name" color="primary" (click)="add()">Add</button>
+    </mat-card>
+  </div>
+  <div *ngIf="!playerIsFreeAgent() && player">
+      <mat-card>
+          <h3>{{player?.name}}</h3>
+      </mat-card>
   </div>
 </div>

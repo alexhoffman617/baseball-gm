@@ -47,4 +47,14 @@ export class PlayerComponent implements OnInit {
       })
     })
   }
+
+  getCurrentContract() {
+    const that = this
+    if (!this.player) {
+      return
+    }
+    return  _.find(this.player.contracts, function(contract){
+      return contract.firstYear - 1 + contract.years >= that.leagueDataService.currentSeason.year
+    })
+  }
 }

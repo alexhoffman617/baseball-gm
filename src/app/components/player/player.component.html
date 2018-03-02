@@ -1,17 +1,27 @@
 <div class="view-container">
-  <div>
-    <h3> {{ player?.name }}</h3>
-  </div>
-  <div>
-      Age: {{player?.age}}
-  </div>
-  <div>
-      Bats: {{player?.bats}}
-  </div>
-  <div>
-      Throws: {{player?.throws}}
-  </div>
   <div fxLayout="row">
+    <app-face fxFlex="20" [player]="player"></app-face>
+    <div fxFlex="20">
+      <div>
+        <h3> {{ player?.name }}</h3>
+      </div>
+      <div>
+          Age: {{player?.age}}
+      </div>
+      <div>
+          Bats: {{player?.bats}}
+      </div>
+      <div>
+          Throws: {{player?.throws}}
+      </div>
+      <div *ngIf="getCurrentContract()">
+          Signed With {{leagueDataService.getTeamById(getCurrentContract().teamId).location + ' ' + leagueDataService.getTeamById(getCurrentContract().teamId).name}}
+           through {{getCurrentContract().firstYear - 1 + getCurrentContract().years}} at {{sharedFunctionsService.salaryWithCommas(getCurrentContract().salary)}}
+        </div>
+        <div *ngIf="!getCurrentContract()">
+          Free Agent
+        </div>
+    </div>
     <div fxFlex="20">
       <div>
         Overall Hitting: {{sharedFunctionsService.overallHitting(player?.hittingAbility)}} ({{sharedFunctionsService.overallHitting(player?.hittingPotential)}})

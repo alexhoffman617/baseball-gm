@@ -37,6 +37,7 @@ import { StaticListsService } from './services/static-lists.service';
 import { ProcessGameService } from './services/process-game.service';
 import { SharedFunctionsService } from './services/shared-functions.service';
 import { AuthService } from './services/auth.service';
+import { RandomFaceService } from './services/random-face.service';
 
 import { TeamBatterRowComponent } from './components/team-batter-row/team-batter-row.component';
 import { TeamPitcherRowComponent } from './components/team-pitcher-row/team-pitcher-row.component';
@@ -50,11 +51,15 @@ import { LoginComponent } from './components/login/login.component';
 import { LeagueAdminComponent } from './components/league-admin/league-admin.component';
 import { ContractExpectationService } from './services/contract-expectation.service';
 import { ActivatePlayerPopupComponent } from './components/activate-player-popup/activate-player-popup.component';
+import { TeamFreeAgentComponent } from './components/team-free-agent/team-free-agent.component';
+import { DraftComponent } from 'app/components/draft/draft.component';
+import { FaceComponent } from './components/face/face.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
   {path: 'login', component: LoginComponent},
   {path: 'test', component: TestComponent},
+  {path: 'face', component: FaceComponent},
   {path: ':leagueId',
   component: LeagueComponent,
   children: [
@@ -64,7 +69,8 @@ const routes: Routes = [
     {path: 'team/:teamId', component: TeamComponent},
     {path: 'player/:playerId', component: PlayerComponent},
     {path: 'negotiate-contract/:playerId', component: NegotiateContractComponent},
-    {path: 'free-agents', component: FreeAgentsComponent}
+    {path: 'free-agents', component: FreeAgentsComponent},
+    {path: 'draft', component: DraftComponent}
   ]}
 ];
 
@@ -92,7 +98,10 @@ const routes: Routes = [
     PlayoffBracketComponent,
     LoginComponent,
     LeagueAdminComponent,
-    ActivatePlayerPopupComponent
+    ActivatePlayerPopupComponent,
+    TeamFreeAgentComponent,
+    DraftComponent,
+    FaceComponent
   ],
   imports: [
     BrowserModule,
@@ -121,7 +130,8 @@ const routes: Routes = [
     ProcessGameService,
     SharedFunctionsService,
     AuthService,
-    ContractExpectationService
+    ContractExpectationService,
+    RandomFaceService
   ],
   entryComponents: [CreateLeagueDialogComponent, ActivatePlayerPopupComponent],
   bootstrap: [AppComponent]

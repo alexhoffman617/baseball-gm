@@ -5,6 +5,7 @@ import { SharedFunctionsService } from 'app/services/shared-functions.service';
 import { LeagueDataService } from 'app/services/league-data.service';
 import * as _ from 'lodash';
 import { Contract } from 'app/models/contract';
+import { RosterSpot, Team } from 'app/models/team';
 
 @Injectable()
 export class ContractExpectationService {
@@ -19,11 +20,14 @@ export class ContractExpectationService {
     }
     const contractAvv =  player.playerType === this.staticListsService.playerTypes.pitcher ? this.getPitcherContractExpectations(player) :
       this.getBatterContractExpectations(player)
-    return new Contract(player._id, null, contractAvv, this.leagueDataService.currentSeason.year,
-      this.leagueDataService.currentSeason.year + this.getContractLength(player) - 1)
+    return new Contract(player._id, null, contractAvv, this.leagueDataService.currentSeason ? this.leagueDataService.currentSeason.year : 0,
+      this.getContractLength(player), null, null)
   }
 
   getContractLength(player: Player) {
+  if (!this.leagueDataService.currentSeason || this.sharedFunctionsService.getGamesPlayed(this.leagueDataService.currentSeason.year) > 0) {
+      return 1
+    }
     const overall = player.playerType === this.staticListsService.playerTypes.batter ?
     this.sharedFunctionsService.overallHitting(player.hittingAbility) :
     this.sharedFunctionsService.overallPitching(player.pitchingAbility)
@@ -65,8 +69,8 @@ export class ContractExpectationService {
     } else if (mostRecentWar) {
       projectedWar = mostRecentWar
     }
-    const skillFactor = (this.sharedFunctionsService.overallPitching(player.pitchingAbility)
-    + this.sharedFunctionsService.overallPitching(player.pitchingPotential)) / 20 - 1
+    const skillFactor = (this.sharedFunctionsService.overallPitching(player.pitchingAbility) * 2 / 3
+    + this.sharedFunctionsService.overallPitching(player.pitchingPotential) / 3) / 10 - 3.5
     return this.getContractExpectationFromProjectedWarAndSkill(projectedWar, skillFactor)
   }
 
@@ -77,7 +81,7 @@ export class ContractExpectationService {
     })
     const orderedHittingStats = _.orderBy(filteredHittingStats, 'year', 'desc')
     const filteredFieldingStats = _.filter(player.fieldingSeasonStats, function(hss){
-      return hss.year !== that.leagueDataService.currentSeason.year
+      return that.leagueDataService.currentSeason && hss.year !== that.leagueDataService.currentSeason.year
     })
     const orderedFieldingStats = _.orderBy(filteredFieldingStats, 'year', 'desc')
     const mostRecentWar = this.sharedFunctionsService.batWar(orderedHittingStats[0], orderedFieldingStats[0])
@@ -88,8 +92,8 @@ export class ContractExpectationService {
     } else if (mostRecentWar) {
       projectedWar = mostRecentWar
     }
-    const skillFactor = (this.sharedFunctionsService.overallHitting(player.hittingAbility)
-    + this.sharedFunctionsService.overallHitting(player.hittingPotential)) / 20 - 3
+    const skillFactor = (this.sharedFunctionsService.overallHitting(player.hittingAbility) * 2 / 3
+    + this.sharedFunctionsService.overallHitting(player.hittingPotential) / 3) / 10 - 3.5
     return this.getContractExpectationFromProjectedWarAndSkill(projectedWar, skillFactor)
   }
 
@@ -106,4 +110,91 @@ export class ContractExpectationService {
     return Math.max(Math.round(totalSalary) * 100000, 500000)
   }
 
+  getBestOfferedContract(player: Player) {
+    const that = this
+    const expectedContract = this.getContractExpectations(player)
+    let bestContract: Contract
+    const contractOffers = _.filter(player.contractOffers, function(contract){
+      return contract.state === that.staticListsService.contractStates.offered
+          || contract.state === that.staticListsService.contractStates.considering
+    })
+    _.each(contractOffers, function(contract) {
+      if (contract.years >= 4 && contract.salary >= expectedContract.salary * .8) {
+        if (!bestContract || bestContract.years * bestContract.salary < contract.years * contract.salary) {
+          bestContract = contract
+        }
+      } else {
+        if (contract.years <= expectedContract.years && contract.salary > expectedContract.salary * .65) {
+          if (!bestContract || bestContract.years * bestContract.salary < contract.years * contract.salary) {
+            bestContract = contract
+          }
+        } else {
+          if (contract.salary > expectedContract.salary * (1 + .75 * contract.years - expectedContract.years)) {
+            if (!bestContract || bestContract.years * bestContract.salary < contract.years * contract.salary) {
+              bestContract = contract
+            }
+          }
+        }
+      }
+    })
+    if (!bestContract) {
+      _.each(contractOffers, function(contract){
+        if (contract.years === 1 && contract.salary > expectedContract.salary * .5) {
+          if (!bestContract || bestContract.years * bestContract.salary < contract.years * contract.salary) {
+            bestContract = contract
+          }
+        }
+      })
+    }
+    return bestContract
+  }
+
+  processAllContractOffers() {
+    const that = this
+    _.each(_.orderBy(that.leagueDataService.players, function(player) { return that.sharedFunctionsService.overallAbility(player) })
+      , function(player){
+      if (player.contractOffers && player.contractOffers.length > 0) {
+        that.processContractOffers(player)
+      }
+    })
+  }
+
+  processContractOffers(player: Player) {
+    const bestContract = this.getBestOfferedContract(player)
+    const expectedContract = this.getContractExpectations(player)
+    if (bestContract) {
+      const daysSinceBestOffer = this.leagueDataService.currentSeason.preseasonDay - bestContract.offeredDay
+      if (daysSinceBestOffer >= 3 && (bestContract.years <= 2 || expectedContract.salary <= bestContract.salary)
+      || daysSinceBestOffer >= 5 || this.leagueDataService.currentSeason.preseasonDay === this.staticListsService.preseasonDays) {
+        this.sharedFunctionsService.acceptFaContract(player, bestContract)
+      } else {
+        this.negotiateContracts(player, bestContract)
+      }
+    } else {
+      this.rejectAllContracts(player)
+    }
+  }
+
+  negotiateContracts(player: Player, bestContract: Contract) {
+    const that = this
+    const expectedContract = this.getContractExpectations(player)
+    _.each(player.contractOffers, function(contract) {
+      if (bestContract.teamId !== contract.teamId) {
+        contract.state = that.staticListsService.contractStates.countered
+        contract.years = bestContract.years
+        contract.salary = bestContract.salary + 1000000
+      } else {
+        contract.state = that.staticListsService.contractStates.considering
+      }
+    })
+    this.leagueDataService.updatePlayer(player)
+  }
+
+  rejectAllContracts(player: Player) {
+    const that = this
+    _.each(player.contractOffers, function(contract) {
+      contract.state = that.staticListsService.contractStates.rejected
+    })
+    this.leagueDataService.updatePlayer(player)
+  }
 }

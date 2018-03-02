@@ -10,6 +10,8 @@ import { SeasonGenerator } from './season.generator';
 import { LeagueDataService } from './league-data.service';
 import * as _ from 'lodash';
 import { StaticListsService } from 'app/services/static-lists.service';
+import { SharedFunctionsService } from './shared-functions.service';
+import { DraftPick } from '../models/draft';
 
 @Injectable()
 export class LeagueProgressionService {
@@ -18,6 +20,7 @@ export class LeagueProgressionService {
               private pitcherProgressionService: PitcherProgressionService,
               private seasonGenerator: SeasonGenerator,
               private staticListsService: StaticListsService,
+              private sharedFunctionsService: SharedFunctionsService,
               private leagueDataService: LeagueDataService ) { }
 
   async progressLeague(leagueId: string, currentSeason: Season, teams: Array<Team>, structure) {
@@ -26,17 +29,23 @@ export class LeagueProgressionService {
     that.leagueDataService.updateLeague()
     const teamIds = _.map(teams, '_id')
     _.each(that.leagueDataService.players, function(player){
-      (async () => {
-        if (player.playerType === that.staticListsService.playerTypes.batter) {
-          that.progressBatter(player, currentSeason)
-        } else {
-          that.progressPitcher(player, currentSeason)
-        }
-        await that.retirePlayerIfNeeded(player, currentSeason, teams)
+      if (!_.find(currentSeason.draft.draftPlayerIds, function(dpi){
+        return dpi === player._id
+      })) {
+        (async () => {
+          if (player.playerType === that.staticListsService.playerTypes.batter) {
+            that.progressBatter(player, currentSeason)
+          } else {
+            that.progressPitcher(player, currentSeason)
+          }
+          await that.retirePlayerIfNeeded(player, currentSeason, teams)
       })();
+      }
     })
     that.leagueDataService.deleteAllGamesInSeason(currentSeason._id)
-    await that.seasonGenerator.generateSeason(leagueId, teamIds, currentSeason.year + 1, structure)
+    that.setDraftOrder(currentSeason)
+    await that.seasonGenerator.generateSeason(leagueId, teamIds, currentSeason.year + 1,
+      _.find(this.staticListsService.leaguePhases, {order: 0}).name , structure)
     that.leagueDataService.league.simming = false
     that.leagueDataService.updateLeague()
   }
@@ -62,12 +71,19 @@ export class LeagueProgressionService {
     this.progressBatterAbility(player, improvement)
   }
 
-  resetBatterForNewYear(player: Player, currentSeason: Season) {
+  async resetBatterForNewYear(player: Player, currentSeason: Season, teams: Array<Team>) {
     player.age++
     player.currentStamina = 100
     player.hittingSeasonStats.push(new BatterSeasonStats(currentSeason.year + 1))
     player.pitchingSeasonStats.push(new PitcherSeasonStats(currentSeason.year + 1))
     player.fieldingSeasonStats.push(new FieldingSeasonStats(currentSeason.year + 1))
+    const contractEndingThisYear = _.find(player.contracts, function(contract){
+      return contract.firstYear - 1 + contract.years === currentSeason.year
+    })
+    if (contractEndingThisYear) {
+      await this.removePlayerFromRoster(player, teams)
+      player.teamId = null
+    }
     this.leagueDataService.updatePlayer(player)
   }
 
@@ -92,7 +108,7 @@ export class LeagueProgressionService {
           || Math.random() < .2 * (player.age - 35)) {
         await this.retirePlayer(player, currentSeason, teams)
       } else {
-        that.resetBatterForNewYear(player, currentSeason)
+        await that.resetBatterForNewYear(player, currentSeason, teams)
       }
     } else if (player.age > 26) {
       if (player.hittingSeasonStats.length > 1
@@ -101,10 +117,10 @@ export class LeagueProgressionService {
       && !player.teamId) {
         await this.retirePlayer(player, currentSeason, teams)
       } else {
-        that.resetBatterForNewYear(player, currentSeason)
+        await that.resetBatterForNewYear(player, currentSeason, teams)
       }
     } else {
-      that.resetBatterForNewYear(player, currentSeason)
+      await that.resetBatterForNewYear(player, currentSeason, teams)
     }
   }
 
@@ -121,13 +137,39 @@ export class LeagueProgressionService {
     player.retired = true
     player.lastYear = currentSeason.year
     if (player.teamId) {
-      const playerType = player.playerType === this.staticListsService.playerTypes.batter ? 'batters' : 'pitchers'
-      const team = _.find(teams, {_id: player.teamId})
-      _.remove(team.roster[playerType], function(batter){
-        return batter.playerId === player._id
+      await this.removePlayerFromRoster(player, teams)
+      const currentContract = _.find(player.contracts, function(contract){
+        return contract.firstYear + contract.years - 1 >= currentSeason.year
       })
-      await this.leagueDataService.updateTeam(team)
+      if (currentContract) {
+        currentContract.years = currentSeason.year - currentContract.firstYear + 1
+      }
     }
     await this.leagueDataService.updatePlayer(player)
+  }
+
+async removePlayerFromRoster(player: Player, teams: Array<Team>) {
+    const team = _.find(teams, {_id: player.teamId})
+    _.remove(team.roster.batters, function(batter){
+      return batter.playerId === player._id
+    })
+    _.remove(team.roster.batterReserves, function(batter){
+      return batter.playerId === player._id
+    })
+    _.remove(team.roster.pitchers, function(batter){
+      return batter.playerId === player._id
+    })
+    _.remove(team.roster.pitcherReserves, function(batter){
+      return batter.playerId === player._id
+    })
+    await this.leagueDataService.updateTeam(team)
+  }
+
+  setDraftOrder(currentSeason: Season) {
+    const orderedTeams = this.sharedFunctionsService.getRecordOrderedTeams()
+    for (let pick = 1; pick <= orderedTeams.length * 4; pick++) {
+      currentSeason.draft.draftPicks.push(new DraftPick(pick, orderedTeams[(pick - 1) % orderedTeams.length]._id))
+    }
+    this.leagueDataService.updateSeason(currentSeason)
   }
 }

@@ -124,6 +124,9 @@ export class TeamPitcherRowComponent implements OnChanges {
     _.remove(this.teamInstance.roster.pitchers, function(pitcher){
       return pitcher.playerId === that.pitcher._id
     })
+    _.remove(this.teamInstance.roster.pitcherReserves, function(pitcher){
+      return pitcher.playerId === that.pitcher._id
+    })
     this.leagueDataService.updateTeam(this.teamInstance)
     this.pitcher.teamId = null
     this.leagueDataService.updatePlayer(this.pitcher)
