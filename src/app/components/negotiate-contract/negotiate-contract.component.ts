@@ -48,9 +48,8 @@ export class NegotiateContractComponent implements OnInit {
   }
 
   add() {
-    if (this.usersTeam.roster.batters.length + this.usersTeam.roster.pitchers.length +
-      this.usersTeam.roster.batterReserves.length + this.usersTeam.roster.pitcherReserves.length >= 40) {
-      this.snackBar.open('Team already has a full 40 man roster players', 'Ok', {duration: 2000})
+    if (!this.sharedFunctionsService.canOfferContract(this.usersTeam, this.salary)) {
+      this.snackBar.open(this.sharedFunctionsService.canOfferContract(this.usersTeam, this.salary).reason,  'Ok', {duration: 2000})
     } else {
       if (this.player.playerType === this.staticListsService.playerTypes.batter) {
         this.usersTeam.roster.batters.push(new RosterSpot(this.playerId, null, null))

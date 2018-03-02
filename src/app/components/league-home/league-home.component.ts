@@ -49,6 +49,7 @@ export class LeagueHomeComponent implements OnInit {
   getStat(player: Player, attribute: string, isSharedFunction: boolean, isPitching: boolean = false) {
     const that = this
     let stats
+    if (!that.leagueDataService.currentSeason) { return null }
     if (isPitching) {
       stats = _.find(player.pitchingSeasonStats, function(s){
         return s.year === that.leagueDataService.currentSeason.year

@@ -140,13 +140,15 @@ export class LeagueDataService  {
           observer.next(data);
         });
         that.socket.on('player:' + leagueId, (data) => {
-          let currentPlayer = _.find(that.players, function(player){
-            return player._id === data._id
-          })
-          if (currentPlayer) {
-            currentPlayer = data
-          } else {
-            that.players.push(data)
+          if (that.players) {
+            let currentPlayer = _.find(that.players, function(player){
+              return player._id === data._id
+            })
+            if (currentPlayer) {
+              currentPlayer = data
+            } else {
+              that.players.push(data)
+            }
           }
         });
         return () => {

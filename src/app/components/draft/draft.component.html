@@ -1,7 +1,7 @@
 <div fxLayout="row" class="view-container">
   <div fxFlex="10">
-    <button md-raised-button color="primary" *ngIf="canStartDraft()" (click)="startDraft()">Start Draft</button>
-    <button md-raised-button color="primary" *ngIf="isUsersPick()" (click)="pass()">Pass</button>
+    <button mat-raised-button color="primary" *ngIf="canStartDraft()" (click)="startDraft()">Start Draft</button>
+    <button mat-raised-button color="primary" *ngIf="isUsersPick()" (click)="pass()">Pass</button>
   </div>
   <div fxFlex="40">
     <table>

@@ -1,6 +1,4 @@
-var mongoose = require('mongoose');
-mongoose.connect("mongodb://website:password@ds255797.mlab.com:55797/baseballgm");
-//mongoose.connect("mongodb://127.0.0.1:27017");
+const mongoose = require('../mongoose-connection')
 var Schema = mongoose.Schema
 var leagueSchema = new Schema({}, {strict: false})
 var League = mongoose.model('leagues', leagueSchema);

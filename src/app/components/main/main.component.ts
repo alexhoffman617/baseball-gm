@@ -51,7 +51,7 @@ export class MainComponent implements OnInit {
 })
 export class CreateLeagueDialogComponent {
   leagueName: string
-  numberOfTeams: number
+  numberOfTeams = 4
   useMlbTeams = false
   isGenerating = false
   constructor(
