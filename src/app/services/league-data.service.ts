@@ -8,6 +8,7 @@ import { Season } from '../models/season';
 import { Game, AtBat, PitcherAppearance } from '../models/game';
 import { BatterSeasonStats, PitcherSeasonStats } from '../models/season-stats';
 import { Account } from '../models/account';
+import { Trade } from '../models/trade';
 
 import * as _ from 'lodash';
 import * as io from 'socket.io-client';
@@ -30,6 +31,8 @@ export class LeagueDataService  {
   gamesObservable: Observable<Array<Game>>;
   accounts: Array<Account>;
   accountsObservable: Observable<Array<Account>>;
+  trades: Array<Trade>;
+  tradesObservable: Observable<Array<Trade>>;
   socket = io.connect(window.location.protocol + '//' + window.location.host);
   messages: any;
   constructor(private http: Http, private route: ActivatedRoute) {
@@ -213,6 +216,37 @@ export class LeagueDataService  {
     })
   }
 
+  async getTrades(leagueId) {
+    const that = this
+    return new Promise(function(resolve){
+      that.tradesObservable = new Observable(observer => {
+        that.http.get('/api/trades/' + leagueId).subscribe(data => {
+          observer.next(data.json());
+          resolve(true)
+        });
+        that.socket.on('trades:' + leagueId, (data) => {
+          observer.next(data);
+        });
+        that.socket.on('trade:' + leagueId, (data) => {
+          let currentTrade = _.find(that.trades, function(trade){
+            return trade._id === data._id
+          })
+          if (currentTrade) {
+            currentTrade = data
+          } else {
+            that.trades.push(data)
+          }
+        });
+        return () => {
+          that.socket.disconnect();
+        };
+      })
+      that.tradesObservable.subscribe(trades => {
+        that.trades = trades as Array<Trade>
+      })
+    })
+  }
+
   updateLocalSeason(season: Season) {
     this.currentSeason = season
   }
@@ -226,6 +260,7 @@ export class LeagueDataService  {
     const playersPromise = this.getPlayers(leagueId)
     const gamesPromise = this.getGames(leagueId)
     const accountsPromise = this.getAccounts()
+    const tradesPromise = this.getTrades(leagueId)
 
     return Promise.all([leaguePromise, seasonsPromise, teamsPromise, playersPromise, gamesPromise, accountsPromise])
   }
@@ -244,6 +279,13 @@ export class LeagueDataService  {
     })
   }
 
+  getTeamByOwnerId(ownerId: string) {
+    const that = this
+    return _.find(that.teams, function(team){
+      return team.ownerAccountId === ownerId
+    })
+  }
+
   async updateAllPlayers() {
     const that = this
     return new Promise(function(resolve){
@@ -257,6 +299,15 @@ export class LeagueDataService  {
     const that = this
     return new Promise(function(resolve){
       that.socket.emit('update-player', player,  function(completed){
+        resolve(completed)
+      });
+    })
+  }
+
+  async updateTrade(trade) {
+    const that = this
+    return new Promise(function(resolve){
+      that.socket.emit('update-trade', trade,  function(completed){
         resolve(completed)
       });
     })
@@ -302,6 +353,15 @@ export class LeagueDataService  {
     const that = this
     return new Promise(function(resolve){
       that.socket.emit('create-season', season, function(completed){
+        resolve(completed)
+      });
+    })
+  }
+
+  async createTrade(trade) {
+    const that = this
+    return new Promise(function(resolve){
+      that.socket.emit('create-trade', trade, function(completed){
         resolve(completed)
       });
     })

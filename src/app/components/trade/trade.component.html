@@ -1,0 +1,197 @@
+<div class="view-container">
+  <mat-tab-group>
+    <mat-tab label="New Trade">
+      <div fxLayout="row">
+        <div fxFlex="40">
+          <div>
+            <span fxFlex="15">Team:</span> {{getUserTeam()?.location}} {{getUserTeam()?.name}}
+          </div>
+          <table>
+            <thead>
+              <th>Select</th>
+              <th>Player</th>
+              <th>Pos</th>
+              <th>Age</th>
+              <th>Ovr</th>
+              <th>Contract</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let value of usersTeamPlayersArray; let i = index">
+                <td><mat-checkbox [(ngModel)]="value.selected"></mat-checkbox></td>
+                <td>{{value.player.name}}</td>
+                <td><span *ngFor="let pos of value.player.primaryPositions">{{pos}} </span></td>
+                <td>{{value.player.age}}</td>
+                <td>{{sharedFunctionsService.overallAbility(value.player)}}({{sharedFunctionsService.overallPotential(value.player)}})</td>
+                <td>
+                  {{ sharedFunctionsService.salaryWithCommas(getCurrentContract(value.player)?.salary) }}
+                  through {{getCurrentContract(value.player)?.firstYear + getCurrentContract(value.player)?.years - 1}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div fxFlex="40" fxFlexOffset="10">
+          <div fxLayout="row">
+            <span fxFlex="15">Team:</span> <mat-select (change)="changeTeam()" [(ngModel)]="otherTeamId" placeholder="team">
+                <ng-container  *ngFor="let team of leagueDataService.teams">
+                    <mat-option *ngIf="team._id !== getUserTeam()?._id"  [value]="team._id" >{{team.location}} {{team.name}}</mat-option>
+                </ng-container>
+              </mat-select>
+          </div>
+          <table>
+            <thead>
+              <th>Select</th>
+              <th>Player</th>
+              <th>Pos</th>
+              <th>Age</th>
+              <th>Ovr</th>
+              <th>Contract</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let value of otherTeamPlayersArray; let i = index">
+                <td><mat-checkbox [(ngModel)]="value.selected"></mat-checkbox></td>
+                <td>{{value.player.name}}</td>
+                <td><span *ngFor="let pos of value.player.primaryPositions">{{pos}} </span></td>
+                <td>{{value.player.age}}</td>
+                <td>{{sharedFunctionsService.overallAbility(value.player)}}({{sharedFunctionsService.overallPotential(value.player)}})</td>
+                <td>
+                  {{ sharedFunctionsService.salaryWithCommas(getCurrentContract(value.player)?.salary) }}
+                  through {{getCurrentContract(value.player)?.firstYear + getCurrentContract(value.player)?.years - 1}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <button mat-raised-button color="primary" (click)="offer()">Offer</button>
+    </mat-tab>
+    <mat-tab label="Trade Offers">
+      <div *ngFor="let trade of getUsersTradeOffers()">
+        <mat-card>
+          <div fxLayout="row">
+              <div fxFlex="40">
+                <div>
+                  Team: {{leagueDataService.getTeamById(trade.teamAId).location}} {{leagueDataService.getTeamById(trade.teamAId).name}}
+                </div>
+                <table>
+                  <thead>
+                    <th>Player</th>
+                    <th>Pos</th>
+                    <th>Age</th>
+                    <th>Ovr</th>
+                    <th>Contract</th>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let playerId of trade.teamAPlayerIds">
+                      <td>{{leagueDataService.getPlayer(playerId)?.name}}</td>
+                      <td><span *ngFor="let pos of leagueDataService.getPlayer(playerId)?.primaryPositions">{{pos}} </span></td>
+                      <td>{{leagueDataService.getPlayer(playerId)?.age}}</td>
+                      <td>{{leagueDataService.getPlayer(playerId) ? sharedFunctionsService.overallAbility(leagueDataService.getPlayer(playerId)) : null}}
+                          ({{ leagueDataService.getPlayer(playerId) ? sharedFunctionsService.overallPotential(leagueDataService.getPlayer(playerId)) : null}})</td>
+                      <td>
+                        {{ sharedFunctionsService.salaryWithCommas(getCurrentContract(leagueDataService.getPlayer(playerId))?.salary) }}
+                        through {{getCurrentContract(leagueDataService.getPlayer(playerId))?.firstYear + getCurrentContract(leagueDataService.getPlayer(playerId))?.years -1 }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div fxFlex="40" fxFlexOffset="10">
+                <div>
+                    Team: {{leagueDataService.getTeamById(trade.teamBId).location}} {{leagueDataService.getTeamById(trade.teamBId).name}}
+                </div>
+                <table>
+                  <thead>
+                    <th>Player</th>
+                    <th>Pos</th>
+                    <th>Age</th>
+                    <th>Ovr</th>
+                    <th>Contract</th>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let playerId of trade.teamBPlayerIds">
+                      <td>{{leagueDataService.getPlayer(playerId)?.name}}</td>
+                      <td><span *ngFor="let pos of leagueDataService.getPlayer(playerId)?.primaryPositions">{{pos}} </span></td>
+                      <td>{{leagueDataService.getPlayer(playerId)?.age}}</td>
+                      <td>{{leagueDataService.getPlayer(playerId) ? sharedFunctionsService.overallAbility(leagueDataService.getPlayer(playerId)) : null}}
+                          ({{ leagueDataService.getPlayer(playerId) ? sharedFunctionsService.overallPotential(leagueDataService.getPlayer(playerId)) : null}})</td>
+                      <td>
+                        {{ sharedFunctionsService.salaryWithCommas(getCurrentContract(leagueDataService.getPlayer(playerId))?.salary) }}
+                        through {{getCurrentContract(leagueDataService.getPlayer(playerId))?.firstYear + getCurrentContract(leagueDataService.getPlayer(playerId))?.years -1 }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          <div style="color: red" *ngIf="getCantAcceptTradeReason(trade)">{{ getCantAcceptTradeReason(trade) }}</div>
+          <button mat-raised-button color="primary" (click)="revoke(trade)">Revoke</button>
+        </mat-card>
+      </div>
+    </mat-tab>
+    <mat-tab label="Offered Trades">
+      <div *ngFor="let trade of getUsersOfferedTrades()">
+        <mat-card>
+          <div fxLayout="row">
+            <div fxFlex="40">
+              <div>
+                Team: {{leagueDataService.getTeamById(trade.teamAId).location}} {{leagueDataService.getTeamById(trade.teamAId).name}}
+              </div>
+              <table>
+                <thead>
+                  <th>Player</th>
+                  <th>Pos</th>
+                  <th>Age</th>
+                  <th>Ovr</th>
+                  <th>Contract</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let playerId of trade.teamAPlayerIds">
+                    <td>{{leagueDataService.getPlayer(playerId)?.name}}</td>
+                    <td><span *ngFor="let pos of leagueDataService.getPlayer(playerId)?.primaryPositions">{{pos}} </span></td>
+                    <td>{{leagueDataService.getPlayer(playerId)?.age}}</td>
+                    <td>{{leagueDataService.getPlayer(playerId) ? sharedFunctionsService.overallAbility(leagueDataService.getPlayer(playerId)) : null}}
+                        ({{ leagueDataService.getPlayer(playerId) ? sharedFunctionsService.overallPotential(leagueDataService.getPlayer(playerId)) : null}})</td>
+                    <td>
+                      {{ sharedFunctionsService.salaryWithCommas(getCurrentContract(leagueDataService.getPlayer(playerId))?.salary) }}
+                      through {{getCurrentContract(leagueDataService.getPlayer(playerId))?.firstYear + getCurrentContract(leagueDataService.getPlayer(playerId))?.years -1 }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div fxFlex="40" fxFlexOffset="10">
+              <div>
+                  Team: {{leagueDataService.getTeamById(trade.teamBId).location}} {{leagueDataService.getTeamById(trade.teamBId).name}}
+              </div>
+              <table>
+                <thead>
+                  <th>Player</th>
+                  <th>Pos</th>
+                  <th>Age</th>
+                  <th>Ovr</th>
+                  <th>Contract</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let playerId of trade.teamBPlayerIds">
+                    <td>{{leagueDataService.getPlayer(playerId)?.name}}</td>
+                    <td><span *ngFor="let pos of leagueDataService.getPlayer(playerId)?.primaryPositions">{{pos}} </span></td>
+                    <td>{{leagueDataService.getPlayer(playerId)?.age}}</td>
+                    <td>{{leagueDataService.getPlayer(playerId) ? sharedFunctionsService.overallAbility(leagueDataService.getPlayer(playerId)) : null}}
+                        ({{ leagueDataService.getPlayer(playerId) ? sharedFunctionsService.overallPotential(leagueDataService.getPlayer(playerId)) : null}})</td>
+                    <td>
+                      {{ sharedFunctionsService.salaryWithCommas(getCurrentContract(leagueDataService.getPlayer(playerId))?.salary) }}
+                      through {{getCurrentContract(leagueDataService.getPlayer(playerId))?.firstYear + getCurrentContract(leagueDataService.getPlayer(playerId))?.years -1 }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div style="color: red" *ngIf="getCantAcceptTradeReason(trade)">{{ getCantAcceptTradeReason(trade) }}</div>
+          <button [disabled]="getCantAcceptTradeReason(trade)" mat-raised-button color="primary" (click)="accept(trade)">Accept</button>
+        </mat-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

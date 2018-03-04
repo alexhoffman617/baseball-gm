@@ -39,8 +39,8 @@ export class GeneratePlayerService {
     }
 
     async generateBatter(leagueId: string, teamId: string, year: number, age: number = null, isProspect: boolean = false) {
-      const name = this.staticListsService.firstNames[Math.round(Math.random() * this.staticListsService.firstNames.length)] + ' '
-      + this.staticListsService.lastNames[Math.round(Math.random() * this.staticListsService.lastNames.length)]
+      const name = this.staticListsService.firstNames[Math.round(Math.random() * (this.staticListsService.firstNames.length - 1))] + ' '
+      + this.staticListsService.lastNames[Math.round(Math.random() * (this.staticListsService.lastNames.length - 1))]
         if (!age) { age = Math.round(18 + Math.random() * 22) };
         const potential = new HittingSkillset(
             this.generatePotentialValue(age, isProspect),
@@ -58,7 +58,8 @@ export class GeneratePlayerService {
 
         const player = new Player(name, age, this.staticListsService.playerTypes.batter, this.getBattingSide(), this.getThrowingSide(),
                        skills, potential, new PitchingSkillset(0, 0, 0, 'std'),
-                       new PitchingSkillset(0, 0, 0, 'std'), leagueId, teamId, year, this.getPrimaryPositions(), this.randomFaceService.generateRandomFace());
+                       new PitchingSkillset(0, 0, 0, 'std'), leagueId, teamId, year,
+                       this.getPrimaryPositions(), this.randomFaceService.generateRandomFace());
         player.hittingSeasonStats = [new BatterSeasonStats(year)]
         player.pitchingSeasonStats = [new PitcherSeasonStats(year)]
         player.fieldingSeasonStats = [new FieldingSeasonStats(year)]

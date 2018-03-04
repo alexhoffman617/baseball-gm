@@ -16,6 +16,7 @@ var Teams = require('./models/teams')
 var Seasons = require('./models/seasons')
 var Games = require('./models/games')
 var Accounts = require('./models/accounts');
+var Trades = require('./models/trades');
 
 var io = require('socket.io')(server);
 
@@ -128,6 +129,19 @@ io.on('connection', function(socket){
   socket.on('delete-all-seasons-games', (seasonId, leagueId, callback) => {
     Games.deleteAllSeasonsGames(seasonId, function(status, deletedGames){
       io.emit('games:' + leagueId, [])
+    })
+  })
+
+  socket.on('create-trade', (trade, callback) => {
+    Trades.createTrade(trade, function(status, savedTrade){
+      io.emit('trade:' + trade.leagueId, savedTrade)
+      callback(savedTrade)
+    })
+  })
+
+  socket.on('update-trade', (trade, callback) => {
+    Trades.updateTrade(trade, function(status, savedTrade){
+      io.emit('trade:' + trade.leagueId, savedTrade)
     })
   })
 

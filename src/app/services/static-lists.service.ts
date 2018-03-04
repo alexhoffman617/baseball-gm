@@ -13,6 +13,14 @@ export class StaticListsService {
     offseason: {name: 'Offseason', order: 4}
   }
 
+  tradeStatus = {
+    offered: 'offered',
+    rejected: 'rejected',
+    revoked: 'revoked',
+    expired: 'expired',
+    completed: 'completed'
+  }
+
   preseasonDays = 15
   leagueSalary = 150000000
 

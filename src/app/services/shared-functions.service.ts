@@ -447,11 +447,11 @@ export class SharedFunctionsService {
     this.leagueDataService.updateTeam(team)
   }
 
-  acceptContract(player: Player, bestContract: Contract, team: Team) {
-    if (bestContract) {
-      bestContract.state = this.staticListsService.contractStates.accepted
-      player.contracts.push(bestContract)
-      player.teamId = bestContract.teamId
+  acceptContract(player: Player, contract: Contract, team: Team) {
+    if (contract) {
+      contract.state = this.staticListsService.contractStates.accepted
+      player.contracts.push(contract)
+      player.teamId = contract.teamId
       player.playerType === this.staticListsService.playerTypes.batter ?
       team.roster.batterReserves.push(new RosterSpot(player._id, null, null)) :
       team.roster.pitcherReserves.push(new RosterSpot(player._id, null, null))
@@ -461,8 +461,7 @@ export class SharedFunctionsService {
 
   removeNoLongerValidOffers(team: Team) {
     const that = this
-    const rosterLength = team.roster.batterReserves.length + team.roster.pitcherReserves.length
-                      + team.roster.batters.length + team.roster.pitchers.length
+    const rosterLength = that.getRosterCount(team)
     _.each(this.leagueDataService.players, function(player){
       const contractIndex = _.findIndex(player.contractOffers, function(offer){
         return offer.teamId === team._id
@@ -475,8 +474,7 @@ export class SharedFunctionsService {
   }
 
   canOfferContract(team: Team, salary: number) {
-    const rosterCount = team.roster.batters.length + team.roster.pitchers.length +
-    team.roster.batterReserves.length + team.roster.pitcherReserves.length
+    const rosterCount = this.getRosterCount(team)
     if (rosterCount >= 40) {
       return { canOffer: false, reason: 'Team already has a full 40 man roster players' }
     } else if (this.getTeamSalary(team) + (39 - rosterCount) * 500000
@@ -488,4 +486,27 @@ export class SharedFunctionsService {
       return { canOffer: true, reason: null}
     }
   }
+
+  getRosterCount(team: Team) {
+    return team.roster.batters.length + team.roster.pitchers.length +
+    team.roster.batterReserves.length + team.roster.pitcherReserves.length
+  }
+
+  async removePlayerFromRoster(playerId: string, team: Team) {
+    _.remove(team.roster.batters, function(batter){
+      return batter.playerId === playerId
+    })
+    _.remove(team.roster.batterReserves, function(batter){
+      return batter.playerId === playerId
+    })
+    _.remove(team.roster.pitchers, function(batter){
+      return batter.playerId === playerId
+    })
+    _.remove(team.roster.pitcherReserves, function(batter){
+      return batter.playerId === playerId
+    })
+    await this.leagueDataService.updateTeam(team)
+  }
 }
+
+

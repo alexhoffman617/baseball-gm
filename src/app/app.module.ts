@@ -54,6 +54,7 @@ import { ActivatePlayerPopupComponent } from './components/activate-player-popup
 import { TeamFreeAgentComponent } from './components/team-free-agent/team-free-agent.component';
 import { DraftComponent } from 'app/components/draft/draft.component';
 import { FaceComponent } from './components/face/face.component';
+import { TradeComponent } from './components/trade/trade.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -70,7 +71,8 @@ const routes: Routes = [
     {path: 'player/:playerId', component: PlayerComponent},
     {path: 'negotiate-contract/:playerId', component: NegotiateContractComponent},
     {path: 'free-agents', component: FreeAgentsComponent},
-    {path: 'draft', component: DraftComponent}
+    {path: 'draft', component: DraftComponent},
+    {path: 'trade', component: TradeComponent}
   ]}
 ];
 
@@ -101,7 +103,8 @@ const routes: Routes = [
     ActivatePlayerPopupComponent,
     TeamFreeAgentComponent,
     DraftComponent,
-    FaceComponent
+    FaceComponent,
+    TradeComponent
   ],
   imports: [
     BrowserModule,

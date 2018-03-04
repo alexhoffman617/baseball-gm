@@ -13,6 +13,7 @@ var teams = require('../models/teams')
 var players = require('../models/players')
 var games = require('../models/games')
 var accounts = require('../models/accounts')
+var trades = require('../models/trades')
 
 router.get('/', (req, res) => {
   res.send('api works');
@@ -74,6 +75,12 @@ router.get('/players/:leagueId', (req, res) => {
 
 router.get('/games/:leagueId', (req, res) => {
   games.getGames(req.params.leagueId, function(status, value){
+    res.status(status).send(value)
+  })
+})
+
+router.get('/trades/:leagueId', (req, res) => {
+  trades.getTrades(req.params.leagueId, function(status, value){
     res.status(status).send(value)
   })
 })

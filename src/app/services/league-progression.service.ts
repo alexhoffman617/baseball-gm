@@ -44,6 +44,7 @@ export class LeagueProgressionService {
     })
     that.leagueDataService.deleteAllGamesInSeason(currentSeason._id)
     that.setDraftOrder(currentSeason)
+    that.revokeAllTrades()
     await that.seasonGenerator.generateSeason(leagueId, teamIds, currentSeason.year + 1,
       _.find(this.staticListsService.leaguePhases, {order: 0}).name , structure)
     that.leagueDataService.league.simming = false
@@ -81,7 +82,8 @@ export class LeagueProgressionService {
       return contract.firstYear - 1 + contract.years === currentSeason.year
     })
     if (contractEndingThisYear) {
-      await this.removePlayerFromRoster(player, teams)
+      const team = _.find(teams, {_id: player.teamId})
+      await this.sharedFunctionsService.removePlayerFromRoster(player._id, team)
       player.teamId = null
     }
     this.leagueDataService.updatePlayer(player)
@@ -137,7 +139,8 @@ export class LeagueProgressionService {
     player.retired = true
     player.lastYear = currentSeason.year
     if (player.teamId) {
-      await this.removePlayerFromRoster(player, teams)
+      const team = _.find(teams, {_id: player.teamId})
+      await this.sharedFunctionsService.removePlayerFromRoster(player._id, team)
       const currentContract = _.find(player.contracts, function(contract){
         return contract.firstYear + contract.years - 1 >= currentSeason.year
       })
@@ -148,28 +151,21 @@ export class LeagueProgressionService {
     await this.leagueDataService.updatePlayer(player)
   }
 
-async removePlayerFromRoster(player: Player, teams: Array<Team>) {
-    const team = _.find(teams, {_id: player.teamId})
-    _.remove(team.roster.batters, function(batter){
-      return batter.playerId === player._id
-    })
-    _.remove(team.roster.batterReserves, function(batter){
-      return batter.playerId === player._id
-    })
-    _.remove(team.roster.pitchers, function(batter){
-      return batter.playerId === player._id
-    })
-    _.remove(team.roster.pitcherReserves, function(batter){
-      return batter.playerId === player._id
-    })
-    await this.leagueDataService.updateTeam(team)
-  }
-
   setDraftOrder(currentSeason: Season) {
     const orderedTeams = this.sharedFunctionsService.getRecordOrderedTeams()
     for (let pick = 1; pick <= orderedTeams.length * 4; pick++) {
       currentSeason.draft.draftPicks.push(new DraftPick(pick, orderedTeams[(pick - 1) % orderedTeams.length]._id))
     }
     this.leagueDataService.updateSeason(currentSeason)
+  }
+
+  revokeAllTrades() {
+    const that = this
+    _.each(this.leagueDataService.trades, function(trade){
+      if (trade.state === that.staticListsService.tradeStatus.offered) {
+        trade.state = that.staticListsService.tradeStatus.expired
+        that.leagueDataService.updateTrade(trade)
+      }
+    })
   }
 }

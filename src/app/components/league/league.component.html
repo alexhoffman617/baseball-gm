@@ -6,10 +6,10 @@
   <mat-menu #sim="matMenu">
     <ng-container *ngIf="!leagueDataService.league?.simming">
       <ng-container *ngIf="leagueDataService.currentSeason?.phase === staticListsService.leaguePhases.freeAgency.name">
-        <ng-container *ngIf="leagueDataService.currentSeason?.preseasonDay === staticListsService.preseasonDays">
+        <ng-container *ngIf="leagueDataService.currentSeason?.preseasonDay >= staticListsService.preseasonDays">
           <button mat-menu-item (click)="sharedFunctionsService.updateSeasonToNextPhase()">Start Season</button>
         </ng-container>
-        <ng-container *ngIf="leagueDataService.currentSeason?.preseasonDay !== staticListsService.preseasonDays">
+        <ng-container *ngIf="leagueDataService.currentSeason?.preseasonDay < staticListsService.preseasonDays">
           <button mat-menu-item (click)="simPreseasonDays(1)">Sim Day</button>
           <button mat-menu-item (click)="simPreseasonDays(20)">Sim Free Agency</button>
         </ng-container>
@@ -40,6 +40,7 @@
   </mat-menu>
   <button mat-button [routerLink]="'/'+ leagueId + '/free-agents'">Free Agents</button>
   <button mat-button [routerLink]="'/'+ leagueId + '/draft'">Draft</button>
+  <button mat-button [routerLink]="'/'+ leagueId + '/trade'">Trade</button>
   <span class="spacer"></span>
   <button mat-button *ngIf="leagueDataService.league?.creatorAccountId === accountId" [routerLink]="'/'+ leagueId + '/admin'">Admin</button>
   <button mat-button (click)="authService.logout()">Logout</button>
