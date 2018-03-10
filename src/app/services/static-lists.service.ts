@@ -69,6 +69,9 @@ export class StaticListsService {
     centerField: 'CF',
     rightField: 'RF',
     designatedHitter: 'DH',
+    utilFielder: 'UTIL',
+    utilOutfielder: 'UOF',
+    utilInfielder: 'UIF',
     pitcher: 'P'
   }
 

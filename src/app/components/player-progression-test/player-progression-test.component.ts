@@ -66,7 +66,8 @@ export class PlayerProgressionTestComponent implements OnInit {
         this.batter.hittingAbility.power + this.improvement.power,
         this.batter.hittingAbility.patience + this.improvement.patience,
         this.batter.hittingAbility.speed + this.improvement.speed,
-        this.batter.hittingAbility.fielding + this.improvement.fielding
+        this.batter.hittingAbility.fielding + this.improvement.fielding,
+        0
       );
       this.batter.age++;
     }

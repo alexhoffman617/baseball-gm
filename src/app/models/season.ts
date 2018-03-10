@@ -1,4 +1,5 @@
 import { Draft } from './draft'
+import { FieldingSeasonStats, BatterSeasonStats, PitcherSeasonStats } from './player';
 
 export class Season {
   year: number;
@@ -9,6 +10,7 @@ export class Season {
   _id: string;
   phase: string
   draft: Draft
+  seasonStats: SeasonStats
   constructor(year: number, schedule: Array<ScheduledDay>, leagueId: string, phase: string) {
     this.year = year;
     this.schedule = schedule
@@ -17,6 +19,18 @@ export class Season {
     this.phase = phase
     this.preseasonDay = 1
     this.draft = new Draft()
+    this.seasonStats = new SeasonStats(this.year)
+  }
+}
+
+export class SeasonStats {
+    seasonBattingStats: BatterSeasonStats;
+    seasonPitchingStats: PitcherSeasonStats;
+    seasonFieldingStats: FieldingSeasonStats
+  constructor(year: number) {
+    this.seasonBattingStats = new BatterSeasonStats(year);
+    this.seasonPitchingStats = new PitcherSeasonStats(year);
+    this.seasonFieldingStats = new FieldingSeasonStats(year);
   }
 }
 

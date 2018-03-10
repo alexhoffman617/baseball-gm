@@ -35,6 +35,7 @@ export class TeamBatterRowComponent implements OnChanges {
   showSkills = false
   showStats = false
   showErrors = false
+  showStamina = false
 
   constructor(public leagueDataService: LeagueDataService,
     public sharedFunctionsService: SharedFunctionsService,
@@ -61,6 +62,7 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showSkills = false
       this.showStats = true
       this.showErrors = true
+      this.showStamina = false
     } else if (this.displaySet === 'fa') {
       this.showName = true
       this.showSeasonYear = false
@@ -72,6 +74,7 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showSkills = false
       this.showStats = false
       this.showErrors = false
+      this.showStamina = false
     } else {
       this.showName = true
       this.showSeasonYear = false
@@ -83,6 +86,7 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showSkills = false
       this.showStats = true
       this.showErrors = true
+      this.showStamina = true
     }
   }
 

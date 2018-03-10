@@ -240,14 +240,36 @@ async playDays(daysLeft) {
         gamePlayers.push(new GamePlayer(p.startingPosition, null, null, playerPitcher))
       }
     })
-
     _.each(gameTeam.roster.batters, function(rosterBatter){
       const playerBatter = _.find(teamPlayers, function(tp: Player){
         return tp._id === rosterBatter.playerId
       })
       gamePlayers.push(new GamePlayer(rosterBatter.startingPosition, rosterBatter.orderNumber, rosterBatter.startingPosition, playerBatter))
     })
+    this.replaceTiredBatters(gamePlayers)
     return gamePlayers
+  }
+
+  replaceTiredBatters(gamePlayers: Array<GamePlayer>) {
+    const that = this
+    const playerToReplace = _.find(gamePlayers, function(gamePlayer) {
+      return !!gamePlayer.orderNumber && gamePlayer.player.currentStamina < 30
+    })
+    if (playerToReplace) {
+      const orderedPlayers = _.orderBy(gamePlayers, function(g) {
+        return that.sharedFunctionsService.overallHittingOutOfPosition(g.player, playerToReplace.position)
+      }, 'desc')
+      const replacementPlayer = _.find(orderedPlayers, function(gp) {
+        return gp.player.currentStamina >= 30 && !gp.position
+      })
+      replacementPlayer.position = playerToReplace.position
+      replacementPlayer.played = playerToReplace.played
+      replacementPlayer.orderNumber = playerToReplace.orderNumber
+      playerToReplace.position = null
+      playerToReplace.played = null
+      playerToReplace.orderNumber = null
+      this.replaceTiredBatters(gamePlayers)
+    }
   }
 
   makeSureAllLineupsSet() {

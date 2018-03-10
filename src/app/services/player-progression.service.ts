@@ -55,7 +55,7 @@ export class PlayerProgressionService {
     const speedChange = Math.max(speedAgeChange + speedPerformanceChange, 1 - player.hittingAbility.speed);
     const patienceChange = Math.max(patienceAgeChange + patiencePerformanceChange, 1 - player.hittingAbility.patience);
     const fieldingChange = Math.max(fieldingAgeChange + fieldingPerformanceChange, 1 - player.hittingAbility.fielding);
-    return new HittingSkillset(contactChange, powerChange, patienceChange, speedChange, fieldingPerformanceChange);
+    return new HittingSkillset(contactChange, powerChange, patienceChange, speedChange, fieldingPerformanceChange, 0);
   }
 
   getAgeImprovement(ability: number, potential: number, age: number, peakAge: number) {

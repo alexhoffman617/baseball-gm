@@ -43,22 +43,24 @@ export class GeneratePlayerService {
       + this.staticListsService.lastNames[Math.round(Math.random() * (this.staticListsService.lastNames.length - 1))]
         if (!age) { age = Math.round(18 + Math.random() * 22) };
         const potential = new HittingSkillset(
-            this.generatePotentialValue(age, isProspect),
-            this.generatePotentialValue(age, isProspect),
-            this.generatePotentialValue(age, isProspect),
-            this.generatePotentialValue(age, isProspect),
-            this.generatePotentialValue(age, isProspect));
+          this.generatePotentialValue(age, isProspect),
+          this.generatePotentialValue(age, isProspect),
+          this.generatePotentialValue(age, isProspect),
+          this.generatePotentialValue(age, isProspect),
+          this.generatePotentialValue(age, isProspect),
+          this.generateBatterStamina());
 
         const skills = new HittingSkillset(
-            this.generateSkillValue('contact', age, potential),
-            this.generateSkillValue('power', age, potential),
-            this.generateSkillValue('patience', age, potential),
-            this.generateSkillValue('speed', age, potential),
-            this.generateSkillValue('fielding', age, potential));
+          this.generateSkillValue('contact', age, potential),
+          this.generateSkillValue('power', age, potential),
+          this.generateSkillValue('patience', age, potential),
+          this.generateSkillValue('speed', age, potential),
+          this.generateSkillValue('fielding', age, potential),
+          potential.stamina);
 
         const player = new Player(name, age, this.staticListsService.playerTypes.batter, this.getBattingSide(), this.getThrowingSide(),
-                       skills, potential, new PitchingSkillset(0, 0, 0, 'std'),
-                       new PitchingSkillset(0, 0, 0, 'std'), leagueId, teamId, year,
+                       skills, potential, new PitchingSkillset(0, 0, 0, 0, 'std'),
+                       new PitchingSkillset(0, 0, 0, 0, 'std'), leagueId, teamId, year,
                        this.getPrimaryPositions(), this.randomFaceService.generateRandomFace());
         player.hittingSeasonStats = [new BatterSeasonStats(year)]
         player.pitchingSeasonStats = [new PitcherSeasonStats(year)]
@@ -80,16 +82,18 @@ export class GeneratePlayerService {
             this.generatePotentialValue(age, isProspect),
             this.generatePotentialValue(age, isProspect),
             this.generatePotentialValue(age, isProspect),
+            this.generatePitcherStamina(),
             this.getPitcherType());
 
         const skills = new PitchingSkillset(
             this.generateSkillValue('velocity', age, potential),
             this.generateSkillValue('control', age, potential),
             this.generateSkillValue('movement', age, potential),
+            potential.stamina,
             potential.type);
 
         const player =  new Player(name, age, this.staticListsService.playerTypes.pitcher, this.getBattingSide(), this.getThrowingSide(),
-             new HittingSkillset(0, 0, 0, 0, 0), new HittingSkillset(0, 0, 0, 0, 0), skills,
+             new HittingSkillset(0, 0, 0, 0, 0, 0), new HittingSkillset(0, 0, 0, 0, 0, 0), skills,
             potential, leagueId, teamId, year, ['P'], this.randomFaceService.generateRandomFace());
         player.hittingSeasonStats = [new BatterSeasonStats(year)]
         player.pitchingSeasonStats = [new PitcherSeasonStats(year)]
@@ -169,6 +173,14 @@ export class GeneratePlayerService {
          }
       }
       return positions
+    }
+
+    generatePitcherStamina() {
+      return 20 + Math.round(Math.random() * 80)
+    }
+
+    generateBatterStamina() {
+      return 20 + Math.round(Math.random() * 80)
     }
 }
 

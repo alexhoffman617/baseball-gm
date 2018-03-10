@@ -37,7 +37,7 @@ export class PitcherProgressionService {
     const controlChange =  Math.max(controlAgeChange + controlPerformanceChange, 1 - player.pitchingAbility.control);
     const movementChange = Math.max(movementAgeChange + movementPerformanceChange, 1 - player.pitchingAbility.movement);
     const velocityChange = Math.max(velocityAgeChange + velocityPerformanceChange, 1 - player.pitchingAbility.velocity);
-    return new PitchingSkillset(velocityChange, controlChange, movementChange, player.pitchingAbility.type);
+    return new PitchingSkillset(velocityChange, controlChange, movementChange, 0, player.pitchingAbility.type);
   }
 
   getAgeImprovement(ability: number, potential: number, age: number, peakAge: number) {

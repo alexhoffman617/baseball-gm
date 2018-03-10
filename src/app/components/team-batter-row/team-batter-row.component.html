@@ -59,6 +59,9 @@
   [{{hittingProgression?.hittingSkillset.speed}}]</span>
   ({{ batter?.hittingPotential.speed }})
 </td>
+<td *ngIf="showStamina">
+  {{ batter?.currentStamina }}/100
+</td>
 <td *ngIf="showStats">
   {{ sharedFunctionsService.atBats(seasonStats) }}
 </td>

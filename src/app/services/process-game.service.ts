@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AtBat, Game, TeamStats, GamePlayer, GameEvent, PitcherAppearance  } from '../models/game';
-import { Player, PitcherSeasonStats, BatterSeasonStats  } from '../models/player';
+import { Player, PitcherSeasonStats, BatterSeasonStats, FieldingSeasonStats  } from '../models/player';
 import { LeagueDataService } from '../services/league-data.service';
 import * as _ from 'lodash';
+import { StaticListsService } from './static-lists.service';
 
 @Injectable()
 export class ProcessGameService {
-    constructor(private leagueDataService: LeagueDataService) {
+    constructor(private leagueDataService: LeagueDataService, private staticListsService: StaticListsService) {
 
     }
 
@@ -20,22 +21,40 @@ export class ProcessGameService {
       const players = this.leagueDataService.getPlayersByTeamId(teamId)
       _.each(teamStats.pitcherAppearances, function(appearance){
         const pitcher = _.find(players, { _id: appearance.pitcherId})
-        that.updatePitcherSeasonStatsFromAppearances(appearance, pitcher)
+        const pitcherSeasonStats = _.find(pitcher.pitchingSeasonStats,
+          {year: that.leagueDataService.currentSeason.year})
+        that.updatePitcherSeasonStatsFromAppearances(appearance, pitcherSeasonStats)
+        that.updatePitcherSeasonStatsFromAppearances(appearance, that.leagueDataService.currentSeason.seasonStats.seasonPitchingStats)
         pitcher.currentStamina -= 50
       })
       _.each(players, function(player){
-        that.updateBatterSeasonStatsFromGameEvents(teamStats.events, player)
-        that.updateFieldingStatsFromGameEvents(otherTeamStats.events, player, gamePlayers)
-        player.currentStamina = Math.min(player.currentStamina + 10, 100)
+        const batterSeasonStats = _.find(player.hittingSeasonStats,
+          {year: that.leagueDataService.currentSeason.year})
+        const playerPlayed = that.updateBatterSeasonStatsFromGameEvents(teamStats.events, batterSeasonStats, player._id)
+        that.updateBatterSeasonStatsFromGameEvents(teamStats.events,
+          that.leagueDataService.currentSeason.seasonStats.seasonBattingStats, player._id)
+        const fieldingSeasonStats = _.find(player.fieldingSeasonStats,
+          {year: that.leagueDataService.currentSeason.year})
+        that.updateFieldingStatsFromGameEvents(otherTeamStats.events, gamePlayers, fieldingSeasonStats, player._id)
+        that.updateFieldingStatsFromGameEvents(otherTeamStats.events, gamePlayers,
+          that.leagueDataService.currentSeason.seasonStats.seasonFieldingStats, player._id)
+        if (player.playerType === that.staticListsService.playerTypes.pitcher) {
+          player.currentStamina = Math.min(player.currentStamina + 10, 100)
+        } else {
+          if (playerPlayed) {
+            player.currentStamina = Math.max(player.currentStamina - 10 + Math.round(player.hittingAbility.stamina / 10), 0)
+          } else {
+            player.currentStamina = Math.min(player.currentStamina + 50, 100)
+          }
+        }
       })
     }
 
-    updateBatterSeasonStatsFromGameEvents(events: Array<GameEvent>, batter: Player) {
-      const batterSeasonStats = _.find(batter.hittingSeasonStats,
-           {year: this.leagueDataService.currentSeason.year})
+    updateBatterSeasonStatsFromGameEvents(events: Array<GameEvent>, batterSeasonStats: BatterSeasonStats, batterId: string) {
+
       let gamePlayed = false
       _.each(events, function(event){
-        if (event.batterId === batter._id) {
+        if (event.batterId === batterId) {
           gamePlayed = true
           if (event.outcome.result === 'sacrifice fly') {
             batterSeasonStats.sacrificeFlies++
@@ -65,7 +84,7 @@ export class ProcessGameService {
           }
           batterSeasonStats.rbis += event.outcome.scoredIds.length
         }
-        if (event.stolenBaseAttempt && event.stolenBaseAttempt.runnerId === batter._id) {
+        if (event.stolenBaseAttempt && event.stolenBaseAttempt.runnerId === batterId) {
           if (event.stolenBaseAttempt.successful) {
             batterSeasonStats.steals++
           } else {
@@ -76,11 +95,10 @@ export class ProcessGameService {
       if (gamePlayed) {
         batterSeasonStats.gamesPlayed ++
       }
+      return gamePlayed
     }
 
-    updatePitcherSeasonStatsFromAppearances(appearance: PitcherAppearance, pitcher: Player) {
-      const pitcherSeasonStats = _.find(pitcher.pitchingSeasonStats,
-          {year: this.leagueDataService.currentSeason.year})
+    updatePitcherSeasonStatsFromAppearances(appearance: PitcherAppearance, pitcherSeasonStats: PitcherSeasonStats) {
       pitcherSeasonStats.appearances++
       if (appearance.start) {
         pitcherSeasonStats.starts++
@@ -109,11 +127,10 @@ export class ProcessGameService {
       }
     }
 
-    updateFieldingStatsFromGameEvents(otherTeamEvents: Array<GameEvent>, player: Player, gamePlayers: Array<GamePlayer>) {
-      const fieldingSeasonStats = _.find(player.fieldingSeasonStats,
-        {year: this.leagueDataService.currentSeason.year})
+    updateFieldingStatsFromGameEvents(otherTeamEvents: Array<GameEvent>,
+      gamePlayers: Array<GamePlayer>, fieldingSeasonStats: FieldingSeasonStats, playerId: string) {
       _.each(otherTeamEvents, function(event){
-        if (event.outcome && event.outcome.fielderId === player._id) {
+        if (event.outcome && event.outcome.fielderId === playerId) {
           if (event.outcome.result === 'out') {
             fieldingSeasonStats.putOuts++
           } else if (event.outcome.result === 'error') {
@@ -122,7 +139,7 @@ export class ProcessGameService {
         }
       })
       const gamePlayer = _.find(gamePlayers, function(gp){
-        return gp.player._id === player._id
+        return gp.player._id === playerId
       })
       if (gamePlayer && gamePlayer.played) {
         fieldingSeasonStats.appearances[gamePlayer.played]++

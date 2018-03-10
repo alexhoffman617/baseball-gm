@@ -103,13 +103,15 @@ export class HittingSkillset {
   speed: number;
   patience: number;
   fielding: number;
+  stamina: number;
 
-  constructor(contact: number, power: number, patience: number, speed: number, fielding: number) {
+  constructor(contact: number, power: number, patience: number, speed: number, fielding: number, stamina: number) {
     this.contact = contact;
     this.power = power;
     this.speed = speed;
     this.patience = patience;
     this.fielding = fielding;
+    this.stamina = stamina;
   }
 }
 
@@ -118,11 +120,13 @@ export class PitchingSkillset {
   control: number;
   movement: number;
   type: string;
+  stamina: number;
 
-  constructor(velocity: number, control: number, movement: number, type: string) {
+  constructor(velocity: number, control: number, movement: number, stamina: number, type: string) {
     this.velocity = velocity;
     this.control = control;
     this.movement = movement;
+    this.stamina = stamina;
     this.type = type;
   }
 }
