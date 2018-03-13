@@ -33,6 +33,7 @@ export class TeamPitcherRowComponent implements OnChanges {
   showOverall = false
   showSkills = false
   showStats = false
+  showStamina = false
 
   constructor(private leagueDataService: LeagueDataService,
      public staticListsService: StaticListsService,
@@ -55,6 +56,7 @@ export class TeamPitcherRowComponent implements OnChanges {
       this.showOverall = false
       this.showSkills = false
       this.showStats = true
+      this.showStamina = false
     } else if (this.displaySet === 'fa') {
       this.showName = true
       this.showPosition = true
@@ -64,6 +66,7 @@ export class TeamPitcherRowComponent implements OnChanges {
       this.showOverall = true
       this.showSkills = false
       this.showStats = false
+      this.showStamina = false
     } else {
       this.showName = true
       this.showPosition = false
@@ -73,6 +76,7 @@ export class TeamPitcherRowComponent implements OnChanges {
       this.showOverall = true
       this.showSkills = false
       this.showStats = true
+      this.showStamina = true
     }
   }
 

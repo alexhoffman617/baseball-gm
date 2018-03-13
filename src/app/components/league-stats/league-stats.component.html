@@ -1,0 +1,67 @@
+<mat-tab-group>
+  <mat-tab label="Avg Batter Stats">
+    <table>
+      <thead>
+        <th>Year</th>
+        <th>AVG</th>
+        <th>OBP</th>
+        <th>SLG</th>
+        <th>BABIP</th>
+        <th>2B/G</th>
+        <th>3B/G</th>
+        <th>HR/G</th>
+        <th>K%</th>
+        <th>BB%</th>
+        <th>SF/G</th>
+        <th>SB/G</th>
+        <th>SB%</th>
+        <th>R/G</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let season of leagueDataService?.seasons">
+          <td>{{season.year}}</td>
+          <td>{{sharedFunctionsService.average(season.seasonStats.seasonBattingStats)}}</td>
+          <td>{{sharedFunctionsService.obp(season.seasonStats.seasonBattingStats)}}</td>
+          <td>{{sharedFunctionsService.slg(season.seasonStats.seasonBattingStats)}}</td>
+          <td>{{sharedFunctionsService.batbabip(season.seasonStats.seasonBattingStats)}}</td>
+          <td>{{season.seasonStats.seasonBattingStats.doubles / season.seasonStats.seasonBattingStats.gamesPlayed * 9}}</td>
+          <td>{{season.seasonStats.seasonBattingStats.triples / season.seasonStats.seasonBattingStats.gamesPlayed * 9}}</td>
+          <td>{{season.seasonStats.seasonBattingStats.homeruns / season.seasonStats.seasonBattingStats.gamesPlayed * 9}}</td>
+          <td>{{sharedFunctionsService.strikeoutPercentage(season.seasonStats.seasonBattingStats)}}</td>
+          <td>{{sharedFunctionsService.walkPercentage(season.seasonStats.seasonBattingStats)}}</td>
+          <td>{{season.seasonStats.seasonBattingStats.sacrificeFlies / season.seasonStats.seasonBattingStats.gamesPlayed * 9}}</td>
+          <td>{{season.seasonStats.seasonBattingStats.steals / season.seasonStats.seasonBattingStats.gamesPlayed * 9}}</td>
+          <td>{{season.seasonStats.seasonBattingStats.steals / (season.seasonStats.seasonBattingStats.caughtStealing + season.seasonStats.seasonBattingStats.steals)}}</td>
+          <td>{{season.seasonStats.seasonBattingStats.runs / season.seasonStats.seasonBattingStats.gamesPlayed * 9}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-tab>
+  <mat-tab label="Avg Pitcher Stats">
+    <table>
+      <thead>
+        <th>Year</th>
+        <th>IP</th>
+        <th>ERA</th>
+        <th>FIP</th>
+        <th>WHIP</th>
+        <th>BABIP</th>
+        <th>K/9</th>
+        <th>BB/9</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let season of leagueDataService?.seasons">
+          <td>{{season.year}}</td>
+          <td>{{season.seasonStats.seasonPitchingStats.innings}}</td>
+          <td>{{sharedFunctionsService.era(season.seasonStats.seasonPitchingStats)}}</td>
+          <td>{{sharedFunctionsService.fip(season.seasonStats.seasonPitchingStats)}}</td>
+          <td>{{sharedFunctionsService.whip(season.seasonStats.seasonPitchingStats)}}</td>
+          <td>{{sharedFunctionsService.pitchbabip(season.seasonStats.seasonPitchingStats)}}</td>
+          <td>{{sharedFunctionsService.strikeoutsPerNine(season.seasonStats.seasonPitchingStats)}}</td>
+          <td>{{sharedFunctionsService.walksPerNine(season.seasonStats.seasonPitchingStats)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-tab>
+  <mat-tab label="Avg Fielding Stats"></mat-tab>
+</mat-tab-group>

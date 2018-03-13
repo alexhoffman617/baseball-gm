@@ -1,6 +1,6 @@
 <div class="view-container">
   <div>
-    <h3> {{ team?.location }} {{ team?.name }}</h3>
+    <h3> {{ team?.location }} {{ team?.name }} ({{ sharedFunctionsService.getWins(team?._id) }}-{{ sharedFunctionsService.getLosses(team?._id) }})</h3>
   </div>
   <div>
     <h4> Salary: {{ sharedFunctionsService.salaryWithCommas(sharedFunctionsService.getTeamSalary(team)) }} </h4>
@@ -53,6 +53,7 @@
         <th>Age</th>
         <th>Role</th>
         <th>Overall</th>
+        <th>Stamina</th>
         <th>W</th>
         <th>L</th>
         <th>SV</th>

@@ -56,7 +56,8 @@ export class StaticListsService {
   'SP4',
   'SP5',
   'CL',
-  'RP'
+  'RP1',
+  'LR'
   ]
 
   positions = {

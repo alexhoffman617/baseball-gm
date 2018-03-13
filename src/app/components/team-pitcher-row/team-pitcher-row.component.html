@@ -24,6 +24,9 @@
   [{{ overallPitching(pitchingProgression?.pitchingSkillset) }}]</span>
   ({{ overallPitching(pitcher?.pitchingPotential) }})
 </td>
+<td *ngIf="showStamina">
+  {{ pitcher?.currentStamina }}/100
+</td>
 <td *ngIf="showSkills">
   {{ pitcher?.pitchingAbility.velocity }}
   <span *ngIf="isPitchingProgression()"

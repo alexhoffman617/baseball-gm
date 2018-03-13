@@ -4,6 +4,7 @@ import { AtBatService } from '../services/at-bat.service';
 import { StaticListsService } from '../services/static-lists.service';
 import * as _ from 'lodash';
 import { Player } from 'app/models/player';
+import { SharedFunctionsService } from './shared-functions.service';
 
 @Injectable()
 export class PlayGameService {
@@ -38,7 +39,8 @@ export class PlayGameService {
     leagueMaxHitFreq = .285
     leagueMinHitFreq = .17
 
-    constructor(public atBatService: AtBatService, private staticListsService: StaticListsService) {
+    constructor(public atBatService: AtBatService, private staticListsService: StaticListsService,
+    private sharedFunctionsService: SharedFunctionsService) {
 
     }
 
@@ -103,22 +105,15 @@ export class PlayGameService {
       this.halfInningEvents = new Array<GameEvent>()
       this.battingTeamStats = battingTeamStats
       this.pitchingTeamStats = pitchingTeamStats
-      if (this.currentInning === 8) {
-        const rp = _.find(pitchingTeam, {'position': 'RP'})
-        this.changePitchers(this.pitchingTeamStats, rp, pitchingTeam)
-      }
-      if (this.currentInning === 9) {
-        const rp = _.find(pitchingTeam, {'position': 'CL'})
-        this.changePitchers(this.pitchingTeamStats, rp, pitchingTeam)
-      }
       while (this.outs < 3 && (side !== 'Bottom' || this.currentInning < 9 || this.battingTeamStats.runs <= this.pitchingTeamStats.runs)) {
+        this.currentPitcherAppearance = this.pitchingTeamStats.pitcherAppearances[this.pitchingTeamStats.pitcherAppearances.length - 1]
+        this.changePitchersIfNeeded(pitchingTeamStats, pitchingTeam, battingTeamStats)
         const batter = _.find(battingTeam, function(player){
           return player.orderNumber === (that.battingTeamStats.events.length % 9 + 1);
         }).player;
         const pitcher = _.find(pitchingTeam, function(player){
           return player.position  === 'P';
         }).player;
-        this.currentPitcherAppearance = this.pitchingTeamStats.pitcherAppearances[this.pitchingTeamStats.pitcherAppearances.length - 1]
         if (this.doesRunnerAttemptSteal()) {
           this.stealAttempt(pitcher, pitchingTeam)
           continue
@@ -139,26 +134,27 @@ export class PlayGameService {
       if (outcome.result === 'homerun') {
         pitcherAppearance.homeruns++
       }
+      pitcherAppearance.pitches += outcome.pitches
     }
 
-    doesRunnerAttemptSteal(){
-      if(this.secondBase && !this.thirdBase){
-        if(Math.random() < (this.secondBase.hittingAbility.speed / 100 - .5) / 3){
+    doesRunnerAttemptSteal() {
+      if (this.secondBase && !this.thirdBase) {
+        if (Math.random() < (this.secondBase.hittingAbility.speed / 100 - .5) / 3) {
           return true
         }
-      } else if(this.firstBase && !this.secondBase){
-        if(Math.random() < (this.firstBase.hittingAbility.speed / 100 - .2) / 3){
+      } else if (this.firstBase && !this.secondBase) {
+        if (Math.random() < (this.firstBase.hittingAbility.speed / 100 - .2) / 3) {
           return true
         }
       }
       return false
     }
 
-    stealAttempt(pitcher: Player, pitchingTeam: Array<GamePlayer>){
-      var that = this
+    stealAttempt(pitcher: Player, pitchingTeam: Array<GamePlayer>) {
+      const that = this
       const catcher =  _.find(pitchingTeam, {position: that.staticListsService.positions.catcher})
-      if(this.secondBase && !this.thirdBase){
-        if(Math.random() < this.secondBase.hittingAbility.speed / 100 - .1 - (.2 * catcher.player.hittingAbility.fielding - 40) / 100){
+      if (this.secondBase && !this.thirdBase) {
+        if (Math.random() < this.secondBase.hittingAbility.speed / 100 - .1 - (.2 * catcher.player.hittingAbility.fielding - 40) / 100) {
           this.battingTeamStats.events.push(new GameEvent(null, pitcher._id,
             null, new StolenBaseAttempt(true, this.secondBase._id, catcher.player._id)))
           this.thirdBase = this.secondBase
@@ -172,8 +168,8 @@ export class PlayGameService {
           this.firstBase = null
           this.outs ++
         }
-      } else if(this.firstBase && !this.secondBase){
-        if(Math.random() < this.firstBase.hittingAbility.speed / 100  - (.2 * catcher.player.hittingAbility.fielding - 40) / 100){
+      } else if (this.firstBase && !this.secondBase) {
+        if (Math.random() < this.firstBase.hittingAbility.speed / 100  - (.2 * catcher.player.hittingAbility.fielding - 40) / 100) {
           this.battingTeamStats.events.push(new GameEvent(null, pitcher._id,
             null, new StolenBaseAttempt(true, this.firstBase._id, catcher.player._id)))
           this.secondBase = this.firstBase
@@ -476,7 +472,113 @@ export class PlayGameService {
       }
     }
 
+    changePitchersIfNeeded(pitchingTeamStats: TeamStats, pitchingTeam: Array<GamePlayer>, battingTeamStats: TeamStats) {
+      if (this.currentPitcherAppearance.start) {
+        if ((this.currentInning + 2 < this.currentPitcherAppearance.runs || this.currentPitcherAppearance.runs > 5)
+            || this.currentPitcherAppearance.pitches > 100
+            || (pitchingTeamStats.runs > battingTeamStats.runs && pitchingTeamStats.runs - battingTeamStats.runs < 4
+               && this.currentInning >= 9)) {
+          this.changePitchers(pitchingTeamStats, this.chooseNextPitcher(pitchingTeamStats, pitchingTeam, battingTeamStats), pitchingTeam)
+        }
+      } else  if ((this.currentInning > 6 && (this.currentPitcherAppearance.innings >= 2 || this.currentPitcherAppearance.pitches > 40))
+          || this.currentPitcherAppearance.pitches > 60
+          || this.currentPitcherAppearance.runs > 3
+          || (pitchingTeamStats.runs > battingTeamStats.runs && pitchingTeamStats.runs - battingTeamStats.runs < 4
+            && this.currentInning >= 9 && _.find(pitchingTeam, {'position': 'CL'}))) {
+            this.changePitchers(pitchingTeamStats, this.chooseNextPitcher(pitchingTeamStats, pitchingTeam, battingTeamStats), pitchingTeam)
+      }
+    }
+
+    chooseNextPitcher(pitchingTeamStats: TeamStats, pitchingTeam: Array<GamePlayer>, battingTeamStats: TeamStats) {
+      if (this.currentInning < 5) {
+        return this.getLongReliever(pitchingTeam)
+      } else if (this.currentInning < 7)  {
+        return this.getFreshestPitcher(pitchingTeam)
+      } else if (this.currentInning === 7 || this.currentInning === 8)  {
+        if (pitchingTeamStats.runs >= battingTeamStats.runs && pitchingTeamStats.runs - battingTeamStats.runs < 4) {
+          return this.getBestPitcher(pitchingTeam)
+        } else {
+          return this.getFreshestPitcher(pitchingTeam)
+        }
+      } else if (this.currentInning >= 9) {
+        if (pitchingTeamStats.runs > battingTeamStats.runs && pitchingTeamStats.runs - battingTeamStats.runs < 4) {
+          return this.getCloser(pitchingTeam)
+        } else if (pitchingTeamStats.runs === battingTeamStats.runs) {
+          return this.getBestPitcher(pitchingTeam)
+        } else {
+          return this.getFreshestPitcher(pitchingTeam)
+        }
+      }
+    }
+
+    getBestPitcher(pitchingTeam: Array<GamePlayer>) {
+      const that = this
+      const rp = _.find(pitchingTeam, {'position': 'RP1'})
+      if (rp && !rp.played && rp.player.currentStamina > 40) {
+        return rp
+      } else {
+        const eligiblePitchers = _.filter(pitchingTeam, function(gp) {
+          return !gp.position && gp.player.playerType === that.staticListsService.playerTypes.pitcher
+          && !gp.played && gp.player.currentStamina > 40
+        })
+        const orderedPitchers = _.orderBy(eligiblePitchers, function(ep){
+          return that.sharedFunctionsService.overallAbility(ep.player)
+        }, 'desc')
+        if (orderedPitchers[0]) {
+          return orderedPitchers[0]
+        } else {
+          return _.find(pitchingTeam, {'position': 'CL'})
+        }
+      }
+    }
+
+    getCloser(pitchingTeam: Array<GamePlayer>) {
+      const closer = _.find(pitchingTeam, {'position': 'CL'})
+      if (closer && !closer.played && closer.player.currentStamina > 40) {
+        return closer
+      } else {
+        return this.getBestPitcher(pitchingTeam)
+      }
+    }
+
+    getLongReliever(pitchingTeam: Array<GamePlayer>) {
+      const longReliever = _.find(pitchingTeam, {'position': 'LR'})
+      if (longReliever && !longReliever.played && longReliever.player.currentStamina > 40) {
+        return longReliever
+      } else {
+        return this.getFreshestPitcher(pitchingTeam)
+      }
+    }
+
+    getFreshestPitcher(pitchingTeam: Array<GamePlayer>) {
+      const that = this
+      const eligiblePitchers = _.filter(pitchingTeam, function(gp) {
+        return !gp.position && gp.player.playerType === that.staticListsService.playerTypes.pitcher
+        && !gp.played && gp.player.currentStamina > 40
+      })
+      const orderedPitchers = _.sortBy(eligiblePitchers, function(ep){
+        return [ep.player.currentStamina,  that.sharedFunctionsService.overallAbility(ep.player)]
+      }, ['desc', 'desc'])
+      if (orderedPitchers[0]) {
+        return orderedPitchers[0]
+      } else {
+        const lr = _.find(pitchingTeam, {'position': 'LR'})
+        if (lr && !lr.played && lr.player.currentStamina > 40) {
+          return lr
+        }
+        const rp = _.find(pitchingTeam, {'position': 'RP1'})
+        if (rp && !rp.played && rp.player.currentStamina > 40) {
+          return rp
+        }
+        const cl = _.find(pitchingTeam, {'position': 'CL'})
+        if (cl && !cl.played && cl.player.currentStamina > 40) {
+          return cl
+        }
+      }
+    }
+
     changePitchers(teamStats: TeamStats, gamePlayer: GamePlayer, pitchingTeam: Array<GamePlayer>) {
+      if (!gamePlayer) { return }
       const pitcherAppearance = new PitcherAppearance(gamePlayer.player._id, false)
       const currentPitcher = _.find(pitchingTeam, function(player){
         return player.position  === 'P';

@@ -25,7 +25,11 @@ export class ProcessGameService {
           {year: that.leagueDataService.currentSeason.year})
         that.updatePitcherSeasonStatsFromAppearances(appearance, pitcherSeasonStats)
         that.updatePitcherSeasonStatsFromAppearances(appearance, that.leagueDataService.currentSeason.seasonStats.seasonPitchingStats)
-        pitcher.currentStamina -= 50
+        if (appearance.start) {
+          pitcher.currentStamina = 0
+        } else {
+          pitcher.currentStamina = Math.max(pitcher.currentStamina - (20 + appearance.pitches), 0)
+        }
       })
       _.each(players, function(player){
         const batterSeasonStats = _.find(player.hittingSeasonStats,
@@ -39,10 +43,11 @@ export class ProcessGameService {
         that.updateFieldingStatsFromGameEvents(otherTeamStats.events, gamePlayers,
           that.leagueDataService.currentSeason.seasonStats.seasonFieldingStats, player._id)
         if (player.playerType === that.staticListsService.playerTypes.pitcher) {
-          player.currentStamina = Math.min(player.currentStamina + 10, 100)
+          player.currentStamina = Math.min(player.currentStamina + 20, 100)
         } else {
           if (playerPlayed) {
-            player.currentStamina = Math.max(player.currentStamina - 10 + Math.round(player.hittingAbility.stamina / 10), 0)
+            player.currentStamina = Math.max(player.currentStamina - Math.round((13 - player.hittingAbility.stamina / 10) * Math.random()),
+            0)
           } else {
             player.currentStamina = Math.min(player.currentStamina + 50, 100)
           }
@@ -108,6 +113,8 @@ export class ProcessGameService {
       pitcherSeasonStats.strikeouts += appearance.strikeouts
       pitcherSeasonStats.walks += appearance.walks
       pitcherSeasonStats.hits += appearance.hits
+      pitcherSeasonStats.homeruns += appearance.homeruns
+      pitcherSeasonStats.iffb += appearance.iffb
       pitcherSeasonStats.earnedRuns += appearance.earnedRuns
       pitcherSeasonStats.runs += appearance.runs
       if (appearance.win) {

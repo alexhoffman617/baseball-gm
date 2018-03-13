@@ -249,9 +249,9 @@ export class AtBatService {
     const fieldingPosition = this.getFieldingPosition(fieldingTeam, hitDirection, trajectory)
     const fielder = this.getFielder(fieldingTeam, fieldingPosition);
     if (Math.random() < this.getErrorChance(trajectory, contactType, isHomeTeam, fielder, fieldingPosition)) {
-      return new AtBat('error', contactType, trajectory, hitDirection, fielder._id)
+      return new AtBat('error', contactType, trajectory, hitDirection, fielder._id, _.random(1, 7))
     }
-      return new AtBat('out', contactType, trajectory, hitDirection, fielder._id)
+      return new AtBat('out', contactType, trajectory, hitDirection, fielder._id, _.random(1, 7))
     }
 
   atBat(batter, pitcher, fieldingTeam, fieldingTeamIsHome = false) {
@@ -261,9 +261,9 @@ export class AtBatService {
      const walkProb = Math.max(0, this.getModifierPercentage(0, .07, batter.hittingAbility.patience, false)
      + this.getModifierPercentage(0, .07, pitcher.pitchingAbility.control, true) + .02);
      if (contactRand < strikeOutProb) {
-      return new AtBat('strikeout', 'none', 'none', 'none', '');
+      return new AtBat('strikeout', 'none', 'none', 'none', '', _.random(3, 7));
      } else if (contactRand < strikeOutProb + walkProb) {
-      return new AtBat('walk', 'none', 'none', 'none', '');
+      return new AtBat('walk', 'none', 'none', 'none', '', _.random(4, 7));
      } else {
       const contactTypeRand = Math.random();
       const battingSide = batter.bats === 'B' ? (pitcher.throws === 'L' ? 'R' : 'L') : batter.bats;
@@ -277,14 +277,15 @@ export class AtBatService {
           if (Math.random() < this.getFieldingModifiedFieldedChance(.65, 'gb', hitDirection, fieldingTeam)) {
             return this.getFieldedBallOutcome('gb', hitDirection, 'hard', fieldingTeam, fieldingTeamIsHome);
           } else {
-            return new AtBat(this.getHitType(0, 0, .175 + batter.hittingAbility.contact * .002), 'hard', 'gb', hitDirection, '');
+            return new AtBat(this.getHitType(0, 0, .175 + batter.hittingAbility.contact * .002), 'hard',
+            'gb', hitDirection, '', _.random(1, 7));
           }
         } else if (trajectoryRandom < this.getTrajectoryPercentage(pitcher, 'gb') + this.getTrajectoryPercentage(pitcher, 'ld')) {
           if (Math.random() < this.getFieldingModifiedFieldedChance(.3, 'ld', hitDirection, fieldingTeam)) {
             return this.getFieldedBallOutcome('ld', hitDirection, 'hard', fieldingTeam, fieldingTeamIsHome);
           } else {
              return new AtBat(this.getHitType( batter.hittingAbility.power * .006 - .05,
-              batter.hittingAbility.speed, .2 + batter.hittingAbility.contact * .004), 'hard', 'ld', hitDirection, '');
+              batter.hittingAbility.speed, .2 + batter.hittingAbility.contact * .004), 'hard', 'ld', hitDirection, '', _.random(1, 7));
           }
          } else if (trajectoryRandom < this.getTrajectoryPercentage(pitcher, 'gb') +
          this.getTrajectoryPercentage(pitcher, 'ld') + this.getTrajectoryPercentage(pitcher, 'fb')) {
@@ -292,7 +293,7 @@ export class AtBatService {
             return this.getFieldedBallOutcome('fb', hitDirection, 'hard', fieldingTeam, fieldingTeamIsHome);
           } else {
              return new AtBat(this.getHitType(.1 + batter.hittingAbility.power * .007,
-              batter.hittingAbility.speed, .2 + batter.hittingAbility.contact * .004), 'hard', 'fb', hitDirection, '');
+              batter.hittingAbility.speed, .2 + batter.hittingAbility.contact * .004), 'hard', 'fb', hitDirection, '', _.random(1, 7));
           }
         } else {
           return this.getFieldedBallOutcome('iffb', hitDirection, 'hard', fieldingTeam, fieldingTeamIsHome);
@@ -303,14 +304,16 @@ export class AtBatService {
           if (Math.random() < this.getFieldingModifiedFieldedChance(.7, 'gb', hitDirection, fieldingTeam)) {
             return this.getFieldedBallOutcome('gb', hitDirection, 'medium', fieldingTeam, fieldingTeamIsHome);
           } else {
-            return new AtBat(this.getHitType(0, 0, .175 + batter.hittingAbility.contact * .003), 'medium', 'gb', hitDirection, '');
+            return new AtBat(this.getHitType(0, 0, .175 + batter.hittingAbility.contact * .003), 'medium',
+            'gb', hitDirection, '', _.random(1, 7));
           }
         } else if (trajectoryRandom < this.getTrajectoryPercentage(pitcher, 'gb') + this.getTrajectoryPercentage(pitcher, 'ld')) {
           if (Math.random() < this.getFieldingModifiedFieldedChance(.35, 'ld', hitDirection, fieldingTeam)) {
             return this.getFieldedBallOutcome('ld', hitDirection, 'medium', fieldingTeam, fieldingTeamIsHome);
           } else {
              return new AtBat(this.getHitType(batter.hittingAbility.power * .002 - .025,
-              batter.hittingAbility.speed,  batter.hittingAbility.contact * .004), 'medium', 'ld', hitDirection, '');
+              batter.hittingAbility.speed,  batter.hittingAbility.contact * .004), 'medium',
+              'ld', hitDirection, '', _.random(1, 7));
           }
          } else if (trajectoryRandom < this.getTrajectoryPercentage(pitcher, 'gb') +
          this.getTrajectoryPercentage(pitcher, 'ld') + this.getTrajectoryPercentage(pitcher, 'fb')) {
@@ -318,7 +321,7 @@ export class AtBatService {
             return this.getFieldedBallOutcome('fb', hitDirection, 'medium', fieldingTeam, fieldingTeamIsHome);
           } else {
              return new AtBat(this.getHitType(batter.hittingAbility.power * .004 - .025, batter.hittingAbility.speed,
-              batter.hittingAbility.contact * .004), 'medium', 'fb', hitDirection, '');
+              batter.hittingAbility.contact * .004), 'medium', 'fb', hitDirection, '', _.random(1, 7));
           }
         } else {
           return this.getFieldedBallOutcome('iffb', hitDirection, 'medium', fieldingTeam, fieldingTeamIsHome);
@@ -329,20 +332,22 @@ export class AtBatService {
           if (Math.random() < this.getFieldingModifiedFieldedChance(.75, 'gb', hitDirection, fieldingTeam)) {
             return this.getFieldedBallOutcome('gb', hitDirection, 'soft', fieldingTeam, fieldingTeamIsHome);
           } else {
-            return new AtBat('single', 'soft', 'gb', hitDirection, '');
+            return new AtBat('single', 'soft', 'gb', hitDirection, '', _.random(1, 7));
           }
         } else if (trajectoryRandom < this.getTrajectoryPercentage(pitcher, 'gb') + this.getTrajectoryPercentage(pitcher, 'ld')) {
           if (Math.random() < this.getFieldingModifiedFieldedChance(.5, 'ld', hitDirection, fieldingTeam)) {
             return this.getFieldedBallOutcome('ld', hitDirection, 'soft', fieldingTeam, fieldingTeamIsHome);
           } else {
-            return new AtBat(this.getHitType(0, 0,  batter.hittingAbility.contact * .003 + .05), 'soft', 'ld', hitDirection, '');
+            return new AtBat(this.getHitType(0, 0,  batter.hittingAbility.contact * .003 + .05), 'soft',
+            'ld', hitDirection, '', _.random(1, 7));
           }
          } else if (trajectoryRandom < this.getTrajectoryPercentage(pitcher, 'gb') +
          this.getTrajectoryPercentage(pitcher, 'ld') + this.getTrajectoryPercentage(pitcher, 'fb')) {
           if (Math.random() < this.getFieldingModifiedFieldedChance(.85, 'fb', hitDirection, fieldingTeam)) {
             return this.getFieldedBallOutcome('fb', hitDirection, 'soft', fieldingTeam, fieldingTeamIsHome);
           } else {
-            return new AtBat(this.getHitType(0, 0, batter.hittingAbility.contact * .003 + .05), 'soft', 'fb', hitDirection, '');
+            return new AtBat(this.getHitType(0, 0, batter.hittingAbility.contact * .003 + .05), 'soft',
+            'fb', hitDirection, '', _.random(1, 7));
           }
         } else {
           return this.getFieldedBallOutcome('iffb', hitDirection, 'soft', fieldingTeam, fieldingTeamIsHome);

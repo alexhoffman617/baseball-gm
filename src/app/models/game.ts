@@ -65,7 +65,7 @@ export class StolenBaseAttempt {
     runnerId: string
     catcherId: string
 
-    constructor(successful: boolean, runnerId: string, catcherId: string){
+    constructor(successful: boolean, runnerId: string, catcherId: string) {
       this.successful = successful
       this.runnerId = runnerId
       this.catcherId = catcherId
@@ -80,7 +80,8 @@ export class AtBat {
     fielderId: string;
     scoredIds: Array<string>;
     batterScored: boolean;
-    constructor(result: string, contact: string, trajectory: string, direction: string, fielderId: string) {
+    pitches: number;
+    constructor(result: string, contact: string, trajectory: string, direction: string, fielderId: string, pitches: number) {
         this.result = result;
         this.contact = contact;
         this.trajectory = trajectory;
@@ -88,12 +89,14 @@ export class AtBat {
         this.fielderId = fielderId;
         this.scoredIds = [],
         this.batterScored = false
+        this.pitches = pitches
     }
 }
 
 export class PitcherAppearance {
   pitcherId: string;
   innings: number;
+  pitches: number
   hits: number;
   walks: number;
   strikeouts: number;
@@ -112,6 +115,7 @@ export class PitcherAppearance {
   constructor(pitcherId: string, isStart: boolean) {
     this.pitcherId = pitcherId;
     this.innings = 0;
+    this.pitches = 0;
     this.hits = 0;
     this.walks = 0;
     this.strikeouts = 0;

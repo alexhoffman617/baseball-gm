@@ -81,7 +81,7 @@ export class SharedFunctionsService {
         return g.homeTeamId === teamId || g.awayTeamId === teamId;
       });
       if ((game && game.homeTeamId === teamId && game.homeTeamScore > game.awayTeamScore)
-          || (game.awayTeamId === teamId && game.awayTeamScore > game.homeTeamScore) ) {
+          || (game && game.awayTeamId === teamId && game.awayTeamScore > game.homeTeamScore) ) {
         wins++;
       }
     })
@@ -97,8 +97,8 @@ export class SharedFunctionsService {
       const game = _.find(scheduledDay.scheduledGames, function(g){
         return g.homeTeamId === teamId || g.awayTeamId === teamId;
       });
-      if ((game.homeTeamId === teamId && game.homeTeamScore < game.awayTeamScore)
-          || (game.awayTeamId === teamId && game.awayTeamScore < game.homeTeamScore) ) {
+      if ((game && game.homeTeamId === teamId && game.homeTeamScore < game.awayTeamScore)
+          || (game && game.awayTeamId === teamId && game.awayTeamScore < game.homeTeamScore) ) {
         losses++;
       }
     })
