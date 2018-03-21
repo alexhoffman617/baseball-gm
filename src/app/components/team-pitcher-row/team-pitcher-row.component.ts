@@ -30,7 +30,9 @@ export class TeamPitcherRowComponent implements OnChanges {
   showAge = false
   showRosterPosition = false
   showPosition = false
-  showOverall = false
+  showOvrAndPot = false
+  showOvr = false
+  showPot = false
   showSkills = false
   showStats = false
   showStamina = false
@@ -53,7 +55,9 @@ export class TeamPitcherRowComponent implements OnChanges {
       this.showSeasonYear = true
       this.showAge = false
       this.showRosterPosition = false
-      this.showOverall = false
+      this.showOvrAndPot = false
+      this.showOvr = false
+      this.showPot = false
       this.showSkills = false
       this.showStats = true
       this.showStamina = false
@@ -63,7 +67,9 @@ export class TeamPitcherRowComponent implements OnChanges {
       this.showSeasonYear = false
       this.showAge = true
       this.showRosterPosition = false
-      this.showOverall = true
+      this.showOvrAndPot = false
+      this.showOvr = true
+      this.showPot = true
       this.showSkills = false
       this.showStats = false
       this.showStamina = false
@@ -73,7 +79,9 @@ export class TeamPitcherRowComponent implements OnChanges {
       this.showSeasonYear = false
       this.showAge = true
       this.showRosterPosition = true
-      this.showOverall = true
+      this.showOvrAndPot = true
+      this.showOvr = false
+      this.showPot = false
       this.showSkills = false
       this.showStats = true
       this.showStamina = true

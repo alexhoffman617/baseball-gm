@@ -31,7 +31,9 @@ export class TeamBatterRowComponent implements OnChanges {
   showPosition = false
   showRosterPosition = false
   showOrderNumber = false
-  showOverall = false
+  showOvrAndPot = false
+  showOvr = false
+  showPot = false
   showSkills = false
   showStats = false
   showErrors = false
@@ -58,7 +60,9 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showPosition = false
       this.showRosterPosition = false
       this.showOrderNumber = false
-      this.showOverall = false
+      this.showOvrAndPot = false
+      this.showOvr = false
+      this.showPot = false
       this.showSkills = false
       this.showStats = true
       this.showErrors = true
@@ -70,7 +74,9 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showPosition = true
       this.showRosterPosition = false
       this.showOrderNumber = false
-      this.showOverall = true
+      this.showOvr = true
+      this.showPot = true
+      this.showOvrAndPot = false
       this.showSkills = false
       this.showStats = false
       this.showErrors = false
@@ -82,7 +88,9 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showPosition = true
       this.showRosterPosition = true
       this.showOrderNumber = true
-      this.showOverall = true
+      this.showOvrAndPot = true
+      this.showOvr = false
+      this.showPot = false
       this.showSkills = false
       this.showStats = true
       this.showErrors = true

@@ -24,13 +24,19 @@
     </mat-option>
   </mat-select>
 </td>
-<td *ngIf="showOverall">
+<td *ngIf="showOvrAndPot">
   {{ overallHittingAbility() }}
   <span *ngIf="isHittingProgression()"
   [ngClass]="{ 'positive': overallHitting(hittingProgression?.hittingSkillset) > 0, 'negative': overallHitting(hittingProgression?.hittingSkillset) < 0 }" >
   [{{ overallHitting(hittingProgression?.hittingSkillset) }}]</span>
   ({{ overallHittingPotential() }})
 </td>
+<td *ngIf="showOvr">
+    {{ overallHittingAbility() }}
+</td>
+<td *ngIf="showPot">
+    {{ overallHittingPotential() }}
+  </td>
 <td *ngIf="showSkills">
   {{ batter?.hittingAbility.contact }}
   <span *ngIf="isHittingProgression()"

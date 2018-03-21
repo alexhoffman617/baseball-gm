@@ -17,13 +17,19 @@
     </mat-option>
   </mat-select>
 </td>
-<td *ngIf="showOverall">
+<td *ngIf="showOvrAndPot">
   {{ overallPitching(pitcher?.pitchingAbility) }}
   <span *ngIf="isPitchingProgression()"
   [ngClass]="{ 'positive': overallPitching(pitchingProgression?.pitchingSkillset) > 0, 'negative': overallPitching(pitchingProgression?.pitchingSkillset) < 0 }" >
   [{{ overallPitching(pitchingProgression?.pitchingSkillset) }}]</span>
   ({{ overallPitching(pitcher?.pitchingPotential) }})
 </td>
+<td *ngIf="showOvr">
+    {{ overallPitching(pitcher?.pitchingAbility) }}
+  </td>
+<td *ngIf="showPot">
+    {{ overallPitching(pitcher?.pitchingPotential) }}
+  </td>
 <td *ngIf="showStamina">
   {{ pitcher?.currentStamina }}/100
 </td>

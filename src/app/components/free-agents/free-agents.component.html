@@ -3,15 +3,37 @@
   <table>
     <thead>
       <tr class="header">
-        <th>Name</th>
-        <th>Pos</th>
-        <th>Age</th>
-        <th>Overall</th>
+        <th (click)='changeSort("name")'>Name
+          <mat-icon *ngIf="sortType === 'name' && sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+          <mat-icon *ngIf="sortType === 'name' && sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+          <mat-icon *ngIf="sortType != 'name'">remove</mat-icon>
+        </th>
+        <th (click)='changeSort("pos")'>Pos
+            <mat-icon *ngIf="sortType === 'pos' && sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="sortType === 'pos' && sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+            <mat-icon *ngIf="sortType != 'pos'">remove</mat-icon>
+        </th>
+        <th (click)='changeSort("age")'>Age
+            <mat-icon *ngIf="sortType === 'age' && sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="sortType === 'age' && sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+            <mat-icon *ngIf="sortType != 'age'">remove</mat-icon>
+
+        </th>
+        <th (click)='changeSort("ovr")'>Overall
+            <mat-icon *ngIf="sortType === 'ovr' && sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="sortType === 'ovr' && sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+            <mat-icon *ngIf="sortType != 'ovr'">remove</mat-icon>
+        </th>
+        <th (click)='changeSort("pot")'>Potential
+            <mat-icon *ngIf="sortType === 'pot' && sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="sortType === 'pot' && sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+            <mat-icon *ngIf="sortType != 'pot'">remove</mat-icon>
+        </th>
         <th>Negotiate</th>
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let player of freeAgents">
+      <ng-container *ngFor="let player of getSortedFreeAgents()">
         <tr *ngIf="player.playerType === staticListsService.playerTypes.batter" app-team-batter-row [batter]="player" displaySet="fa" button="negotiate"></tr>
         <tr *ngIf="player.playerType === staticListsService.playerTypes.pitcher" app-team-pitcher-row [pitcher]="player" displaySet="fa" button="negotiate"></tr>
       </ng-container>
