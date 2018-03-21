@@ -51,6 +51,7 @@ export class MainComponent implements OnInit {
 })
 export class CreateLeagueDialogComponent {
   leagueName: string
+  fantasyDraft = false
   numberOfTeams = 4
   useMlbTeams = false
   isGenerating = false
@@ -67,7 +68,8 @@ export class CreateLeagueDialogComponent {
 
   async generateLeague() {
     this.isGenerating = true
-    const newLeagueId = await this.generateLeagueService.generateLeague(this.leagueName, this.numberOfTeams, this.useMlbTeams)
+    const newLeagueId = await this.generateLeagueService.generateLeague(this.leagueName, this.numberOfTeams,
+       this.fantasyDraft, this.useMlbTeams)
     this.isGenerating = false
     this.dialogRef.close();
     this.router.navigate([newLeagueId])

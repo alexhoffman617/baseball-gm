@@ -16,19 +16,27 @@ export class GenerateTeamService {
                 private sharedFunctionsService: SharedFunctionsService,
                 private leagueDataService: LeagueDataService) { }
 
-    async generateRandomTeam(leagueId: string,  ownerAccountId: string = null) {
+    async generateRandomTeam(leagueId: string, fantasyDraft: boolean, ownerAccountId: string = null) {
       const team = await this.leagueDataService.createTeam(new Team(this.getTeamName(), this.getTeamLocation(), this.getRandomColor(), '#adadad',
         new Roster(new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId)) as Team;
       team.ownerAccountId = ownerAccountId
-      return await this.generateTeam(leagueId, team)
+      if (fantasyDraft) {
+        return team
+      } else {
+        return await this.generateTeam(leagueId, team)
+      }
     }
 
-    async generateMlbTeam(leagueId: string, mlbTeamIndex: number, ownerAccountId: string = null) {
+    async generateMlbTeam(leagueId: string, mlbTeamIndex: number, fantasyDraft: boolean, ownerAccountId: string = null) {
       const team = await this.leagueDataService.createTeam(new Team(this.staticListsService.mlbTeamNames[mlbTeamIndex],
-         this.staticListsService.mlbLocations[mlbTeamIndex], this.getRandomColor(), '#adadad',
+         this.staticListsService.mlbLocations[mlbTeamIndex], this.getRandomColor(), this.getRandomColor(),
          new Roster(new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>(), new Array<RosterSpot>()), leagueId)) as Team;
       team.ownerAccountId = ownerAccountId
-      return await this.generateTeam(leagueId, team)
+      if (fantasyDraft) {
+        return team
+      } else {
+        return await this.generateTeam(leagueId, team)
+      }
     }
 
     async generateTeam(leagueId: string, team: Team) {
@@ -75,7 +83,8 @@ export class GenerateTeamService {
         '#008000',
         '#7c519f',
         '#36127f',
-        '#a95e00'
+        '#a95e00',
+        '#adadad'
       ]
 
       return colors[_.random(colors.length - 1)]

@@ -86,9 +86,9 @@ export class GeneratePlayerService {
             this.getPitcherType());
 
         const skills = new PitchingSkillset(
-            this.generateSkillValue('velocity', age, potential),
-            this.generateSkillValue('control', age, potential),
-            this.generateSkillValue('movement', age, potential),
+            this.generateSkillValue('velocity', age, potential, isProspect),
+            this.generateSkillValue('control', age, potential, isProspect),
+            this.generateSkillValue('movement', age, potential, isProspect),
             potential.stamina,
             potential.type);
 
@@ -146,9 +146,16 @@ export class GeneratePlayerService {
       return value;
     }
 
-    generateSkillValue(skill, age, potential) {
+    generateSkillValue(skill, age, potential, isProspect = false) {
     const garunteedValue = .2 + Math.min(9, age - 18) / 9 * .4
-    const value = Math.round(garunteedValue * potential[skill] + Math.random() * potential[skill] * (1 - garunteedValue));
+    let value
+    if (isProspect) {
+      value = Math.round(garunteedValue / 2 * potential[skill] +
+        Math.random() * potential[skill] * (1 - garunteedValue / 2) / 2 +
+        Math.random() * potential[skill] * (1 - garunteedValue / 2) / 2);
+    } else {
+      value = Math.round(garunteedValue * potential[skill] + Math.random() * potential[skill] * (1 - garunteedValue));
+    }
     return value;
     }
 

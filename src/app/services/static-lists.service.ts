@@ -22,7 +22,7 @@ export class StaticListsService {
   }
 
   preseasonDays = 15
-  leagueSalary = 150000000
+  leagueSalary = 170000000
 
   draftStates = {
     preDraft: 'Pre Draft',

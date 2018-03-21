@@ -1,3 +1,5 @@
+import { Draft } from './draft';
+
 export class League {
   id: string;
   numberOfTeams: number;
@@ -6,6 +8,7 @@ export class League {
   simming: boolean
   _id: string;
   structure: Array<Array<Array<string>>>
+  fantasyDraft: Draft
   constructor(numberOfTeams: number, creatorAccountId: string, name: string) {
     this.name = name,
     this.numberOfTeams = numberOfTeams,

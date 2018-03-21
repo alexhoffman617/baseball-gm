@@ -1,6 +1,6 @@
 <div class="view-container">
   <div fxLayout="row" *ngFor="let team of leagueDataService.teams">
-    <mat-card fxFlex="45" style="margin: 10px">
+    <mat-card fxFlex="75" style="margin: 10px">
       <mat-input-container>
           <input matInput [(ngModel)]="team.location" placeholder="Location">
       </mat-input-container>
@@ -15,6 +15,8 @@
           {{ account.username }}
         </mat-option>
       </mat-select>
+      <input matInput fxFlex="20" [(ngModel)]="team.mainColor" placeholder="Main Color">
+      <input matInput fxFlex="20" [(ngModel)]="team.secondaryColor" placeholder="Secondary Color">
       <span class="spacer"></span>
       <button mat-button mat-raised-button (click)="leagueDataService.updateTeam(team)" color="primary" style="height:40px; margin-top:1%">Save Changes</button>
     </mat-card>

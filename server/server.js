@@ -56,9 +56,10 @@ io.on('connection', function(socket){
     })
   })
 
-  socket.on('update-league', (league) => {
+  socket.on('update-league', (league, callback) => {
     Leagues.updateLeague(league, function(status, updatedLeague){
       io.emit('league:' + league._id, updatedLeague)
+      callback(updatedLeague)
     })
   })
 
@@ -103,7 +104,7 @@ io.on('connection', function(socket){
 
   socket.on('update-player', (player, callback) => {
     Players.updatePlayer(player, function(status, savedPlayer){
-       io.emit('player:' + player.leagueId, savedPlayer)
+       io.emit('player:' + player.leagueId, player)
     })
   })
 

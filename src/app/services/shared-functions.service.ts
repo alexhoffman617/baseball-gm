@@ -399,7 +399,12 @@ export class SharedFunctionsService {
   updateSeasonToNextPhase() {
     const that = this
     const currentPhase = _.find(this.staticListsService.leaguePhases, {name: that.leagueDataService.currentSeason.phase})
-    const newPhase = _.find(this.staticListsService.leaguePhases, {order: currentPhase.order + 1})
+    let newPhase;
+    if (that.leagueDataService.currentSeason.phase === this.staticListsService.leaguePhases.fantasyDraft.name) {
+      newPhase = this.staticListsService.leaguePhases.regularSeason
+    } else {
+      newPhase = _.find(this.staticListsService.leaguePhases, {order: currentPhase.order + 1})
+    }
     if (newPhase) {
       that.leagueDataService.currentSeason.phase = newPhase.name
     }
@@ -416,13 +421,19 @@ export class SharedFunctionsService {
     const that = this
     let teamSalary = 0
     _.each(that.leagueDataService.players, function(player) {
-      const teamContract = _.find(player.contracts, function(contract) {
-        return contract.teamId === team._id && contract.firstYear <= that.leagueDataService.currentSeason.year
-        && contract.firstYear + contract.years > that.leagueDataService.currentSeason.year
-      })
+      const teamContract = that.getCurrentContract(player, team._id)
       teamSalary += teamContract ? teamContract.salary : 0
     })
     return teamSalary
+  }
+
+  getCurrentContract(player: Player, teamId: string) {
+    const that = this
+    return _.find(player.contracts, function(contract) {
+      return contract.firstYear <= that.leagueDataService.currentSeason.year
+      && contract.firstYear + contract.years > that.leagueDataService.currentSeason.year
+      && contract.teamId === teamId
+    })
   }
 
   salaryWithCommas(x) {

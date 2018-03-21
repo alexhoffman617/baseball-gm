@@ -10,6 +10,7 @@ import 'rxjs/add/operator/toPromise';
 import * as io from 'socket.io-client';
 import { StaticListsService } from 'app/services/static-lists.service';
 import * as _ from 'lodash';
+import { Draft, DraftPick } from '../models/draft';
 
 @Injectable()
 export class GenerateLeagueService {
@@ -23,7 +24,7 @@ export class GenerateLeagueService {
 
      }
 
-    async generateLeague(leagueName: string, numberOfTeams: number, useMlbTeams = false) {
+    async generateLeague(leagueName: string, numberOfTeams: number, fantasyDraft: boolean, useMlbTeams = false) {
       this.sharedFunctionsService.setLoading(2, 'Generating League')
       const league = new League(numberOfTeams, localStorage.getItem('baseballgm-id'), leagueName)
       const createdLeague = await this.createLeague(league) as League
@@ -32,8 +33,8 @@ export class GenerateLeagueService {
       for (let x = 0; x < league.numberOfTeams; x++) {
         const ownerAccountId = x === 0 ? localStorage.getItem('baseballgm-id') : null
         const team = useMlbTeams ?
-                      await this.generateTeamService.generateMlbTeam(createdLeague._id, x, ownerAccountId) :
-                      await this.generateTeamService.generateRandomTeam(createdLeague._id, ownerAccountId)
+                      await this.generateTeamService.generateMlbTeam(createdLeague._id, x, fantasyDraft, ownerAccountId) :
+                      await this.generateTeamService.generateRandomTeam(createdLeague._id, fantasyDraft, ownerAccountId)
         teamIds.push(team._id)
         this.sharedFunctionsService.setLoading(10 + (70 * (x + 1) / numberOfTeams),
           'Generated Team ' + (x + 1) + ': ' + team.location + ' ' + team.name)
@@ -46,12 +47,30 @@ export class GenerateLeagueService {
         createdLeague.structure = leagueArray
         this.leagueDataService.updateLeague(createdLeague)
       }
+      if (fantasyDraft) {
+        await this.generateFantasyDraft(createdLeague, teamIds)
+      }
       this.sharedFunctionsService.setLoading(85, 'Generating Free Agents')
-      await this.generatePlayerService.generateFreeAgents(createdLeague._id, (new Date()).getFullYear(), teamIds.length * 10)
+      await this.generatePlayerService.generateFreeAgents(createdLeague._id, (new Date()).getFullYear(),
+        fantasyDraft ? teamIds.length * 52 : teamIds.length * 10)
       this.sharedFunctionsService.setLoading(92, 'Generating Season')
       this.seasonGenerator.generateSeason(createdLeague._id, teamIds, null,
+        fantasyDraft ? this.staticListsService.leaguePhases.fantasyDraft.name :
         this.staticListsService.leaguePhases.regularSeason.name, createdLeague.structure)
       return createdLeague._id
+    }
+
+    async generateFantasyDraft(league: League, teamIds: Array<string>) {
+      league.fantasyDraft = new Draft()
+      const draftOrder = _.shuffle(teamIds)
+      for (let pick = 1; pick <= draftOrder.length * 40; pick++) {
+        if (Math.floor((pick - 1) / teamIds.length) % 2 === 1) {
+          league.fantasyDraft.draftPicks.push(new DraftPick(pick, draftOrder[draftOrder.length - 1 - ((pick - 1) % draftOrder.length)]))
+        } else {
+          league.fantasyDraft.draftPicks.push(new DraftPick(pick, draftOrder[(pick - 1) % draftOrder.length]))
+        }
+      }
+      await this.leagueDataService.updateLeague(league)
     }
 
     createLeague(league) {

@@ -56,6 +56,7 @@ import { DraftComponent } from 'app/components/draft/draft.component';
 import { FaceComponent } from './components/face/face.component';
 import { TradeComponent } from './components/trade/trade.component';
 import { LeagueStatsComponent } from './components/league-stats/league-stats.component';
+import { FantasyDraftComponent } from './components/fantasy-draft/fantasy-draft.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -73,6 +74,7 @@ const routes: Routes = [
     {path: 'negotiate-contract/:playerId', component: NegotiateContractComponent},
     {path: 'free-agents', component: FreeAgentsComponent},
     {path: 'draft', component: DraftComponent},
+    {path: 'fantasy-draft', component: FantasyDraftComponent},
     {path: 'league-stats', component: LeagueStatsComponent},
     {path: 'trade', component: TradeComponent}
   ]}
@@ -107,7 +109,8 @@ const routes: Routes = [
     DraftComponent,
     FaceComponent,
     TradeComponent,
-    LeagueStatsComponent
+    LeagueStatsComponent,
+    FantasyDraftComponent
   ],
   imports: [
     BrowserModule,

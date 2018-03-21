@@ -45,6 +45,7 @@ export class LeagueProgressionService {
     that.leagueDataService.deleteAllGamesInSeason(currentSeason._id)
     that.setDraftOrder(currentSeason)
     that.revokeAllTrades()
+    that.makeSureRostersClear()
     await that.seasonGenerator.generateSeason(leagueId, teamIds, currentSeason.year + 1,
       _.find(this.staticListsService.leaguePhases, {order: 0}).name , structure)
     that.leagueDataService.league.simming = false
@@ -166,6 +167,23 @@ export class LeagueProgressionService {
         trade.state = that.staticListsService.tradeStatus.expired
         that.leagueDataService.updateTrade(trade)
       }
+    })
+  }
+
+  async makeSureRostersClear() {
+    const that = this
+    _.each(that.leagueDataService.teams, function(team) {
+      (async () => {
+      _.each(team.roster.batterReserves, function(rb) {
+        const player = that.leagueDataService.getPlayer(rb.playerId)
+        if (!that.sharedFunctionsService.getCurrentContract(player, team._id)) {
+          _.remove(team.roster.batterReserves, function(batter){
+            return batter.playerId === rb.playerId
+          })
+        }
+      })
+      await that.leagueDataService.updateTeam(team)
+    })()
     })
   }
 }

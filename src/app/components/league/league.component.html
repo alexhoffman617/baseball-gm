@@ -40,6 +40,8 @@
   </mat-menu>
   <button mat-button [routerLink]="'/'+ leagueId + '/free-agents'">Free Agents</button>
   <button mat-button [routerLink]="'/'+ leagueId + '/draft'">Draft</button>
+  <button mat-button *ngIf="leagueDataService.currentSeason?.phase === staticListsService.leaguePhases.fantasyDraft.name"
+   [routerLink]="'/'+ leagueId + '/fantasy-draft'">Fantasy Draft</button>
   <button mat-button [routerLink]="'/'+ leagueId + '/trade'">Trade</button>
   <span class="spacer"></span>
   <button mat-button *ngIf="leagueDataService.league?.creatorAccountId === accountId" [routerLink]="'/'+ leagueId + '/admin'">Admin</button>
