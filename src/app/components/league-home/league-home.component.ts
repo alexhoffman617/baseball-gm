@@ -59,7 +59,12 @@ export class LeagueHomeComponent implements OnInit {
         return s.year === that.leagueDataService.currentSeason.year
       })
     }
-
+    if (attribute === 'batWar') {
+      const fieldingStats = _.find(player.fieldingSeasonStats, function(s){
+        return s.year === that.leagueDataService.currentSeason.year
+      })
+      return that.sharedFunctionsService[attribute](stats, fieldingStats)
+    }
     return stats ? (isSharedFunction ? that.sharedFunctionsService[attribute](stats) : stats[attribute]) : null
   }
 }

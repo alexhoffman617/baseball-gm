@@ -79,10 +79,10 @@
   {{ seasonStats?.innings }}
 </td>
 <td *ngIf="showStats">
-  {{ sharedFunctionsService.era(seasonStats) }}
+  {{ sharedFunctionsService.era(seasonStats).toPrecision(3) }}
 </td>
 <td *ngIf="showStats">
-  {{ sharedFunctionsService.whip(seasonStats) }}
+  {{ sharedFunctionsService.whip(seasonStats).toPrecision(3) }}
 </td>
 <td *ngIf="showStats">
   {{ seasonStats?.strikeouts }}
@@ -91,11 +91,11 @@
   {{ seasonStats?.walks }}
 </td>
 <td *ngIf="showStats">
-  {{ sharedFunctionsService.pitWar(seasonStats) }}
+  {{ sharedFunctionsService.pitWar(seasonStats).toPrecision(3) }}
 </td>
 <td *ngIf="button === 'release'">
-  <button mat-raised-button color="primary" (click)="release()">Release</button>
-  <button *ngIf="reserve" mat-raised-button color="secondary" (click)="activate()">Activate</button>
+  <button mat-mini-fab color="primary" (click)="release()" matTooltip="Realease Player"><mat-icon>do_not_disturb</mat-icon></button>
+  <button *ngIf="reserve" mat-mini-fab color="secondary" (click)="activate()" matTooltip="Activate Player"><mat-icon>vertical_align_top</mat-icon></button>
 </td>
 <td *ngIf="button === 'negotiate'">
   <button mat-raised-button color="primary" [routerLink]="'/' + pitcher?.leagueId + '/negotiate-contract/' + pitcher?._id">Negotiate</button>

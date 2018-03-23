@@ -78,13 +78,13 @@
   {{ seasonStats?.rbis }}
 </td>
 <td *ngIf="showStats">
-  {{ sharedFunctionsService.average(seasonStats) }}
+  {{ sharedFunctionsService.average(seasonStats).toPrecision(3) }}
 </td>
 <td *ngIf="showStats">
-  {{ sharedFunctionsService.obp(seasonStats) }}
+  {{ sharedFunctionsService.obp(seasonStats).toPrecision(3) }}
 </td>
-<td *ngIf="showStats">
-  {{ sharedFunctionsService.slg(seasonStats) }}
+<td *ngIf="showStatsExt">
+  {{ sharedFunctionsService.slg(seasonStats).toPrecision(3) }}
 </td>
 <td *ngIf="showStats">
   {{ seasonStats?.homeruns }}
@@ -92,7 +92,7 @@
 <td *ngIf="showStats">
   {{ seasonStats?.steals }}
 </td>
-<td *ngIf="showStats">
+<td *ngIf="showStatsExt">
   {{ seasonStats?.caughtStealing }}
 </td>
 <td *ngIf="showErrors">
@@ -102,11 +102,11 @@
   {{ fieldingSeasonStats?.errors }}
 </td>
 <td *ngIf="showStats">
-  {{ sharedFunctionsService.batWar(seasonStats, fieldingSeasonStats) }}
+  {{ sharedFunctionsService.batWar(seasonStats, fieldingSeasonStats).toPrecision(3) }}
 </td>
 <td *ngIf="button === 'release'">
-  <button mat-raised-button color="primary" (click)="release()">Release</button>
-  <button *ngIf="reserve" mat-raised-button color="secondary" (click)="activate()">Activate</button>
+  <button mat-mini-fab color="primary" (click)="release()" matTooltip="Realease Player"><mat-icon>do_not_disturb</mat-icon></button>
+  <button *ngIf="reserve" mat-mini-fab color="secondary" (click)="activate()" matTooltip="Activate Player"><mat-icon>vertical_align_top</mat-icon></button>
 </td>
 <td *ngIf="button === 'negotiate'">
   <button mat-raised-button color="primary" [routerLink]="'/' + batter?.leagueId + '/negotiate-contract/' + batter?._id">Negotiate</button>

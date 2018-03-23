@@ -1,71 +1,130 @@
-<div fxLayout="row" class="view-container">
-  <div fxFlex="40" fxFlexOffset="10">
-    <div>
-      {{leagueId}}
-    </div>
-    <ng-container *ngIf="!leagueDataService.league?.structure && !leagueDataService.currentSeason?.playoffSchedule">
-    <div *ngFor="let team of sharedFunctionsService.getRecordOrderedTeams()" [routerLink]="'/' + team.leagueId + '/team/' + team._id">
-      {{team.location}} {{team.name}} ({{sharedFunctionsService.getWins(team._id)}}-{{sharedFunctionsService.getLosses(team._id)}})
-    </div>
-    </ng-container>
-    <ng-container *ngIf="leagueDataService.league?.structure && !leagueDataService.currentSeason?.playoffSchedule">
-      <ng-container *ngFor="let conf of leagueDataService.league.structure; let iconf = index" >
-          <ng-container *ngFor="let div of conf; let idiv = index" >
-            <h3>{{staticListsService.mlbConfs[iconf]}} {{staticListsService.mlbDivs[idiv]}}</h3>
-            <div *ngFor="let team of sharedFunctionsService.getRecordOrderedTeamsById(div)" [routerLink]="'/' + team?.leagueId + '/team/' + team?._id">
-              {{team?.location}} {{team?.name}} ({{sharedFunctionsService.getWins(team?._id)}}-{{sharedFunctionsService.getLosses(team?._id)}})
-            </div>
-            <hr>
-          </ng-container>
+<div fxLayout="column" class="view-container">
+  <div flFlex="45" fxLayout="row">
+    <mat-card fxFlex="40" fxFlexOffset="10">
+      <h2>Standings:</h2>
+      <div>
+        {{leagueId}}
+      </div>
+      <ng-container *ngIf="!leagueDataService.league?.structure && !leagueDataService.currentSeason?.playoffSchedule">
+      <div *ngFor="let team of sharedFunctionsService.getRecordOrderedTeams()" [routerLink]="'/' + team.leagueId + '/team/' + team._id">
+        {{team.location}} {{team.name}} ({{sharedFunctionsService.getWins(team._id)}}-{{sharedFunctionsService.getLosses(team._id)}})
+      </div>
       </ng-container>
-    </ng-container>
-    <ng-container *ngIf="leagueDataService.currentSeason?.playoffSchedule">
-      <app-playoff-bracket></app-playoff-bracket>
-    </ng-container>
-  </div>
-  <div fxFlex="40">
-    <div>
-      <h3>HR</h3>
-      <div *ngFor="let player of getLeaders('homeruns')" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
-        {{ !player ? null : player?.name + ": " + getStat(player, 'homeruns')}}
-      </div>
-    </div>
-    <div>
-      <h3>AVG</h3>
-      <div *ngFor="let player of getLeaders('average', true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
-        {{ !player ? null : player?.name + ": " + getStat(player, 'average', true)}}
-      </div>
-    </div>
-    <div>
-      <h3>RBI</h3>
-      <div *ngFor="let player of getLeaders('rbis')" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
-        {{ !player ? null : player?.name + ": " + getStat(player, 'rbis')}}
-      </div>
-    </div>
-    <div>
-      <h3>SB</h3>
-      <div *ngFor="let player of getLeaders('steals')" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
-        {{ !player ? null : player?.name + ": " + getStat(player, 'steals')}}
-      </div>
-    </div>
+      <ng-container *ngIf="leagueDataService.league?.structure && !leagueDataService.currentSeason?.playoffSchedule">
+        <ng-container *ngFor="let conf of leagueDataService.league.structure; let iconf = index" >
+            <ng-container *ngFor="let div of conf; let idiv = index" >
+              <h3>{{staticListsService.mlbConfs[iconf]}} {{staticListsService.mlbDivs[idiv]}}</h3>
+              <div *ngFor="let team of sharedFunctionsService.getRecordOrderedTeamsById(div)" [routerLink]="'/' + team?.leagueId + '/team/' + team?._id">
+                {{team?.location}} {{team?.name}} ({{sharedFunctionsService.getWins(team?._id)}}-{{sharedFunctionsService.getLosses(team?._id)}})
+              </div>
+              <hr>
+            </ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="leagueDataService.currentSeason?.playoffSchedule">
+        <app-playoff-bracket></app-playoff-bracket>
+      </ng-container>
+    </mat-card>
+    <mat-card fxFlex="40" fxFlexOffset="1">
 
-    <div>
-      <h3>ERA</h3>
-      <div *ngFor="let player of getLeaders('era', true, true, true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
-        {{ !player ? null : player?.name + ": " + getStat(player, 'era', true, true)}}
+    </mat-card>
+  </div>
+  <div fxFlex="45" fxFlexOffset="1" fxLayout="row">
+    <mat-card fxFlexOffset="10" fxFlex="40">
+      <h2>Hitter Leaders:</h2>
+    <div fxLayout="row" >
+      <div fxFlexOffset="5" fxFlex="45">
+        <div>
+          <h3>R</h3>
+          <div *ngFor="let player of getLeaders('runs')" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'runs')}}
+          </div>
+        </div>
+        <div>
+          <h3>RBI</h3>
+          <div *ngFor="let player of getLeaders('rbis')" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'rbis')}}
+          </div>
+        </div>
+        <div>
+          <h3>HR</h3>
+          <div *ngFor="let player of getLeaders('homeruns')" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'homeruns')}}
+          </div>
+        </div>
+        <div>
+          <h3>SB</h3>
+          <div *ngFor="let player of getLeaders('steals')" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'steals')}}
+          </div>
+        </div>
+      </div>
+      <div fxFlex="50">
+        <div>
+          <h3>AVG</h3>
+          <div *ngFor="let player of getLeaders('average', true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'average', true).toPrecision(3)}}
+          </div>
+        </div>
+        <div>
+          <h3>OBP</h3>
+          <div *ngFor="let player of getLeaders('obp', true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'obp', true).toPrecision(3)}}
+          </div>
+        </div>
+        <div>
+          <h3>WAR</h3>
+          <div *ngFor="let player of getLeaders('batWar', true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'batWar', true).toPrecision(3)}}
+          </div>
+        </div>
       </div>
     </div>
-    <div>
-      <h3>WHIP</h3>
-      <div *ngFor="let player of getLeaders('whip', true, true, true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
-        {{ !player ? null : player?.name + ": " + getStat(player, 'whip', true, true)}}
+  </mat-card>
+  <mat-card fxFlexOffset="1" fxFlex="40">
+    <h2>Pitcher Leaders:</h2>
+    <div fxLayout="row" >
+      <div fxFlexOffset="5" fxFlex="45">
+        <div>
+          <h3>K</h3>
+          <div *ngFor="let player of getLeaders('strikeouts', false, true, false)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'strikeouts', false, true)}}
+          </div>
+        </div>
+        <div>
+          <h3>W</h3>
+          <div *ngFor="let player of getLeaders('wins', false, true, false)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'wins', false, true)}}
+          </div>
+        </div>
+        <div>
+          <h3>SV</h3>
+          <div *ngFor="let player of getLeaders('saves', false, true, false)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'saves', false, true)}}
+          </div>
+        </div>
+      </div>
+      <div fxFlex="50">
+        <div>
+          <h3>ERA</h3>
+          <div *ngFor="let player of getLeaders('era', true, true, true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'era', true, true).toPrecision(3)}}
+          </div>
+        </div>
+        <div>
+          <h3>WHIP</h3>
+          <div *ngFor="let player of getLeaders('whip', true, true, true)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'whip', true, true).toPrecision(3)}}
+          </div>
+        </div>
+        <div>
+          <h3>WAR</h3>
+          <div *ngFor="let player of getLeaders('pitWar', true, true, false)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
+            {{ !player ? null : player?.name + ": " + getStat(player, 'pitWar', true, true).toPrecision(3)}}
+          </div>
+        </div>
       </div>
     </div>
-    <div>
-      <h3>W</h3>
-      <div *ngFor="let player of getLeaders('wins', false, true, false)" [routerLink]="'/' + player.leagueId + '/player/' + player._id">
-        {{ !player ? null : player?.name + ": " + getStat(player, 'wins', false, true)}}
-      </div>
-    </div>
+  </mat-card>
   </div>
 </div>

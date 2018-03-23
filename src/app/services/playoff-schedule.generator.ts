@@ -14,7 +14,7 @@ export class PlayoffScheduleGenerator {
     this.leagueDataService.league.simming = true
     this.leagueDataService.updateLeague()
     const teams = []
-    _.each(this.sharedFunctionsService.getRecordOrderedTeams().splice(0, this.leagueDataService.teams.length > 8 ? 8 : 4), function(team){
+    _.each(this.sharedFunctionsService.getRecordOrderedTeams().splice(0, this.leagueDataService.teams.length >= 16 ? 8 : 4), function(team){
       teams.push(team._id)
     })
 

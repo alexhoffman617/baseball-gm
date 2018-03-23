@@ -36,6 +36,7 @@ export class TeamBatterRowComponent implements OnChanges {
   showPot = false
   showSkills = false
   showStats = false
+  showStatsExt = false
   showErrors = false
   showStamina = false
 
@@ -65,6 +66,7 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showPot = false
       this.showSkills = false
       this.showStats = true
+      this.showStatsExt = true
       this.showErrors = true
       this.showStamina = false
     } else if (this.displaySet === 'fa') {
@@ -79,8 +81,24 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showOvrAndPot = false
       this.showSkills = false
       this.showStats = false
+      this.showStatsExt = false
       this.showErrors = false
       this.showStamina = false
+    } else if (this.displaySet === 'team') {
+      this.showName = true
+      this.showSeasonYear = false
+      this.showBatterAge = true
+      this.showPosition = true
+      this.showRosterPosition = true
+      this.showOrderNumber = true
+      this.showOvr = false
+      this.showPot = false
+      this.showOvrAndPot = true
+      this.showSkills = false
+      this.showStats = true
+      this.showStatsExt = false
+      this.showErrors = false
+      this.showStamina = true
     } else {
       this.showName = true
       this.showSeasonYear = false
@@ -93,6 +111,7 @@ export class TeamBatterRowComponent implements OnChanges {
       this.showPot = false
       this.showSkills = false
       this.showStats = true
+      this.showStatsExt = true
       this.showErrors = true
       this.showStamina = true
     }

@@ -5,9 +5,9 @@ import { Team } from '../../models/team';
 import { Player, HittingProgression } from '../../models/player';
 import { Game, AtBat, PitcherAppearance } from '../../models/game';
 import { BatterSeasonStats, PitcherSeasonStats } from '../../models/season-stats';
-import { Season } from '../../models/season';
+import { Season, ScheduledGame } from '../../models/season';
 import { StaticListsService } from '../../services/static-lists.service';
-
+import { DomSanitizer } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/first'
 import { SharedFunctionsService } from 'app/services/shared-functions.service';
@@ -25,6 +25,7 @@ export class TeamComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               public staticListsService: StaticListsService,
               public sharedFunctionsService: SharedFunctionsService,
+              public sanitizer: DomSanitizer,
               public leagueDataService: LeagueDataService) { }
 
   async ngOnInit() {
@@ -110,5 +111,73 @@ export class TeamComponent implements OnInit {
 
   isOwner() {
     return this.team ? this.team.ownerAccountId === localStorage.getItem('baseballgm-id') : false
+  }
+
+  getMatchupDisplay(matchup: ScheduledGame) {
+    if (!this.leagueDataService.teams) { return ' '}
+    let otherTeam = ''
+    let matchupString = ''
+    let result = ''
+    let score = ''
+    if (this.teamId === matchup.homeTeamId) {
+      otherTeam = this.leagueDataService.getTeamById(matchup.awayTeamId).location + ' '
+      + this.leagueDataService.getTeamById(matchup.awayTeamId).name
+      matchupString = 'vs'
+      if (matchup.gameId) {
+        if (matchup.homeTeamScore > matchup.awayTeamScore) {
+          result = '<span style="color:green">W</span>'
+        } else {
+          result = '<span style="color:red">L</span>'
+        }
+        score = matchup.homeTeamScore + ' - ' + matchup.awayTeamScore
+      } else {
+        result = '-'
+        score = '0 - 0'
+      }
+    } else {
+      otherTeam = this.leagueDataService.getTeamById(matchup.homeTeamId).location + ' '
+      + this.leagueDataService.getTeamById(matchup.homeTeamId).name
+      matchupString = '@'
+      if (matchup.gameId) {
+        if (matchup.awayTeamScore > matchup.homeTeamScore) {
+          result = '<span style="color:green">W</span>'
+        } else {
+          result = '<span style="color:red">L</span>'
+        }
+        score = matchup.awayTeamScore + ' - ' + matchup.homeTeamScore
+      } else {
+        result = '-'
+        score = '0 - 0'
+      }
+    }
+    const value = '<td>' + result + '</td><td>' + score + '</td><td>' + matchupString + '</td><td>' + otherTeam + '</td>'
+    return this.sanitizer.bypassSecurityTrustHtml(value)
+  }
+
+  getRecentMatchups() {
+    const that = this
+    const matchups = []
+    if (!this.leagueDataService.currentSeason) { return [] }
+    let index =  _.findIndex(this.leagueDataService.currentSeason.schedule, function(scheduleGames){
+      return scheduleGames.complete === false;
+    })
+    if (index === -1) { index = 161 }
+    for (let i = 1; i > 0; i--) {
+      if (this.leagueDataService.currentSeason.schedule.length > index + i) {
+        const matchup = _.find(this.leagueDataService.currentSeason.schedule[index + i].scheduledGames, function(game){
+          return game.homeTeamId === that.teamId || game.awayTeamId === that.teamId
+        })
+        matchups.push(matchup)
+      }
+    }
+    for (let i = 0; i < 9; i++) {
+      if (0 < index - i) {
+        const matchup = _.find(this.leagueDataService.currentSeason.schedule[index - i].scheduledGames, function(game){
+          return game.homeTeamId === that.teamId || game.awayTeamId === that.teamId
+        })
+        matchups.push(matchup)
+      }
+    }
+    return matchups
   }
 }

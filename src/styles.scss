@@ -50,7 +50,11 @@ tr.header{
     background: #2980b9
 }
 
-
+thead{
+    font-weight: 900;
+    color: #ffffff;
+    background: #2980b9
+}
 
 td{
   padding: 6px 12px;
@@ -67,4 +71,5 @@ td{
 
 .view-container{
   margin: 10px;
+  padding-top: 70px;
 }

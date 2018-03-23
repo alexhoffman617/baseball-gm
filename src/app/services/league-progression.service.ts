@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Season } from '../models/season';
+import { Season, PlayoffMatchup } from '../models/season';
 import { Team } from '../models/team';
 import { Game, AtBat, PitcherAppearance } from '../models/game';
 import { Player, HittingProgression, PitchingProgression, BatterSeasonStats,
@@ -153,11 +153,54 @@ export class LeagueProgressionService {
   }
 
   setDraftOrder(currentSeason: Season) {
-    const orderedTeams = this.sharedFunctionsService.getRecordOrderedTeams()
+    const regularSeasonOrderedTeams = _.reverse(this.sharedFunctionsService.getRecordOrderedTeams())
+    const orderedPlayoffTeamIds = []
+    for (let i = 0; i < currentSeason.playoffSchedule.length; i++) {
+      if (i === currentSeason.playoffSchedule.length - 1) {
+        orderedPlayoffTeamIds.push(this.getMatchupLosingTeamId(currentSeason.playoffSchedule[i][0]))
+        orderedPlayoffTeamIds.push(this.getMatchupWinningTeamId(currentSeason.playoffSchedule[i][0]))
+      } else {
+        const losingTeamIds = []
+        for (let j = 0; j < currentSeason.playoffSchedule[i].length; j++) {
+          losingTeamIds.push(this.getMatchupLosingTeamId(currentSeason.playoffSchedule[i][j]))
+        }
+        const orderedLosingTeamIds = _.orderBy(losingTeamIds, function(teamId){
+          return _.findIndex(regularSeasonOrderedTeams, function(team) { return team._id === teamId })
+        })
+        _.each(orderedLosingTeamIds, function(teamId){
+          orderedPlayoffTeamIds.push(teamId)
+        })
+      }
+    }
+    const orderedTeams = []
+    _.each(regularSeasonOrderedTeams, function(team){
+      if (!_.find(orderedPlayoffTeamIds, function(id) { return team._id === id})) {
+        orderedTeams.push(team._id)
+      }
+    })
+    _.each(orderedPlayoffTeamIds, function(id) {
+      orderedTeams.push(id)
+    })
     for (let pick = 1; pick <= orderedTeams.length * 4; pick++) {
-      currentSeason.draft.draftPicks.push(new DraftPick(pick, orderedTeams[(pick - 1) % orderedTeams.length]._id))
+      currentSeason.draft.draftPicks.push(new DraftPick(pick, orderedTeams[(pick - 1) % orderedTeams.length]))
     }
     this.leagueDataService.updateSeason(currentSeason)
+  }
+
+  getMatchupWinningTeamId(matchup: PlayoffMatchup) {
+    if (matchup.higherSeedWins > matchup.lowerSeedWins) {
+      return matchup.higherSeedTeamId
+    } else {
+      return matchup.lowerSeedTeamId
+    }
+  }
+
+  getMatchupLosingTeamId(matchup) {
+    if (matchup.higherSeedWins > matchup.lowerSeedWins) {
+      return matchup.lowerSeedTeamId
+    } else {
+      return matchup.higherSeedTeamId
+    }
   }
 
   revokeAllTrades() {

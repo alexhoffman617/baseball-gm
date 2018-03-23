@@ -1,48 +1,54 @@
 <div fxLayout="row" class="view-container">
     <div fxFlex="10">
-      <button mat-raised-button color="primary" *ngIf="canStartDraft()" (click)="startDraft()">Start Draft</button>
+      <mat-card *ngIf="canStartDraft()">
+        <button mat-raised-button color="primary" *ngIf="canStartDraft()" (click)="startDraft()">Start Draft</button>
+      </mat-card>
     </div>
   <div fxFlex="40">
-    <table>
-      <thead>
-        <th>Name</th>
-        <th>Pos</th>
-        <th>Age</th>
-        <th>Skill</th>
-        <th>Draft</th>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let player of getPlayers()">
-          <tr>
-            <td>{{player.name}}</td>
-            <td><span *ngFor="let pos of player.primaryPositions">{{ pos + ' ' }}</span></td>
-            <td>{{player.age}}</td>
-            <td>{{sharedFunctionsService.overallAbility(player)}}({{sharedFunctionsService.overallPotential(player)}})</td>
-            <td>
-              <button mat-raised-button color="primary" *ngIf="isUsersPick()" (click)="draft(player)">Draft</button>
-              <button mat-raised-button color="primary" *ngIf="!isUsersPick()" disabled>Draft</button>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
+    <mat-card>
+      <table>
+        <thead>
+          <th>Name</th>
+          <th>Pos</th>
+          <th>Age</th>
+          <th>Skill</th>
+          <th>Draft</th>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let player of getPlayers()">
+            <tr>
+              <td>{{player.name}}</td>
+              <td><span *ngFor="let pos of player.primaryPositions">{{ pos + ' ' }}</span></td>
+              <td>{{player.age}}</td>
+              <td>{{sharedFunctionsService.overallAbility(player)}}({{sharedFunctionsService.overallPotential(player)}})</td>
+              <td>
+                <button mat-raised-button color="primary" *ngIf="isUsersPick()" (click)="draft(player)">Draft</button>
+                <button mat-raised-button color="primary" *ngIf="!isUsersPick()" disabled>Draft</button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </mat-card>
   </div>
-  <div fxFlex="40" fxFlexOffset="5">
-    <table>
-      <thead>
-        <th>Pick #</th>
-        <th>Team</th>
-        <th>Pick</th>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let pick of leagueDataService.league?.fantasyDraft.draftPicks">
-          <tr>
-            <td><span *ngIf="getCurrentPick()?.pickNumber === pick.pickNumber">*</span>{{pick.pickNumber}}</td>
-            <td>{{leagueDataService.getTeamById(pick.teamId)?.location}} {{leagueDataService.getTeamById(pick.teamId)?.name}}</td>
-           <td>{{ leagueDataService.getPlayer(pick.playerId)?.name }}</td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
+  <div fxFlex="40" fxFlexOffset="1">
+    <mat-card>
+      <table>
+        <thead>
+          <th>Pick #</th>
+          <th>Team</th>
+          <th>Pick</th>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let pick of leagueDataService.league?.fantasyDraft.draftPicks">
+            <tr>
+              <td><span *ngIf="getCurrentPick()?.pickNumber === pick.pickNumber">*</span>{{pick.pickNumber}}</td>
+              <td>{{leagueDataService.getTeamById(pick.teamId)?.location}} {{leagueDataService.getTeamById(pick.teamId)?.name}}</td>
+            <td>{{ leagueDataService.getPlayer(pick.playerId)?.name }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </mat-card>
   </div>
 </div>
