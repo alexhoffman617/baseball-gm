@@ -1,8 +1,23 @@
-<div class="view-container">
-  <div>
-    <button mat-raised-button color="primary" (click)="generateNewLeague()">Generate League</button>
-  </div>
-  <div *ngFor="let league of leagues" >
-    <a [routerLink]="'/'+ league._id + '/league-home'">{{ league.name }}</a>
-  </div>
+<div class="view-container" fxLayout="row">
+  <mat-card fxFlexOffset="33" fxFlex="33">
+    <div>
+      <button mat-raised-button color="primary" (click)="generateNewLeague()">Generate League</button>
+    </div>
+    <table style="margin-top: 20px">
+      <thead>
+        <th>Name</th>
+        <th>Year</th>
+        <th>Teams</th>
+        <th></th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let league of leagues" >
+          <td>{{ league.name }}</td>
+          <td>{{ getYear(league._id) }}</td>
+          <td>{{ league.numberOfTeams }}</td>
+          <td><button mat-raised-button color="primary" [routerLink]="'/'+ league._id + '/league-home'">Select</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
 </div>

@@ -4,6 +4,11 @@ var seasonSchema = new Schema({}, {strict: false})
 var Season = mongoose.model('seasons', seasonSchema);
 
 var exports = {
+  getAllSeasons: function(callback){
+    Season.find({}, function(err, seasons){
+      callback(200, seasons)
+    })
+  },
   getSeasons: function(leagueId, callback){
     Season.find({leagueId: leagueId}, function(err, seasons){
       callback(200, seasons)

@@ -61,6 +61,12 @@ router.get('/seasons/:leagueId', (req, res) => {
   })
 })
 
+router.get('/seasons', (req, res) => {
+  seasons.getAllSeasons(function(status, value){
+    res.status(status).send(value)
+  })
+})
+
 router.get('/teams/:leagueId', (req, res) => {
   teams.getTeams(req.params.leagueId, function(status, value){
     res.status(status).send(value)

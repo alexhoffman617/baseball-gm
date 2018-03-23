@@ -7,6 +7,8 @@ import { Observable } from 'rxjs/Observable'
 import * as io from 'socket.io-client';
 import { SharedFunctionsService } from 'app/services/shared-functions.service';
 import { Router } from '@angular/router';
+import { Season } from '../../models/season';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-main',
@@ -15,12 +17,16 @@ import { Router } from '@angular/router';
 })
 export class MainComponent implements OnInit {
   leagues;
+  seasons: Array<Season>;
   socket;
   constructor(public dialog: MatDialog,
               private http: Http) { }
 
   ngOnInit() {
     this.socket = io.connect(window.location.protocol + '//' + window.location.host);
+    this.http.get('/api/seasons', {params: {}}).subscribe(data => {
+      this.seasons = data.json()
+    })
     new Observable(observer => {
       this.http.get('/api/leagues/' + localStorage.getItem('baseballgm-id'), {params: {}}).subscribe(data => {
         observer.next(data.json());
@@ -43,7 +49,16 @@ export class MainComponent implements OnInit {
     });
   }
 
+  getYear(leagueId) {
+    if (!this.seasons) { return }
+    const seasons = _.filter(this.seasons, function(season){
+      return season.leagueId === leagueId
+    })
+    const orderedSeasons = _.orderBy(seasons, 'year', 'desc')
+    return orderedSeasons.length === 0 ? null : orderedSeasons[0].year
+  }
 }
+
 
 @Component({
   selector: 'app-create-league-dialog',
