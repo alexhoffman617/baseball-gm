@@ -262,6 +262,9 @@ async playDays(daysLeft) {
       const replacementPlayer = _.find(orderedPlayers, function(gp) {
         return gp.player.currentStamina >= 30 && !gp.position
       })
+      if (!replacementPlayer) {
+        return
+      }
       replacementPlayer.position = playerToReplace.position
       replacementPlayer.played = playerToReplace.played
       replacementPlayer.orderNumber = playerToReplace.orderNumber

@@ -11,6 +11,9 @@
  <path class="eyebrow-right" [attr.d]="hair?.eyebrowRightD" [attr.stroke]="hair?.color" [attr.stroke-width]="hair?.eyebrowWidth" fill="none" />
  <path class="nose" [attr.d]="face?.noseD" stroke="black" stroke-width="3" fill="none" />
  <path class="hair-front" [attr.d]="hair?.hairFrontD" stroke="none" [attr.fill]="hair?.color" />
+ <path class="sideburns" [attr.d]="hair?.sideburnsD" [attr.fill]="hair?.color" />
+ <path class="mustache" [attr.d]="hair?.mustacheD" [attr.fill]="hair?.mustacheFill ? hair?.color : 'none'" [attr.stroke]="hair?.color" stroke-width="4"/>
+ <path class="beard" [attr.d]="hair?.beardD" [attr.fill]="hair?.color"/>
  <path clas="cap-main" [attr.d]="cap?.mainD" stroke="black" [attr.fill]="cap?.mainColor" stroke-width="2" />
 <path clas="cap-bill" [attr.d]="cap?.billD" stroke="black" [attr.fill]="cap?.secondaryColor" stroke-width="2" />
 <text x="120" y="72" [attr.fill]="cap?.secondaryColor" style="font-family: 'Playball'; font-size: 25px">{{cap?.teamAbv}}</text>

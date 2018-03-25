@@ -1,10 +1,10 @@
 <div fxLayout="row" class="view-container">
-    <div fxFlex="10">
+    <div fxFlex="9">
       <mat-card *ngIf="canStartDraft()">
         <button mat-raised-button color="primary" *ngIf="canStartDraft()" (click)="startDraft()">Start Draft</button>
       </mat-card>
     </div>
-  <div fxFlex="40">
+  <div fxFlex="40" fxFlexOffset="1">
     <mat-card>
       <table>
         <thead>

@@ -30,10 +30,11 @@ export class GenerateLeagueService {
       const createdLeague = await this.createLeague(league) as League
       this.sharedFunctionsService.setLoading(10, 'Generating Teams')
       const teamIds = []
+      const mlbTeamIndicies = this.generateMlbIndicies(league.numberOfTeams)
       for (let x = 0; x < league.numberOfTeams; x++) {
         const ownerAccountId = x === 0 ? localStorage.getItem('baseballgm-id') : null
         const team = useMlbTeams ?
-                      await this.generateTeamService.generateMlbTeam(createdLeague._id, x, fantasyDraft, ownerAccountId) :
+                      await this.generateTeamService.generateMlbTeam(createdLeague._id, mlbTeamIndicies[x], fantasyDraft, ownerAccountId) :
                       await this.generateTeamService.generateRandomTeam(createdLeague._id, fantasyDraft, ownerAccountId)
         teamIds.push(team._id)
         this.sharedFunctionsService.setLoading(10 + (70 * (x + 1) / numberOfTeams),
@@ -71,6 +72,15 @@ export class GenerateLeagueService {
         }
       }
       await this.leagueDataService.updateLeague(league)
+    }
+
+    generateMlbIndicies(numberOfTeams) {
+      let array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 , 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+        22, 23, 24, 25, 26, 27, 28, 29]
+      if (numberOfTeams < 30) {
+        array = _.shuffle(array)
+      }
+      return array
     }
 
     createLeague(league) {

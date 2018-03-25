@@ -197,14 +197,14 @@ export class SharedFunctionsService {
       if ((team.roster.batters.length < 13 || team.roster.pitcherReserves.length === 0) && team.roster.batterReserves.length > 0) {
         const orderedReserveBatters = _.orderBy(team.roster.batterReserves, function(batter){
           return that.overallAbility(_.find(players, {_id: batter.playerId}))
-        })
+        }, 'desc')
         const batter = _.remove(team.roster.batterReserves, orderedReserveBatters[0])
         team.roster.batters.push(batter[0])
       } else {
         if ((team.roster.pitchers.length < 12 || team.roster.batterReserves.length === 0) && team.roster.pitcherReserves.length > 0) {
           const orderedReservePitchers = _.orderBy(team.roster.pitcherReserves, function(pitcher){
             return that.overallAbility(_.find(players, {_id: pitcher.playerId}))
-          })
+          }, 'desc')
           const pitcher = _.remove(team.roster.pitcherReserves, orderedReservePitchers[0])
           team.roster.pitchers.push(pitcher[0])
         }
@@ -409,6 +409,24 @@ export class SharedFunctionsService {
       that.leagueDataService.currentSeason.phase = newPhase.name
     }
     this.leagueDataService.updateSeason(that.leagueDataService.currentSeason)
+  }
+
+  startSeason() {
+    const that = this
+    _.each(this.leagueDataService.teams, function(team){
+      if (!team.ownerAccountId) {
+        _.each(team.roster.batters, function(batter){
+          team.roster.batterReserves.push(new RosterSpot(batter.playerId, null, null))
+        })
+        team.roster.batters = []
+        _.each(team.roster.pitchers, function(pitcher){
+          team.roster.pitcherReserves.push(new RosterSpot(pitcher.playerId, null, null))
+        })
+        team.roster.pitchers = []
+        that.leagueDataService.updateTeam(team)
+      }
+    })
+    this.updateSeasonToNextPhase()
   }
 
   getUsersTeam() {

@@ -8,6 +8,7 @@ import { Contract } from 'app/models/contract';
 import { SharedFunctionsService } from 'app/services/shared-functions.service';
 import { ContractExpectationService } from 'app/services/contract-expectation.service';
 import { RandomFaceService } from './random-face.service';
+import * as _ from 'lodash';
 
 @Injectable()
 export class GeneratePlayerService {
@@ -147,12 +148,17 @@ export class GeneratePlayerService {
     }
 
     generateSkillValue(skill, age, potential, isProspect = false) {
-    const garunteedValue = .2 + Math.min(9, age - 18) / 9 * .4
+    const garunteedValue = Math.round(.2 + Math.min(9, age - 18) / 9 * .4)
     let value
     if (isProspect) {
-      value = Math.round(garunteedValue / 2 * potential[skill] +
-        Math.random() * potential[skill] * (1 - garunteedValue / 2) / 2 +
-        Math.random() * potential[skill] * (1 - garunteedValue / 2) / 2);
+      const percentileRand = Math.random()
+      if (percentileRand < .45) {
+        value = garunteedValue + _.random(0, Math.round(potential[skill] / 3))
+      } else if (percentileRand < .8) {
+        value = garunteedValue + _.random(Math.round(potential[skill] / 3), Math.round(potential[skill] * 2 / 3))
+      } else {
+        value = garunteedValue + _.random(Math.round(potential[skill] * 2 / 3), Math.round(potential[skill]))
+      }
     } else {
       value = Math.round(garunteedValue * potential[skill] + Math.random() * potential[skill] * (1 - garunteedValue));
     }

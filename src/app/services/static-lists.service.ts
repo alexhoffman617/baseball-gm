@@ -645,19 +645,38 @@ mlbConfs = ['AL', 'NL']
 
 mlbDivs = ['East', 'Central', 'West']
 
-mlbTeamNames =  ['Orioles', 'Red Sox', 'Yankees', 'Rays', 'Blue Jays',
-                'White Sox', 'Indians', 'Tigers', 'Royals', 'Twins',
-                'Astros', 'Angels', 'Athletics', 'Mariners', 'Rangers',
-                'Braves', 'Marlins', 'Mets', 'Philies', 'Nationals',
-                'Cubs', 'Reds', 'Brewers', 'Pirates', 'Cardinals',
-                'Diamondbacks', 'Rockies', 'Padres', 'Dodgers', 'Giants']
-
-mlbLocations = ['Baltimore', 'Boston', 'New York', 'Tampa Bay', 'Toronto',
-                'Chicago', 'Cleveland', 'Detroit', 'Kansas City', 'Minnesota',
-                'Houston', 'Los Angeles', 'Oakland', 'Seattle', 'Texas',
-                'Atlanta', 'Miami', 'New York', 'Philadelphia', 'Washington',
-                'Chicago', 'Cincinnati', 'Milwaukee', 'Pittsburg', 'St. Louis',
-                'Arizona', 'Colorado', 'San Diego', 'Los Angeles', 'San Fransisco']
+mlbTeams = [
+  {name: 'Orioles', location: 'Baltimore', primaryColor: '#FC4C02', secondaryColor: '#000000'},
+  {name: 'Red Sox', location: 'Boston', primaryColor: '#C8102E', secondaryColor: '#0C2340'},
+  {name: 'Yankees', location: 'New York', primaryColor: '#0C2340', secondaryColor: '#ffffff'},
+  {name: 'Rays', location: 'Tampa Bay', primaryColor: '#092C5C', secondaryColor: '#8FBCE6'},
+  {name: 'Blue Jays', location: 'Toronto', primaryColor: '#134A8E', secondaryColor: '#1D2D5C'},
+  {name: 'White Sox', location: 'Chicago', primaryColor: '#27251F', secondaryColor: '#8A8D8F'},
+  {name: 'Indians', location: 'Cleveland', primaryColor: '#0C2340', secondaryColor: '#D50032'},
+  {name: 'Tigers', location: 'Detroit', primaryColor: '#0C2340', secondaryColor: '#FA4616'},
+  {name: 'Royals', location: 'Kansas City', primaryColor: '#004687', secondaryColor: '#7AB2DD'},
+  {name: 'Twins', location: 'Minnesota', primaryColor: '#0C2340', secondaryColor: '#BA0C2F'},
+  {name: 'Astros', location: 'Houston', primaryColor: '#002D62', secondaryColor: '#EB6E1F'},
+  {name: 'Angels', location: 'Los Angeles', primaryColor: '#003263', secondaryColor: '#BA0021'},
+  {name: 'Athletics', location: 'Oakland', primaryColor: '#034638', secondaryColor: '#FFB81C'},
+  {name: 'Mariners', location: 'Seattle', primaryColor: '#0C2340', secondaryColor: '#00685E'},
+  {name: 'Rangers', location: 'Texas', primaryColor: '#C0111F', secondaryColor: '#003278'},
+  {name: 'Braves', location: 'Atlanta', primaryColor: '#BA0C2F', secondaryColor: '#0C2340'},
+  {name: 'Marlins', location: 'Miami', primaryColor: '#ED6F2E', secondaryColor: '#8A8D8F'},
+  {name: 'Mets', location: 'New York', primaryColor: '#002D72', secondaryColor: '#FC4C02'},
+  {name: 'Philies', location: 'Philadelphia', primaryColor: '#BA0C2F', secondaryColor: '#FFFFFF'},
+  {name: 'Nationals', location: 'Washington', primaryColor: '#BA122B', secondaryColor: '#14225A'},
+  {name: 'Cubs', location: 'Chicago', primaryColor: '#002F6C', secondaryColor: '#C8102E'},
+  {name: 'Reds', location: 'Cincinnati', primaryColor: '#D50032', secondaryColor: '#FFFFFF'},
+  {name: 'Brewers', location: 'Milwaukee', primaryColor: '#13294B', secondaryColor: '#85714D'},
+  {name: 'Pirates', location: 'Pittsburg', primaryColor: '#27251F', secondaryColor: '#FFC72C'},
+  {name: 'Cardinals', location: 'St. Louis', primaryColor: '#BA0C2F', secondaryColor: '#FFFFFF'},
+  {name: 'Diamondbacks', location: 'Arizona', primaryColor: '#A71930', secondaryColor: '#E3D4AD'},
+  {name: 'Rockies', location: 'Colorado', primaryColor: '#330072', secondaryColor: '#27251F'},
+  {name: 'Padres', location: 'San Diego', primaryColor: '#041E42', secondaryColor: '#A2AAAD'},
+  {name: 'Dodgers', location: 'Los Angeles', primaryColor: '#002F6C', secondaryColor: '#FFFFFF'},
+  {name: 'Giants', location: 'San Fransisco', primaryColor: '#FA4616', secondaryColor: '#27251F'},
+]
 
 firstNames = ['James',
                 'John',

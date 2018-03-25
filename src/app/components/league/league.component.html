@@ -7,7 +7,7 @@
     <ng-container *ngIf="!leagueDataService.league?.simming">
       <ng-container *ngIf="leagueDataService.currentSeason?.phase === staticListsService.leaguePhases.freeAgency.name">
         <ng-container *ngIf="leagueDataService.currentSeason?.preseasonDay >= staticListsService.preseasonDays">
-          <button mat-menu-item (click)="sharedFunctionsService.updateSeasonToNextPhase()">Start Season</button>
+          <button mat-menu-item (click)="sharedFunctionsService.startSeason()">Start Season</button>
         </ng-container>
         <ng-container *ngIf="leagueDataService.currentSeason?.preseasonDay < staticListsService.preseasonDays">
           <button mat-menu-item (click)="simPreseasonDays(1)">Sim Day</button>

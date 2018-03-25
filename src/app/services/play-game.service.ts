@@ -114,12 +114,15 @@ export class PlayGameService {
         const pitcher = _.find(pitchingTeam, function(player){
           return player.position  === 'P';
         }).player;
+        const catcher = _.find(pitchingTeam, function(player){
+          return player.position  === 'C';
+        }).player;
         if (this.doesRunnerAttemptSteal()) {
           this.stealAttempt(pitcher, pitchingTeam)
           continue
         }
         // determine outcome of PA
-        this.outcome = this.atBatService.atBat(batter, pitcher, pitchingTeam, side === 'Bottom');
+        this.outcome = this.atBatService.atBat(batter, pitcher, catcher, pitchingTeam, side === 'Bottom');
         this.advanceRunners(batter, pitcher);
         this.addDetailsToPitcherAppearance(this.outcome, this.currentPitcherAppearance)
         this.halfInningEvents.push(new GameEvent(batter._id, pitcher._id, this.outcome));
@@ -139,11 +142,11 @@ export class PlayGameService {
 
     doesRunnerAttemptSteal() {
       if (this.secondBase && !this.thirdBase) {
-        if (Math.random() < (this.secondBase.hittingAbility.speed / 100 - .5) / 3) {
+        if (Math.random() < (this.secondBase.hittingAbility.speed / 100 - .5) / 5) {
           return true
         }
       } else if (this.firstBase && !this.secondBase) {
-        if (Math.random() < (this.firstBase.hittingAbility.speed / 100 - .2) / 3) {
+        if (Math.random() < (this.firstBase.hittingAbility.speed / 100 - .2) / 5) {
           return true
         }
       }
@@ -154,7 +157,9 @@ export class PlayGameService {
       const that = this
       const catcher =  _.find(pitchingTeam, {position: that.staticListsService.positions.catcher})
       if (this.secondBase && !this.thirdBase) {
-        if (Math.random() < this.secondBase.hittingAbility.speed / 100 - .1 - (.2 * catcher.player.hittingAbility.fielding - 40) / 100) {
+        if (Math.random() < Math.max(this.secondBase.hittingAbility.speed / 100 - .35 - (.2 *
+          this.sharedFunctionsService.getBestFieldingAtPostion(catcher.player, this.staticListsService.positions.catcher) - 40)
+          / 100, .1)) {
           this.battingTeamStats.events.push(new GameEvent(null, pitcher._id,
             null, new StolenBaseAttempt(true, this.secondBase._id, catcher.player._id)))
           this.thirdBase = this.secondBase
@@ -169,7 +174,9 @@ export class PlayGameService {
           this.outs ++
         }
       } else if (this.firstBase && !this.secondBase) {
-        if (Math.random() < this.firstBase.hittingAbility.speed / 100  - (.2 * catcher.player.hittingAbility.fielding - 40) / 100) {
+        if (Math.random() < Math.max(this.firstBase.hittingAbility.speed / 100 - .25  - (.2 *
+          this.sharedFunctionsService.getBestFieldingAtPostion(catcher.player, this.staticListsService.positions.catcher) - 40)
+           / 100, .05)) {
           this.battingTeamStats.events.push(new GameEvent(null, pitcher._id,
             null, new StolenBaseAttempt(true, this.firstBase._id, catcher.player._id)))
           this.secondBase = this.firstBase

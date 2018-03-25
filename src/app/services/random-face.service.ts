@@ -8,37 +8,50 @@ export class RandomFaceService {
     short: 'short',
     shaggy: 'shaggy',
     long: 'long',
+    afro: 'afro',
     bald: 'bald'
+  }
+  mustacheTypes = {
+    none: 'none',
+    straight: 'straight',
+    pencil: 'pencil'
   }
   constructor() {}
 
   generateRandomFace() {
     const faceWidth = this.getRandomFaceWidth()
-    const noseLength = this.getRandomNoseLength()
+    const mustacheType = this.getMustacheType()
+    const noseLength = this.getRandomNoseLength(mustacheType !== this.mustacheTypes.none)
+    const hasSideburns = this.hasSideburns()
+    const hasBeard = this.hasBeard()
+    const sideburnLength = this.getRandomSideburnLength()
     return new Face(this.getRandomSkinTone(), faceWidth, noseLength, this.getRandomNoseSize(),
     this.getRandomNoseCurve(noseLength), this.getRandomEyeColor(), this.getRandomHairType(), this.getRandomHairColor(),
-    this.getRandomEyeBrowCurve(), this.getRandomEyeBrowCenter())
+    this.getRandomEyeBrowCurve(), this.getRandomEyeBrowCenter(),
+    hasSideburns, hasSideburns ? sideburnLength : 0, hasSideburns ? this.getRandomSideburnWidth(sideburnLength) : 0,
+    mustacheType, mustacheType ? this.getRandomMustacheWidth() : 0,
+    hasBeard, hasBeard ? this.getRandomBeardWidth() : 0, hasBeard ? this.getRandomBeardLength() : 0)
   }
 
 
   getRandomFaceWidth() {
-    return Math.round(Math.random() * 15) + 75
+    return _.random(75, 90)
   }
 
   getRandomEyeBrowCurve() {
-    return Math.round(Math.random() * 40) - 30
+    return _.random(-30, 10)
   }
 
   getRandomEyeBrowCenter() {
-    return Math.round(Math.random() * 30) - 15
+    return _.random(-15, 15)
   }
 
   getRandomNoseSize() {
-    return Math.round(Math.random() * 30) + 5
+    return _.random(5, 35)
   }
 
-  getRandomNoseLength() {
-    return Math.round(Math.random() * 20) + 10
+  getRandomNoseLength(hasMustache) {
+    return hasMustache ? _.random(10, 22) : _.random(10, 30) + 10
   }
 
   getRandomNoseCurve(length) {
@@ -94,5 +107,55 @@ export class RandomFaceService {
       hairTypes.push(prop)
     }
     return hairTypes[_.random(hairTypes.length - 1)]
+  }
+
+  hasSideburns() {
+    if (Math.random() < .4) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  getRandomSideburnLength() {
+    return Math.round(Math.random() * 40)
+  }
+
+  getRandomSideburnWidth(length) {
+    if (length > 10) {
+      return _.random(0, 25)
+    }
+    return _.random(0, 15)
+  }
+
+  getMustacheType() {
+    const random = Math.random()
+    if (random < .15) {
+      return this.mustacheTypes.pencil
+    } else if (random < .3) {
+      return this.mustacheTypes.straight
+    } else {
+      return this.mustacheTypes.none
+    }
+  }
+
+  getRandomMustacheWidth() {
+    return _.random(28, 58)
+  }
+
+  hasBeard() {
+    if (Math.random() < .25) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  getRandomBeardWidth() {
+    return _.random(5, 35)
+  }
+
+  getRandomBeardLength() {
+    return _.random(10, 50)
   }
 }
