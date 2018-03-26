@@ -2,7 +2,7 @@
   {{ pitcher?.name }}
 </td>
 <td *ngIf="showPosition">
-    Pit
+    {{ pitcher.primaryPositions[0] }}
 </td>
 <td *ngIf="showSeasonYear">
     {{ seasonYear }}

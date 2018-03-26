@@ -4,31 +4,32 @@
     <table>
       <thead>
         <tr class="header">
-          <th (click)='changeSort("name")'>Name
-            <mat-icon *ngIf="sortType === 'name' && sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
-            <mat-icon *ngIf="sortType === 'name' && sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
-            <mat-icon *ngIf="sortType != 'name'">remove</mat-icon>
+          <th (click)='sharedFunctionsService.changeSort("name", sort)'>Name
+            <mat-icon *ngIf="sort.sortType === 'name' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="sort.sortType === 'name' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+            <mat-icon *ngIf="sort.sortType != 'name'">remove</mat-icon>
           </th>
-          <th (click)='changeSort("pos")'>Pos
-              <mat-icon *ngIf="sortType === 'pos' && sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
-              <mat-icon *ngIf="sortType === 'pos' && sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
-              <mat-icon *ngIf="sortType != 'pos'">remove</mat-icon>
+          <th>Pos
+              <mat-icon *ngIf="sort.sortType === 'pos' && sort.sortDirection === 'desc'" (click)='sharedFunctionsService.changeSort("pos", sort)'>keyboard_arrow_down</mat-icon>
+              <mat-icon *ngIf="sort.sortType === 'pos' && sort.sortDirection === 'asc'" (click)='sharedFunctionsService.changeSort("pos", sort)'>keyboard_arrow_up</mat-icon>
+              <mat-icon *ngIf="sort.sortType != 'pos'" (click)='sharedFunctionsService.changeSort("pos", sort)'>remove</mat-icon>
+              <input style="width: 25px" [(ngModel)]="sort.positionFilter">
           </th>
-          <th (click)='changeSort("age")'>Age
-              <mat-icon *ngIf="sortType === 'age' && sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
-              <mat-icon *ngIf="sortType === 'age' && sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
-              <mat-icon *ngIf="sortType != 'age'">remove</mat-icon>
+          <th (click)='sharedFunctionsService.changeSort("age", sort)'>Age
+              <mat-icon *ngIf="sort.sortType === 'age' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+              <mat-icon *ngIf="sort.sortType === 'age' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+              <mat-icon *ngIf="sort.sortType != 'age'">remove</mat-icon>
 
           </th>
-          <th (click)='changeSort("ovr")'>Overall
-              <mat-icon *ngIf="sortType === 'ovr' && sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
-              <mat-icon *ngIf="sortType === 'ovr' && sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
-              <mat-icon *ngIf="sortType != 'ovr'">remove</mat-icon>
+          <th (click)='sharedFunctionsService.changeSort("ovr", sort)'>Overall
+              <mat-icon *ngIf="sort.sortType === 'ovr' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+              <mat-icon *ngIf="sort.sortType === 'ovr' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+              <mat-icon *ngIf="sort.sortType != 'ovr'">remove</mat-icon>
           </th>
-          <th (click)='changeSort("pot")'>Potential
-              <mat-icon *ngIf="sortType === 'pot' && sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
-              <mat-icon *ngIf="sortType === 'pot' && sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
-              <mat-icon *ngIf="sortType != 'pot'">remove</mat-icon>
+          <th (click)='sharedFunctionsService.changeSort("pot", sort)'>Potential
+              <mat-icon *ngIf="sort.sortType === 'pot' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+              <mat-icon *ngIf="sort.sortType === 'pot' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+              <mat-icon *ngIf="sort.sortType != 'pot'">remove</mat-icon>
           </th>
           <th>Negotiate</th>
         </tr>

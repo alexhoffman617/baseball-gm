@@ -536,6 +536,57 @@ export class SharedFunctionsService {
     })
     await this.leagueDataService.updateTeam(team)
   }
+
+  getSortedPlayers(origPlayers: Array<Player>, sortType: string, sortDirection: string, positionFilter: string) {
+    const that = this
+    if (!origPlayers) { return [] }
+    let players: Array<Player>;
+    if (positionFilter) {
+      players = _.filter(origPlayers, function(player){
+        return !!_.find(player.primaryPositions, function(pos) { return pos === positionFilter })
+      })
+    } else {
+      players = origPlayers
+    }
+    if (sortType === 'name') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.name
+      }, sortDirection)
+    } else if (sortType === 'pos') {
+      return _.orderBy(players, function(freeAgent) {
+        return _.indexOf(that.staticListsService.fieldingPositionsWithDH, freeAgent.primaryPositions[0])
+      }, sortDirection)
+    } else if (sortType === 'age') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.age
+      }, sortDirection)
+    } else if (sortType === 'pot') {
+      return _.orderBy(players, function(freeAgent) {
+        return that.overallPotential(freeAgent)
+      }, sortDirection)
+    } else {
+      return _.orderBy(players, function(freeAgent) {
+        return that.overallAbility(freeAgent)
+      }, sortDirection)
+    }
+  }
+
+  changeSort(newSortType, sort) {
+    if (sort.sortType === newSortType) {
+      if (sort.sortDirection === 'desc') {
+        sort.sortDirection = 'asc'
+      } else {
+        sort.sortDirection = 'desc'
+      }
+    } else {
+      if (newSortType === 'ovr' || newSortType === 'pot') {
+        sort.sortDirection = 'desc'
+      } else {
+        sort.sortDirection = 'asc'
+      }
+      sort.sortType = newSortType
+    }
+  }
 }
 
 

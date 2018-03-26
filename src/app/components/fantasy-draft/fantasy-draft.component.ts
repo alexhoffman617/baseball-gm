@@ -14,6 +14,11 @@ import { MatSnackBar } from '@angular/material';
 })
 export class FantasyDraftComponent {
   accountId
+  sort = {
+    sortType: 'ovr',
+    sortDirection: 'desc',
+    positionFilter: ''
+  }
   constructor(public leagueDataService: LeagueDataService,
       public sharedFunctionsService: SharedFunctionsService,
       public snackBar: MatSnackBar,
@@ -130,5 +135,10 @@ export class FantasyDraftComponent {
       return this.leagueDataService.league.fantasyDraft.draftPicks.slice(this.getCurrentPick().pickNumber - 4,
       this.getCurrentPick().pickNumber + 2)
     }
+  }
+
+  getSortedPlayers() {
+    return this.sharedFunctionsService.getSortedPlayers(this.getPlayers(), this.sort.sortType,
+    this.sort.sortDirection, this.sort.positionFilter)
   }
 }

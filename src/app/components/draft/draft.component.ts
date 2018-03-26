@@ -14,6 +14,11 @@ import { MatSnackBar } from '@angular/material';
 })
 export class DraftComponent {
   passString = 'Pass'
+  sort = {
+    sortType: 'ovr',
+    sortDirection: 'desc',
+    positionFilter: ''
+  }
   constructor(public leagueDataService: LeagueDataService,
       public sharedFunctionsService: SharedFunctionsService,
       public snackBar: MatSnackBar,
@@ -37,6 +42,11 @@ export class DraftComponent {
     return _.orderBy(players, function(player){
       return that.sharedFunctionsService.overallPotential(player)
     }, 'desc')
+  }
+
+  getSortedPlayers() {
+    return this.sharedFunctionsService.getSortedPlayers(this.getPlayers(), this.sort.sortType,
+    this.sort.sortDirection, this.sort.positionFilter)
   }
 
   currentDraft() {
