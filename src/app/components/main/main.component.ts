@@ -9,6 +9,7 @@ import { SharedFunctionsService } from 'app/services/shared-functions.service';
 import { Router } from '@angular/router';
 import { Season } from '../../models/season';
 import * as _ from 'lodash';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-main',
@@ -20,6 +21,7 @@ export class MainComponent implements OnInit {
   seasons: Array<Season>;
   socket;
   constructor(public dialog: MatDialog,
+              public authService: AuthService,
               private http: Http) { }
 
   ngOnInit() {
