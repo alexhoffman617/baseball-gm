@@ -1,7 +1,8 @@
 <div fxLayout="row" class="view-container">
     <div fxFlex="9">
-      <mat-card *ngIf="canStartDraft()">
+      <mat-card *ngIf="canStartDraft() || leagueDataService.league?.creatorAccountId === accountId">
         <button mat-raised-button color="primary" *ngIf="canStartDraft()" (click)="startDraft()">Start Draft</button>
+        <button mat-raised-button color="primary" *ngIf="leagueDataService.league?.creatorAccountId === accountId && !canStartDraft()" (click)="simRestOfDraft()">Sim Rest Of Draft</button>
       </mat-card>
     </div>
   <div fxFlex="40" fxFlexOffset="1">
@@ -17,7 +18,7 @@
         <tbody>
           <ng-container *ngFor="let player of getPlayers()">
             <tr>
-              <td>{{player.name}}</td>
+              <td [routerLink]="'/' + player?.leagueId + '/player/' + player?._id">{{player.name}}</td>
               <td><span *ngFor="let pos of player.primaryPositions">{{ pos + ' ' }}</span></td>
               <td>{{player.age}}</td>
               <td>{{sharedFunctionsService.overallAbility(player)}}({{sharedFunctionsService.overallPotential(player)}})</td>
@@ -40,10 +41,30 @@
           <th>Pick</th>
         </thead>
         <tbody>
+          <ng-container *ngFor="let pick of getClosePicks()">
+            <tr>
+              <td><span *ngIf="getCurrentPick()?.pickNumber === pick.pickNumber">*</span>{{pick.pickNumber}}</td>
+              <td>{{leagueDataService.getTeamById(pick.teamId)?.location}} {{leagueDataService.getTeamById(pick.teamId)?.name}}
+                  <span *ngIf="leagueDataService.getTeamById(pick.teamId)?.ownerAccountId">({{ leagueDataService.getAccountById(leagueDataService.getTeamById(pick.teamId)?.ownerAccountId)?.username }})</span>
+              </td>
+            <td>{{ leagueDataService.getPlayer(pick.playerId)?.name }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <table>
+        <thead>
+          <th>Pick #</th>
+          <th>Team</th>
+          <th>Pick</th>
+        </thead>
+        <tbody>
           <ng-container *ngFor="let pick of leagueDataService.league?.fantasyDraft.draftPicks">
             <tr>
               <td><span *ngIf="getCurrentPick()?.pickNumber === pick.pickNumber">*</span>{{pick.pickNumber}}</td>
-              <td>{{leagueDataService.getTeamById(pick.teamId)?.location}} {{leagueDataService.getTeamById(pick.teamId)?.name}}</td>
+              <td>{{leagueDataService.getTeamById(pick.teamId)?.location}} {{leagueDataService.getTeamById(pick.teamId)?.name}}
+                  <span *ngIf="leagueDataService.getTeamById(pick.teamId)?.ownerAccountId">({{ leagueDataService.getAccountById(leagueDataService.getTeamById(pick.teamId)?.ownerAccountId)?.username }})</span>
+              </td>
             <td>{{ leagueDataService.getPlayer(pick.playerId)?.name }}</td>
             </tr>
           </ng-container>

@@ -112,11 +112,11 @@ export class LeagueDataService  {
           observer.next(data);
         });
         that.socket.on('team:' + leagueId, (data) => {
-          let currentTeam = _.find(that.teams, function(team){
+          const currentTeam = _.find(that.teams, function(team){
             return team._id === data._id
           })
           if (currentTeam) {
-            currentTeam = data
+            _.extend(currentTeam, data)
           } else {
             that.teams.push(data)
           }
@@ -144,11 +144,11 @@ export class LeagueDataService  {
         });
         that.socket.on('player:' + leagueId, (data) => {
           if (that.players) {
-            let currentPlayer = _.find(that.players, function(player){
+            const currentPlayer = _.find(that.players, function(player){
               return player._id === data._id
             })
             if (currentPlayer) {
-              currentPlayer = data
+              _.extend(currentPlayer, data)
             } else {
               that.players.push(data)
             }
@@ -176,11 +176,11 @@ export class LeagueDataService  {
           observer.next(data);
         });
         that.socket.on('game:' + leagueId, (data) => {
-          let currentGame = _.find(that.games, function(game){
+          const currentGame = _.find(that.games, function(game){
             return game._id === data._id
           })
           if (currentGame) {
-            currentGame = data
+            _.extend(currentGame, data)
           } else {
             that.games.push(data)
           }
@@ -228,11 +228,11 @@ export class LeagueDataService  {
           observer.next(data);
         });
         that.socket.on('trade:' + leagueId, (data) => {
-          let currentTrade = _.find(that.trades, function(trade){
+          const currentTrade = _.find(that.trades, function(trade){
             return trade._id === data._id
           })
           if (currentTrade) {
-            currentTrade = data
+            _.extend(currentTrade, data)
           } else {
             that.trades.push(data)
           }
@@ -269,6 +269,13 @@ export class LeagueDataService  {
     const that = this
     return _.filter(that.players, function(player){
       return player.teamId === teamId
+    })
+  }
+
+  getAccountById(accountId: string) {
+    const that = this
+    return _.find(that.accounts, function(account){
+      return account._id === accountId
     })
   }
 

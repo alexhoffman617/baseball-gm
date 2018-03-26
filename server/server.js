@@ -105,6 +105,7 @@ io.on('connection', function(socket){
   socket.on('update-player', (player, callback) => {
     Players.updatePlayer(player, function(status, savedPlayer){
        io.emit('player:' + player.leagueId, player)
+       callback(player)
     })
   })
 

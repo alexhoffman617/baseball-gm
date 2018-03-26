@@ -469,11 +469,11 @@ export class SharedFunctionsService {
     this.leagueDataService.updateTeam(team)
   }
 
-  acceptDraftContract(player: Player, bestContract: Contract) {
+  async acceptDraftContract(player: Player, bestContract: Contract) {
     const team = this.leagueDataService.getTeamById(bestContract.teamId)
     this.acceptContract(player, bestContract, team)
-    this.leagueDataService.updatePlayer(player)
-    this.leagueDataService.updateTeam(team)
+    await this.leagueDataService.updatePlayer(player)
+    await this.leagueDataService.updateTeam(team)
   }
 
   acceptContract(player: Player, contract: Contract, team: Team) {

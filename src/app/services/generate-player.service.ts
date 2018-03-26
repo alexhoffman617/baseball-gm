@@ -22,7 +22,7 @@ export class GeneratePlayerService {
 
     async generateFreeAgents(leagueId: string, year: number, numberNeeded: number) {
      for (let x = 0; x < numberNeeded; x++) {
-      if (x % 2 === 1) {
+      if (Math.random() < .6) {
         await this.generateBatter(leagueId, null, year)
       } else {
         await this.generatePitcher(leagueId, null, year)
@@ -148,16 +148,16 @@ export class GeneratePlayerService {
     }
 
     generateSkillValue(skill, age, potential, isProspect = false) {
-    const garunteedValue = Math.round(.2 + Math.min(9, age - 18) / 9 * .4)
+    const garunteedValue = .2 + Math.min(9, age - 18) / 9 * .4
     let value
     if (isProspect) {
       const percentileRand = Math.random()
       if (percentileRand < .45) {
-        value = garunteedValue + _.random(0, Math.round(potential[skill] / 3))
+        value = _.random(0, Math.round((potential[skill] / 3)))
       } else if (percentileRand < .8) {
-        value = garunteedValue + _.random(Math.round(potential[skill] / 3), Math.round(potential[skill] * 2 / 3))
+        value = _.random(Math.round(potential[skill] / 3), Math.round(potential[skill] * 2 / 3))
       } else {
-        value = garunteedValue + _.random(Math.round(potential[skill] * 2 / 3), Math.round(potential[skill]))
+        value = _.random(Math.round(potential[skill] * 2 / 3), Math.round(potential[skill]))
       }
     } else {
       value = Math.round(garunteedValue * potential[skill] + Math.random() * potential[skill] * (1 - garunteedValue));

@@ -13,10 +13,13 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./fantasy-draft.component.scss']
 })
 export class FantasyDraftComponent {
+  accountId
   constructor(public leagueDataService: LeagueDataService,
       public sharedFunctionsService: SharedFunctionsService,
       public snackBar: MatSnackBar,
-     public staticListsService: StaticListsService) { }
+     public staticListsService: StaticListsService) {
+      this.accountId = localStorage.getItem('baseballgm-id')
+      }
 
   getPlayers() {
     const that = this
@@ -61,17 +64,21 @@ export class FantasyDraftComponent {
           && this.leagueDataService.getTeamById(this.getCurrentPick().teamId).ownerAccountId === localStorage.getItem('baseballgm-id')
   }
 
-  async draft(player: Player) {
+  async draft(player: Player, tilEndOfDraft = false) {
     const team = this.leagueDataService.getTeamById(this.getCurrentPick().teamId)
     const salary = this.getCurrentSalary()
-    this.sharedFunctionsService.acceptDraftContract(player, new Contract(player._id, team._id,
+    await this.sharedFunctionsService.acceptDraftContract(player, new Contract(player._id, team._id,
       salary, this.leagueDataService.currentSeason.year, this.getRandomYears(), null, 0))
     this.getCurrentPick().playerId = player._id
     await this.leagueDataService.updateLeague()
     if (!this.getCurrentPick()) {
       this.endDraft()
     } else {
-      this.simToNextUserPick()
+      if (tilEndOfDraft) {
+        this.simRestOfDraft()
+      } else {
+        this.simToNextUserPick()
+      }
     }
   }
 
@@ -86,7 +93,11 @@ export class FantasyDraftComponent {
     }
   }
 
-  async autoDraftBestAvailable() {
+  async simRestOfDraft() {
+    await this.autoDraftBestAvailable(true)
+  }
+
+  async autoDraftBestAvailable(tilEndOfDraft = false) {
     if (this.leagueDataService.seasons
       && this.leagueDataService.currentSeason.phase === this.staticListsService.leaguePhases.fantasyDraft.name
       && !this.getCurrentPick()) {
@@ -95,7 +106,7 @@ export class FantasyDraftComponent {
       const team = this.leagueDataService.getTeamById(this.getCurrentPick().teamId)
       const salary = this.getCurrentPick().pickNumber <= this.leagueDataService.teams.length ? 2000000 :
       this.getCurrentPick().pickNumber <= this.leagueDataService.teams.length * 2 ? 1000000 : 500000
-      this.draft(this.getPlayers()[0])
+      await this.draft(this.getPlayers()[0], tilEndOfDraft)
     }
   }
 
@@ -109,5 +120,15 @@ export class FantasyDraftComponent {
     this.leagueDataService.league.fantasyDraft.status = this.staticListsService.draftStates.completed
     this.sharedFunctionsService.updateSeasonToNextPhase()
     this.leagueDataService.updateSeason(this.leagueDataService.currentSeason)
+  }
+
+  getClosePicks() {
+    if (!this.leagueDataService.league || !this.getCurrentPick()) { return [] }
+    if (this.getCurrentPick().pickNumber < 4) {
+      return this.leagueDataService.league.fantasyDraft.draftPicks.slice(0, 5)
+    } else {
+      return this.leagueDataService.league.fantasyDraft.draftPicks.slice(this.getCurrentPick().pickNumber - 4,
+      this.getCurrentPick().pickNumber + 2)
+    }
   }
 }

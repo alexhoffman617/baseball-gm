@@ -18,7 +18,7 @@
         <tbody>
           <ng-container *ngFor="let player of getPlayers()">
             <tr>
-              <td>{{player.name}}</td>
+              <td [routerLink]="'/' + player?.leagueId + '/player/' + player?._id">{{player.name}}</td>
               <td><span *ngFor="let pos of player.primaryPositions">{{ pos + ' ' }}</span></td>
               <td>{{player.age}}</td>
               <td>{{sharedFunctionsService.overallAbility(player)}}({{sharedFunctionsService.overallPotential(player)}})</td>
@@ -44,7 +44,9 @@
           <ng-container *ngFor="let pick of currentDraft()?.draftPicks">
             <tr>
               <td><span *ngIf="getCurrentPick()?.pickNumber === pick.pickNumber">*</span>{{pick.pickNumber}}</td>
-              <td>{{leagueDataService.getTeamById(pick.teamId)?.location}} {{leagueDataService.getTeamById(pick.teamId)?.name}}</td>
+              <td>{{leagueDataService.getTeamById(pick.teamId)?.location}} {{leagueDataService.getTeamById(pick.teamId)?.name}}
+                ({{ leagueDataService.getAccountById(leagueDataService.getTeamById(pick.teamId)?.ownerAccountId)?.username }})
+              </td>
             <td>{{ pick.playerId === passString ? passString :leagueDataService.getPlayer(pick.playerId)?.name }}</td>
             </tr>
           </ng-container>
