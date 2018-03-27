@@ -90,8 +90,8 @@ io.on('connection', function(socket){
 
   socket.on('update-team', (team, callback) => {
     Teams.updateTeam(team, function(status, savedTeam){
-      io.emit('team:' + team.leagueId, savedTeam)
-      callback(savedTeam)
+      io.emit('team:' + team.leagueId, team)
+      callback(team)
     })
   })
 
