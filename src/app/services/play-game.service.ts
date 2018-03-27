@@ -122,11 +122,20 @@ export class PlayGameService {
           continue
         }
         // determine outcome of PA
-        this.outcome = this.atBatService.atBat(batter, pitcher, catcher, pitchingTeam, side === 'Bottom');
+        this.outcome = this.atBatService.atBat(batter, pitcher, catcher, pitchingTeam,
+          !this.currentPitcherAppearance.start, this.getPitcherStaminaModifier(pitcher),  side === 'Bottom');
         this.advanceRunners(batter, pitcher);
         this.addDetailsToPitcherAppearance(this.outcome, this.currentPitcherAppearance)
         this.halfInningEvents.push(new GameEvent(batter._id, pitcher._id, this.outcome));
         this.battingTeamStats.events.push(new GameEvent(batter._id, pitcher._id, this.outcome))
+      }
+    }
+
+    getPitcherStaminaModifier(pitcher: Player) {
+      if (pitcher.pitchingAbility.stamina * 1.25 - this.currentPitcherAppearance.pitches > 0) {
+        return 0
+      } else {
+        return (pitcher.pitchingAbility.stamina - this.currentPitcherAppearance.pitches) / 3000
       }
     }
 

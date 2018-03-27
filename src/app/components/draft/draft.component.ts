@@ -19,6 +19,7 @@ export class DraftComponent {
     sortDirection: 'desc',
     positionFilter: ''
   }
+  displayType = 'std'
   constructor(public leagueDataService: LeagueDataService,
       public sharedFunctionsService: SharedFunctionsService,
       public snackBar: MatSnackBar,

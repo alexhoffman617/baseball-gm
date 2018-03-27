@@ -95,7 +95,7 @@ export class GeneratePlayerService {
 
         const player =  new Player(name, age, this.staticListsService.playerTypes.pitcher, this.getBattingSide(), this.getThrowingSide(),
              new HittingSkillset(0, 0, 0, 0, 0, 0), new HittingSkillset(0, 0, 0, 0, 0, 0), skills,
-            potential, leagueId, teamId, year, ['P'], this.randomFaceService.generateRandomFace());
+            potential, leagueId, teamId, year, [this.getRelieverOrStarter(potential.stamina)], this.randomFaceService.generateRandomFace());
         player.hittingSeasonStats = [new BatterSeasonStats(year)]
         player.pitchingSeasonStats = [new PitcherSeasonStats(year)]
         player.fieldingSeasonStats = [new FieldingSeasonStats(year)]
@@ -106,6 +106,14 @@ export class GeneratePlayerService {
         }
         const dbPlayer = await this.leagueDataService.createPlayer(player);
         return dbPlayer as Player;
+    }
+
+    getRelieverOrStarter(stamina) {
+      if (stamina >= 40) {
+        return 'SP'
+      } else {
+        return 'RP'
+      }
     }
 
     getBattingSide() {
@@ -154,7 +162,7 @@ export class GeneratePlayerService {
       const percentileRand = Math.random()
       if (percentileRand < .45) {
         value = _.random(0, Math.round((potential[skill] / 3)))
-      } else if (percentileRand < .8) {
+      } else if (percentileRand < .85) {
         value = _.random(Math.round(potential[skill] / 3), Math.round(potential[skill] * 2 / 3))
       } else {
         value = _.random(Math.round(potential[skill] * 2 / 3), Math.round(potential[skill]))

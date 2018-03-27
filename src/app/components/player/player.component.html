@@ -3,7 +3,7 @@
     <app-face fxFlex="20" [player]="player"></app-face>
     <div fxFlex="20">
       <div>
-        <h3> {{ player?.name }}</h3>
+        <h3> {{ player?.name }} | <span *ngFor="let position of player?.primaryPositions">{{position}} </span></h3>
       </div>
       <div>
           Age: {{player?.age}}

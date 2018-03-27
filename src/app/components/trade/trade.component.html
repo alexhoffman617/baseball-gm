@@ -5,7 +5,7 @@
         <div fxLayout="row">
           <mat-card fxFlex="45">
             <div style="font-size:20px">
-              <span fxFlex="15">Team:</span> {{getUserTeam()?.location}} {{getUserTeam()?.name}}
+              <span fxFlex="15">Team:</span> {{sharedFunctionsService.getUserTeam()?.location}} {{sharedFunctionsService.getUserTeam()?.name}}
             </div>
             <table>
               <thead>
@@ -35,7 +35,7 @@
             <div fxLayout="row" style="font-size:20px">
               <span fxFlex="15">Team:</span> <mat-select (change)="changeTeam()" [(ngModel)]="otherTeamId" placeholder="team">
                   <ng-container  *ngFor="let team of leagueDataService.teams">
-                      <mat-option *ngIf="team._id !== getUserTeam()?._id"  [value]="team._id" >{{team.location}} {{team.name}}</mat-option>
+                      <mat-option *ngIf="team._id !== sharedFunctionsService.getUserTeam()?._id"  [value]="team._id" >{{team.location}} {{team.name}}</mat-option>
                   </ng-container>
                 </mat-select>
             </div>
@@ -67,10 +67,10 @@
         <button mat-raised-button color="primary" (click)="offer()">Offer</button>
       </mat-tab>
       <mat-tab label="Trade Offers">
-        <div *ngIf="!getUsersTradeOffers().length" style="font-size:20px; margin-top:20px">
+        <div *ngIf="!sharedFunctionsService.getUsersTradeOffers().length" style="font-size:20px; margin-top:20px">
           No Trade Offers
         </div>
-        <div *ngFor="let trade of getUsersTradeOffers()">
+        <div *ngFor="let trade of sharedFunctionsService.getUsersTradeOffers()">
           <mat-card>
             <div fxLayout="row">
                 <div fxFlex="45">
@@ -134,10 +134,10 @@
         </div>
       </mat-tab>
       <mat-tab label="Offered Trades">
-        <div *ngIf="!getUsersOfferedTrades().length" style="font-size:20px; margin-top:20px">
+        <div *ngIf="!sharedFunctionsService.getUsersOfferedTrades().length" style="font-size:20px; margin-top:20px">
           No Offered Trades
         </div>
-        <div *ngFor="let trade of getUsersOfferedTrades()">
+        <div *ngFor="let trade of sharedFunctionsService.getUsersOfferedTrades()">
           <mat-card>
             <div fxLayout="row">
               <div fxFlex="45">

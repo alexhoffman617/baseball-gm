@@ -220,7 +220,11 @@ export class SharedFunctionsService {
     _.each(this.staticListsService.pitcherRoles, function(role){
       if (!_.find(team.roster.pitchers, {startingPosition: role})) {
         _.find(orderedPitchers, function(op){
-          return !op.startingPosition
+          if (role.lastIndexOf('S') === 0) {
+            return !op.startingPosition && _.find(players, {_id: op.playerId}).primaryPositions[0] === 'SP'
+          } else {
+            return !op.startingPosition
+          }
         }).startingPosition = role
       }
     })
@@ -564,6 +568,46 @@ export class SharedFunctionsService {
       return _.orderBy(players, function(freeAgent) {
         return that.overallPotential(freeAgent)
       }, sortDirection)
+    } else if (sortType === 'cont') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.hittingAbility.contact
+      }, sortDirection)
+    } else if (sortType === 'pat') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.hittingAbility.patience
+      }, sortDirection)
+    } else if (sortType === 'pow') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.hittingAbility.power
+      }, sortDirection)
+    } else if (sortType === 'spd') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.hittingAbility.speed
+      }, sortDirection)
+    } else if (sortType === 'fld') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.hittingAbility.fielding
+      }, sortDirection)
+    } else if (sortType === 'vel') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.pitchingAbility.velocity
+      }, sortDirection)
+    } else if (sortType === 'movement') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.pitchingAbility.movement
+      }, sortDirection)
+    } else if (sortType === 'ctrl') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.pitchingAbility.control
+      }, sortDirection)
+    } else if (sortType === 'sta') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.pitchingAbility.stamina
+      }, sortDirection)
+    } else if (sortType === 'type') {
+      return _.orderBy(players, function(freeAgent) {
+        return freeAgent.pitchingAbility.type
+      }, sortDirection)
     } else {
       return _.orderBy(players, function(freeAgent) {
         return that.overallAbility(freeAgent)
@@ -579,13 +623,33 @@ export class SharedFunctionsService {
         sort.sortDirection = 'desc'
       }
     } else {
-      if (newSortType === 'ovr' || newSortType === 'pot') {
-        sort.sortDirection = 'desc'
-      } else {
+      if (newSortType === 'age' || newSortType === 'pos' || newSortType === 'name') {
         sort.sortDirection = 'asc'
+      } else {
+        sort.sortDirection = 'desc'
       }
       sort.sortType = newSortType
     }
+  }
+
+  getUserTeam() {
+    return this.leagueDataService.getTeamByOwnerId(localStorage.getItem('baseballgm-id'))
+  }
+
+  getUsersOfferedTrades() {
+    const that = this
+    if (!this.leagueDataService.trades) { return [] }
+    return _.filter(this.leagueDataService.trades, function(trade) {
+      return that.getUserTeam() && trade.teamBId === that.getUserTeam()._id && trade.state === that.staticListsService.tradeStatus.offered
+    })
+  }
+
+  getUsersTradeOffers() {
+    const that = this
+    if (!this.leagueDataService.trades) { return [] }
+    return _.filter(this.leagueDataService.trades, function(trade) {
+      return that.getUserTeam() && trade.teamAId === that.getUserTeam()._id && trade.state === that.staticListsService.tradeStatus.offered
+    })
   }
 }
 

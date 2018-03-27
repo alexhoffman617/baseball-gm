@@ -17,6 +17,7 @@ export class FreeAgentsComponent implements OnInit {
     sortDirection: 'desc',
     positionFilter: ''
   }
+  displayType = 'std'
   constructor(public leagueDataService: LeagueDataService,
     public sharedFunctionsService: SharedFunctionsService,
     public staticListsService: StaticListsService) { }

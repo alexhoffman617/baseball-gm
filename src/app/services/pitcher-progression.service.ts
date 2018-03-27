@@ -100,7 +100,7 @@ export class PitcherProgressionService {
     if (whipImprovement > (potential - ability)) {
       whipImprovement = potential - ability;
     }
-    return whipImprovement + eraImprovement ? Math.round(whipImprovement + eraImprovement / 4 * Math.min(appearances / 20, 1)) : 0;
+    return whipImprovement + eraImprovement ? Math.round((whipImprovement + eraImprovement) / 4 * Math.min(appearances / 20, 1)) : 0;
   }
 
   getSpeedPerformanceImprovement(steal: number, ability: number, potential: number) {

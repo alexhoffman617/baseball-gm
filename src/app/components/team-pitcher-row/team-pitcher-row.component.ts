@@ -75,7 +75,7 @@ export class TeamPitcherRowComponent implements OnChanges {
       this.showStamina = false
     } else {
       this.showName = true
-      this.showPosition = false
+      this.showPosition = true
       this.showSeasonYear = false
       this.showAge = true
       this.showRosterPosition = true

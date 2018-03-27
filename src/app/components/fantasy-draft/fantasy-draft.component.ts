@@ -19,6 +19,8 @@ export class FantasyDraftComponent {
     sortDirection: 'desc',
     positionFilter: ''
   }
+  simming = false
+  displayType = 'std'
   constructor(public leagueDataService: LeagueDataService,
       public sharedFunctionsService: SharedFunctionsService,
       public snackBar: MatSnackBar,
@@ -69,18 +71,18 @@ export class FantasyDraftComponent {
           && this.leagueDataService.getTeamById(this.getCurrentPick().teamId).ownerAccountId === localStorage.getItem('baseballgm-id')
   }
 
-  async draft(player: Player, tilEndOfDraft = false) {
+  async draft(player: Player) {
     const team = this.leagueDataService.getTeamById(this.getCurrentPick().teamId)
     const salary = this.getCurrentSalary()
-    await this.sharedFunctionsService.acceptDraftContract(player, new Contract(player._id, team._id,
+    this.sharedFunctionsService.acceptDraftContract(player, new Contract(player._id, team._id,
       salary, this.leagueDataService.currentSeason.year, this.getRandomYears(), null, 0))
     this.getCurrentPick().playerId = player._id
     await this.leagueDataService.updateLeague()
     if (!this.getCurrentPick()) {
       this.endDraft()
     } else {
-      if (tilEndOfDraft) {
-        this.simRestOfDraft()
+      if (this.simming) {
+        this.autoDraftBestAvailable()
       } else {
         this.simToNextUserPick()
       }
@@ -98,11 +100,16 @@ export class FantasyDraftComponent {
     }
   }
 
-  async simRestOfDraft() {
-    await this.autoDraftBestAvailable(true)
+  async startSimming() {
+    this.simming = true
+    await this.autoDraftBestAvailable()
   }
 
-  async autoDraftBestAvailable(tilEndOfDraft = false) {
+  async stopSimming() {
+    this.simming = false
+  }
+
+  async autoDraftBestAvailable() {
     if (this.leagueDataService.seasons
       && this.leagueDataService.currentSeason.phase === this.staticListsService.leaguePhases.fantasyDraft.name
       && !this.getCurrentPick()) {
@@ -111,7 +118,7 @@ export class FantasyDraftComponent {
       const team = this.leagueDataService.getTeamById(this.getCurrentPick().teamId)
       const salary = this.getCurrentPick().pickNumber <= this.leagueDataService.teams.length ? 2000000 :
       this.getCurrentPick().pickNumber <= this.leagueDataService.teams.length * 2 ? 1000000 : 500000
-      await this.draft(this.getPlayers()[0], tilEndOfDraft)
+      await this.draft(this.getPlayers()[0])
     }
   }
 

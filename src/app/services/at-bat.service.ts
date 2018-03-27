@@ -254,10 +254,10 @@ export class AtBatService {
       return new AtBat('out', contactType, trajectory, hitDirection, fielder._id, _.random(1, 7))
     }
 
-  atBat(batter, pitcher, catcher, fieldingTeam, fieldingTeamIsHome = false) {
+  atBat(batter, pitcher, catcher, fieldingTeam, pitcherIsReliever, pitcherStaminaModifier, fieldingTeamIsHome = false) {
     const contactRand = Math.random();
     const strikeOutProb = Math.max(.03, this.getModifierPercentage(.04, .36, batter.hittingAbility.contact, true)
-     + this.getModifierPercentage(.04, .36, pitcher.pitchingAbility.velocity, false)
+     + this.getModifierPercentage(.04, .36, pitcher.pitchingAbility.velocity + (pitcherIsReliever ? 10 : 0), false)
      + this.getModifierPercentage(0, .04, this.sharedFunctionsService.getBestFieldingAtPostion(catcher, 'C'), false)
      - .14);
      const walkProb = Math.max(0, this.getModifierPercentage(0, .07, batter.hittingAbility.patience, false)
@@ -272,8 +272,8 @@ export class AtBatService {
       const contactTypeRand = Math.random();
       const battingSide = batter.bats === 'B' ? (pitcher.throws === 'L' ? 'R' : 'L') : batter.bats;
       const hitDirection = this.getHitDirection(battingSide)
-      const hardHitProb = this.getModifierPercentage(.14, .5, batter.hittingAbility.power, false) + .14;
-      const softHitProb = this.getSoftPercentage(batter.hittingAbility.power);
+      const hardHitProb = this.getModifierPercentage(.14, .5, batter.hittingAbility.power, false) + .14 - pitcherStaminaModifier;
+      const softHitProb = this.getSoftPercentage(batter.hittingAbility.power) + pitcherStaminaModifier * 2;
       const mediumHitProb = 1 - hardHitProb - softHitProb;
       if (contactTypeRand < hardHitProb) {
         const trajectoryRandom = Math.random();

@@ -42,7 +42,9 @@
   <button mat-button [routerLink]="'/'+ leagueId + '/draft'">Draft</button>
   <button mat-button *ngIf="leagueDataService.currentSeason?.phase === staticListsService.leaguePhases.fantasyDraft.name"
    [routerLink]="'/'+ leagueId + '/fantasy-draft'">Fantasy Draft</button>
-  <button mat-button [routerLink]="'/'+ leagueId + '/trade'">Trade</button>
+  <button mat-button *ngIf="sharedFunctionsService.getUsersTeam()" [routerLink]="'/'+ leagueId + '/trade'">
+    Trade <span class="numberCircle" *ngIf="sharedFunctionsService.getUsersOfferedTrades().length > 0">{{ sharedFunctionsService.getUsersOfferedTrades().length }}</span>
+  </button>
   <span class="spacer"></span>
   <button mat-button *ngIf="leagueDataService.league?.creatorAccountId === accountId" [routerLink]="'/'+ leagueId + '/admin'">Admin</button>
   <button mat-button (click)="authService.logout()">Logout</button>

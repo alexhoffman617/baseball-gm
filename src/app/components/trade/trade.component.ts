@@ -24,10 +24,6 @@ export class TradeComponent implements OnInit {
   ngOnInit() {
   }
 
-  getUserTeam() {
-    return this.leagueDataService.getTeamByOwnerId(localStorage.getItem('baseballgm-id'))
-  }
-
   offer() {
     const userPlayers = []
     _.each(this.usersTeamPlayersArray, function(player){
@@ -41,25 +37,11 @@ export class TradeComponent implements OnInit {
         otherTeamPlayers.push(player.player._id)
       }
     })
-    this.leagueDataService.createTrade(new Trade(this.leagueDataService.leagueId, this.getUserTeam()._id,
+    this.leagueDataService.createTrade(new Trade(this.leagueDataService.leagueId, this.sharedFunctionsService.getUserTeam()._id,
       this.otherTeamId, userPlayers, otherTeamPlayers, this.staticListService.tradeStatus.offered))
     this.otherTeamId = null
     this.otherTeamPlayersArray = null
     this.usersTeamPlayersArray = null
-  }
-
-  getUsersOfferedTrades() {
-    const that = this
-    return _.filter(this.leagueDataService.trades, function(trade) {
-      return that.getUserTeam() && trade.teamBId === that.getUserTeam()._id && trade.state === that.staticListService.tradeStatus.offered
-    })
-  }
-
-  getUsersTradeOffers() {
-    const that = this
-    return _.filter(this.leagueDataService.trades, function(trade) {
-      return that.getUserTeam() && trade.teamAId === that.getUserTeam()._id && trade.state === that.staticListService.tradeStatus.offered
-    })
   }
 
   accept(trade: Trade) {
@@ -149,7 +131,7 @@ export class TradeComponent implements OnInit {
       that.otherTeamPlayersArray.push({player: player, selected: false})
     })
     this.usersTeamPlayersArray = []
-    _.each(that.leagueDataService.getPlayersByTeamId(this.getUserTeam()._id), function(player){
+    _.each(that.leagueDataService.getPlayersByTeamId(this.sharedFunctionsService.getUserTeam()._id), function(player){
       that.usersTeamPlayersArray.push({player: player, selected: false})
     })
   }

@@ -1,45 +1,136 @@
-<div class="view-container">
-  <app-team-free-agent *ngIf="leagueDataService.currentSeason?.phase === staticListsService.leaguePhases.freeAgency.name"></app-team-free-agent>
-  <mat-card>
-    <table>
-      <thead>
-        <tr class="header">
-          <th (click)='sharedFunctionsService.changeSort("name", sort)'>Name
-            <mat-icon *ngIf="sort.sortType === 'name' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
-            <mat-icon *ngIf="sort.sortType === 'name' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
-            <mat-icon *ngIf="sort.sortType != 'name'">remove</mat-icon>
-          </th>
-          <th>Pos
-              <mat-icon *ngIf="sort.sortType === 'pos' && sort.sortDirection === 'desc'" (click)='sharedFunctionsService.changeSort("pos", sort)'>keyboard_arrow_down</mat-icon>
-              <mat-icon *ngIf="sort.sortType === 'pos' && sort.sortDirection === 'asc'" (click)='sharedFunctionsService.changeSort("pos", sort)'>keyboard_arrow_up</mat-icon>
-              <mat-icon *ngIf="sort.sortType != 'pos'" (click)='sharedFunctionsService.changeSort("pos", sort)'>remove</mat-icon>
-              <input style="width: 25px" [(ngModel)]="sort.positionFilter">
-          </th>
-          <th (click)='sharedFunctionsService.changeSort("age", sort)'>Age
-              <mat-icon *ngIf="sort.sortType === 'age' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
-              <mat-icon *ngIf="sort.sortType === 'age' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
-              <mat-icon *ngIf="sort.sortType != 'age'">remove</mat-icon>
+<div class="view-container" fxLayout="row">
+  <div fxFlex="9">
+    <mat-card>
+      <mat-radio-group [(ngModel)]="displayType">
+        <mat-radio-button value="std">Standard</mat-radio-button>
+        <mat-radio-button value="batSkill">Batting Skill</mat-radio-button>
+        <mat-radio-button value="pitchSkill">Pitching Skill</mat-radio-button>
+      </mat-radio-group>
+    </mat-card>
+  </div>
+  <div fxFlex="90" fxFlexOffset="1">
+    <app-team-free-agent *ngIf="leagueDataService.currentSeason?.phase === staticListsService.leaguePhases.freeAgency.name"></app-team-free-agent>
+    <mat-card>
+      <table>
+        <thead>
+          <tr class="header">
+            <th (click)='sharedFunctionsService.changeSort("name", sort)'>Name
+              <mat-icon *ngIf="sort.sortType === 'name' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+              <mat-icon *ngIf="sort.sortType === 'name' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+              <mat-icon *ngIf="sort.sortType != 'name'">remove</mat-icon>
+            </th>
+            <ng-container *ngIf="displayType==='std'">
+                <th >Pos
+                    <mat-icon *ngIf="sort.sortType === 'pos' && sort.sortDirection === 'desc'" (click)='sharedFunctionsService.changeSort("pos", sort)'>keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'pos' && sort.sortDirection === 'asc'" (click)='sharedFunctionsService.changeSort("pos", sort)'>keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'pos'" (click)='sharedFunctionsService.changeSort("pos", sort)'>remove</mat-icon>
+                    <input style="width: 25px" [(ngModel)]="sort.positionFilter">
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("age", sort)'>Age
+                    <mat-icon *ngIf="sort.sortType === 'age' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'age' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'age'">remove</mat-icon>
 
-          </th>
-          <th (click)='sharedFunctionsService.changeSort("ovr", sort)'>Overall
-              <mat-icon *ngIf="sort.sortType === 'ovr' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
-              <mat-icon *ngIf="sort.sortType === 'ovr' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
-              <mat-icon *ngIf="sort.sortType != 'ovr'">remove</mat-icon>
-          </th>
-          <th (click)='sharedFunctionsService.changeSort("pot", sort)'>Potential
-              <mat-icon *ngIf="sort.sortType === 'pot' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
-              <mat-icon *ngIf="sort.sortType === 'pot' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
-              <mat-icon *ngIf="sort.sortType != 'pot'">remove</mat-icon>
-          </th>
-          <th>Negotiate</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let player of getSortedFreeAgents()">
-          <tr *ngIf="player.playerType === staticListsService.playerTypes.batter" app-team-batter-row [batter]="player" displaySet="fa" button="negotiate"></tr>
-          <tr *ngIf="player.playerType === staticListsService.playerTypes.pitcher" app-team-pitcher-row [pitcher]="player" displaySet="fa" button="negotiate"></tr>
-        </ng-container>
-      </tbody>
-    </table>
-  </mat-card>
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("ovr", sort)'>Overall
+                    <mat-icon *ngIf="sort.sortType === 'ovr' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'ovr' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'ovr'">remove</mat-icon>
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("pot", sort)'>Potential
+                    <mat-icon *ngIf="sort.sortType === 'pot' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'pot' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'pot'">remove</mat-icon>
+                </th>
+                </ng-container>
+                <ng-container *ngIf="displayType==='batSkill'">
+                <th (click)='sharedFunctionsService.changeSort("cont", sort)'>Contact
+                    <mat-icon *ngIf="sort.sortType === 'cont' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'cont' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'cont'">remove</mat-icon>
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("pat", sort)'>Patience
+                    <mat-icon *ngIf="sort.sortType === 'pat' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'pat' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'pat'">remove</mat-icon>
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("pow", sort)'>Power
+                    <mat-icon *ngIf="sort.sortType === 'pow' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'pow' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'pow'">remove</mat-icon>
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("spd", sort)'>Speed
+                    <mat-icon *ngIf="sort.sortType === 'spd' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'spd' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'sdp'">remove</mat-icon>
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("fld", sort)'>Fielding
+                    <mat-icon *ngIf="sort.sortType === 'fld' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'fld' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'fld'">remove</mat-icon>
+                </th>
+                </ng-container>
+                <ng-container *ngIf="displayType==='pitchSkill'">
+                <th (click)='sharedFunctionsService.changeSort("vel", sort)'>Velocity
+                    <mat-icon *ngIf="sort.sortType === 'vel' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'vel' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'vel'">remove</mat-icon>
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("pat", sort)'>Movement
+                    <mat-icon *ngIf="sort.sortType === 'mov' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'mov' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'mov'">remove</mat-icon>
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("pow", sort)'>Control
+                    <mat-icon *ngIf="sort.sortType === 'ctrl' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'ctrl' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'ctrl'">remove</mat-icon>
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("stam", sort)'>Stamina
+                    <mat-icon *ngIf="sort.sortType === 'stam' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'stam' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'stam'">remove</mat-icon>
+                </th>
+                <th (click)='sharedFunctionsService.changeSort("fld", sort)'>Type
+                    <mat-icon *ngIf="sort.sortType === 'type' && sort.sortDirection === 'desc'">keyboard_arrow_down</mat-icon>
+                    <mat-icon *ngIf="sort.sortType === 'type' && sort.sortDirection === 'asc'">keyboard_arrow_up</mat-icon>
+                    <mat-icon *ngIf="sort.sortType != 'type'">remove</mat-icon>
+                </th>
+                </ng-container>
+            <th>Negotiate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let player of getSortedFreeAgents()">
+              <tr>
+                  <td [routerLink]="'/' + player?.leagueId + '/player/' + player?._id">{{player.name}}</td>
+                  <ng-container *ngIf="displayType==='std'">
+                    <td><span *ngFor="let pos of player.primaryPositions">{{ pos + ' ' }}</span></td>
+                    <td>{{player.age}}</td>
+                    <td>{{sharedFunctionsService.overallAbility(player)}}</td>
+                    <td>{{sharedFunctionsService.overallPotential(player)}}</td>
+                  </ng-container>
+                  <ng-container *ngIf="displayType==='batSkill'">
+                    <td>{{player.hittingAbility.contact}}[{{player.hittingPotential.contact}}]</td>
+                    <td>{{player.hittingAbility.patience}}[{{player.hittingPotential.patience}}]</td>
+                    <td>{{player.hittingAbility.power}}[{{player.hittingPotential.power}}]</td>
+                    <td>{{player.hittingAbility.speed}}[{{player.hittingPotential.speed}}]</td>
+                    <td>{{player.hittingAbility.fielding}}[{{player.hittingPotential.fielding}}]</td>
+                  </ng-container>
+                  <ng-container *ngIf="displayType==='pitchSkill'">
+                    <td>{{player.pitchingAbility.velocity}}[{{player.pitchingPotential.velocity}}]</td>
+                    <td>{{player.pitchingAbility.movement}}[{{player.pitchingPotential.movement}}]</td>
+                    <td>{{player.pitchingAbility.control}}[{{player.pitchingPotential.control}}]</td>
+                    <td>{{player.pitchingAbility.stamina}}[{{player.pitchingPotential.stamina}}]</td>
+                    <td>{{player.pitchingAbility.type}}</td>
+                  </ng-container>
+                  <td>
+                    <button mat-raised-button color="primary" [routerLink]="'/' + player?.leagueId + '/negotiate-contract/' + player?._id">Negotiate</button>
+                  </td>
+                </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </mat-card>
+  </div>
 </div>
