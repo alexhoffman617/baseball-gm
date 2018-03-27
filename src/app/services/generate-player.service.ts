@@ -139,9 +139,23 @@ export class GeneratePlayerService {
     generatePotentialValue(age, prospect: boolean = false) {
       let value
       if (prospect) {
-        value = 25 + Math.round(Math.random() * 75)
+        const percentile = Math.random()
+        if (percentile < .25) {
+          value = _.random(10, 40)
+        } else if (percentile < .75) {
+          value = _.random(40, 70)
+        } else {
+          value = _.random(70, 100)
+        }
       } else {
-        value = 20 + Math.round(Math.random() * 40) + Math.round(Math.random() * 40);
+        const percentile = Math.random()
+        if (percentile < .15) {
+          value = _.random(10, 40)
+        } else if (percentile < .66) {
+          value = _.random(40, 70)
+        } else {
+          value = _.random(70, 100)
+        }
       }
         // if (value > 90 && Math.random() < .66) {
         //     value -= 10;

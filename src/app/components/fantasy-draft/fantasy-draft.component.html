@@ -10,6 +10,12 @@
           <mat-radio-button value="pitchSkill">Pitching Skill</mat-radio-button>
         </mat-radio-group>
       </mat-card>
+      <mat-card style="margin-top:10px">
+        <tr *ngFor="let position of staticListsService.draftPositions">
+          <td>{{position}}</td>
+          <td>{{ getRosterCount(position) }}</td>
+        </tr>
+      </mat-card>
     </div>
   <div fxFlex="50" fxFlexOffset="1">
     <mat-card>

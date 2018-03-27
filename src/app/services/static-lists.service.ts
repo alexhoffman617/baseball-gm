@@ -73,7 +73,9 @@ export class StaticListsService {
     utilFielder: 'UTIL',
     utilOutfielder: 'UOF',
     utilInfielder: 'UIF',
-    pitcher: 'P'
+    pitcher: 'P',
+    startingPitcher: 'SP',
+    reliefPitcher: 'RP'
   }
 
   fieldingPositions = [
@@ -86,6 +88,8 @@ export class StaticListsService {
     this.positions.centerField,
     this.positions.rightField
   ]
+
+  draftPositions = this.fieldingPositions.concat(this.positions.startingPitcher, this.positions.reliefPitcher)
 
   fieldingPositionsWithDH = this.fieldingPositions.concat(this.positions.designatedHitter)
 

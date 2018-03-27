@@ -148,4 +148,26 @@ export class FantasyDraftComponent {
     return this.sharedFunctionsService.getSortedPlayers(this.getPlayers(), this.sort.sortType,
     this.sort.sortDirection, this.sort.positionFilter)
   }
+
+  getRosterCount(position) {
+    const that = this;
+    if (!this.sharedFunctionsService.getUsersTeam()) { return 0 }
+    const batterReservesCount = _.filter(this.sharedFunctionsService.getUsersTeam().roster.batterReserves, function(batter) {
+      if (!that.leagueDataService.getPlayer(batter.playerId)) { return false }
+      return _.indexOf(that.leagueDataService.getPlayer(batter.playerId).primaryPositions, position) > -1
+    }).length
+    const batterCount = _.filter(this.sharedFunctionsService.getUsersTeam().roster.batters, function(batter) {
+      if (!that.leagueDataService.getPlayer(batter.playerId)) { return false }
+      return _.indexOf(that.leagueDataService.getPlayer(batter.playerId).primaryPositions, position) > -1
+    }).length
+    const pitcherReservesCount = _.filter(this.sharedFunctionsService.getUsersTeam().roster.pitcherReserves, function(batter) {
+      if (!that.leagueDataService.getPlayer(batter.playerId)) { return false }
+      return _.indexOf(that.leagueDataService.getPlayer(batter.playerId).primaryPositions, position) > -1
+    }).length
+    const pitcherCount = _.filter(this.sharedFunctionsService.getUsersTeam().roster.pitchers, function(batter) {
+      if (!that.leagueDataService.getPlayer(batter.playerId)) { return false }
+      return _.indexOf(that.leagueDataService.getPlayer(batter.playerId).primaryPositions, position) > -1
+    }).length
+    return batterReservesCount + batterCount + pitcherCount + pitcherReservesCount
+  }
 }
